@@ -54,6 +54,7 @@ Prefer the narrowest id that carries your claim.
 | `ASI01-MIT` | OWASP | 282 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
 | `ASI01-UNTRUSTED-INPUT` | OWASP | 283 | 1. Treat all natural-language inputs (e.g., user-provided text, uploaded documents, retrieved content) | Treat all natural-language input as untrusted before tool calls |
 | `ASI01-LEAST-PRIVILEGE` | OWASP | 286 | 2. Minimize the impact of goal hijacking by enforcing least privilege for agent tools and requiring | Least privilege plus human approval for high-impact actions |
+| `ASI01-LOCK-PROMPTS` | OWASP | 288 | 3. Define and lock agent system prompts so that goal priorities and permitted actions are explicit and | Define and lock system prompts so goals and permitted actions are explicit and auditable |
 | `ASI02` | OWASP | 318 | ## ASI02: Tool Misuse and Exploitation | Category heading |
 | `ASI02-MIT` | OWASP | 372 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
 | `ASI02-TOOL-PROFILES` | OWASP | 376 | 1. Least Agency and Least Privilege for Tools. Define per-tool least-privilege profiles (scopes, | Per-tool least-privilege profiles; read-only queries, no send/delete rights. The provision a well-scoped tool grant satisfies |
@@ -74,6 +75,7 @@ Prefer the narrowest id that carries your claim.
 | `ASI04-RUNTIME-LOADING` | OWASP | 525 | capabilities at runtime - loading external tools- agent personas dynamically – thereby increasing the attack | Runtime loading of external tools and agent personas |
 | `ASI04-THIRD-PARTY-AGENT` | OWASP | 546 | 4. Vulnerable Third-Party Agent (Agent→Agent). A third-party agent with unpatched vulnerabilities | A peer agent used to pivot, leak, or relay instructions |
 | `ASI04-MIT` | OWASP | 575 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI04-PROMPT-REVIEW` | OWASP | 583 | 4. Secure prompts and memory: Put prompts, orchestration scripts, and memory schemas under | Prompts and orchestration scripts under version control with peer review; scan for anomalies |
 | `ASI04-REGISTRIES` | OWASP | 578 | use curated registries and block untrusted sources. | Curated registries; block untrusted sources |
 | `ASI04-GATEKEEPING` | OWASP | 579 | 2. Dependency gatekeeping: Allowlist and pin; scan for typosquats (PyPI, npm, LangChain, | Allowlist and pin; verify provenance; auto-reject unverified |
 | `ASI04-SANDBOX` | OWASP | 581 | 3. Containment and builds: Run sensitive agents in sandboxed containers with strict network or | Sandboxed containers with network or syscall limits |

@@ -22,7 +22,7 @@ make verify          # prove the standard is intact and every citation is honest
 
 Two minutes, no account, no API key, nothing to install.
 
-**1. Verify the auditor's own claims.** `make verify` runs eight offline checks: every registered
+**1. Verify the auditor's own claims.** `make verify` runs nine offline checks: every registered
 provision still sits where the register says, every citation resolves, every passage quoted from
 the standard appears in it verbatim, every audit ruled on all ten categories, and the stated
 ledger arithmetic matches the tables. It exits non-zero if any of that is false.

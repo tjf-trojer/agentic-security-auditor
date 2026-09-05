@@ -19,6 +19,8 @@ each check exists because one of them actually happened while this repo was buil
   7. BROKEN LINK         internal links resolve, except inside verbatim artifacts
                          in targets/, which point at their own repositories.
   8. STALE VOCABULARY    no severity word survives that the rules no longer define.
+  9. UNLINKED CITATION   a bare section-and-line reference in running text is not a
+                         citation: it cannot be redeemed and no other check sees it.
 
     python3 scripts/verify.py             # check everything, exit 1 on failure
     python3 scripts/verify.py --relink    # rewrite citations to carry their ids
@@ -174,32 +176,42 @@ def main(argv: list[str]) -> int:
                     elif rln != ln:
                         fail("id", f"{rel}: ^{pid} cited at L{ln}, register says L{rln}")
 
-        # 4 MISQUOTED STANDARD. Three contexts may quote the standard (rules.md,
-        # Rule 1): a finding's "What the standard requires" block, a ledger row's
-        # Basis cell, and "What holds". A pass has to be checkable the same way a
-        # failure is, so the ledger and "What holds" are checked too.
+        # 4 MISQUOTED STANDARD. Two contexts may quote a reference (rules.md,
+        # Rule 1): a finding's "Standard" line and "What holds". Each quotation is
+        # checked against the document(s) that block actually cites, and against a
+        # window around the cited lines rather than the whole file.
+        #
+        # Both refinements exist because testing found the loose version hollow: a
+        # quote lifted from a different provision, cited to the wrong line, passed
+        # clean; and an AI Act quotation sharing a block with an OWASP citation was
+        # checked against the OWASP text and failed for the wrong reason.
         blocks = re.findall(r"\*\*What the standard requires[.:]\*\*(.*?)(?=\n\n|\Z)",
                             original, re.S)
-        # The brief's equivalent block, one line per finding.
         blocks += re.findall(r"^\*\*Standard\*\*(.*?)(?=\n\*\*|\n\n|\Z)", original, re.M | re.S)
         blocks += re.findall(r"^#+ What holds\s*$(.*?)(?=^#+ |\Z)", original, re.M | re.S)
-        # Ledger cells are deliberately NOT scanned for quotations. A one-line Basis
-        # cell legitimately quotes the artifact and cites the standard in the same
-        # breath, and nothing in a single cell distinguishes the two. So the rule is
-        # that a ledger cell cites by link and quotes the standard nowhere; the link
-        # is what verify.py checks there (id and line against the register), and a
-        # pass that wants to quote does it in "What holds", which is scanned.
+        WINDOW = 12
         for para in blocks:
-            if REF_NAME not in para:
+            cites = [(("owasp" if m.group("file").startswith("owasp") else "act"),
+                      int(m.group("line")),
+                      int(m.group("end")) if m.group("end") else int(m.group("line")))
+                     for m in CITE.finditer(para)]
+            if not cites:
                 continue
-            para = re.sub(r"\]\([^)]*\)", "] ", para)
-            for q in re.findall(r"\"([^\"]{20,400})\"", para):
+            # The text a quotation in this block is allowed to have come from.
+            allowed = []
+            for src, a_, b_ in cites:
+                lines_ = src_lines.get(src, [])
+                lo = max(0, a_ - 1 - WINDOW)
+                hi = min(len(lines_), b_ + WINDOW)
+                allowed.extend(hyphen_variants("\n".join(lines_[lo:hi])))
+            para_txt = re.sub(r"\]\([^)]*\)", "] ", para)
+            for q in re.findall(r"\"([^\"]{20,400})\"", para_txt):
                 parts = [x for x in re.split(r"\s*\.\.\.\s*", q) if len(norm(x)) >= 20]
-                missing = [x for x in parts
-                           if not any(fold(x) in v for v in ref_variants)]
+                missing = [x for x in parts if not any(fold(x) in v for v in allowed)]
                 if parts and missing:
-                    fail("misquote", f"{rel}: in a \"What the standard requires\" block, not "
-                                     f"verbatim in the standard: \"{missing[0][:80]}\"")
+                    where = ", ".join(f"{SOURCE_NAME[s]} L{a_}" for s, a_, _ in cites)
+                    fail("misquote", f"{rel}: quoted passage is not within {WINDOW} lines of any "
+                                     f"citation in its own block ({where}): \"{missing[0][:70]}\"")
 
         # 4b UNLINKED CITATION. A citation written as prose ("§L1008", "line 376")
         # resolves for a human reader and is invisible to every other check here,

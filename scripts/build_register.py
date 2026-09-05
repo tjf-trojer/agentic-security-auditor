@@ -41,6 +41,7 @@ REGISTER = [
     ("ASI01-MIT", "owasp", 282, "Mitigation section heading"),
     ("ASI01-UNTRUSTED-INPUT", "owasp", 283, "Treat all natural-language input as untrusted before tool calls"),
     ("ASI01-LEAST-PRIVILEGE", "owasp", 286, "Least privilege plus human approval for high-impact actions"),
+    ("ASI01-LOCK-PROMPTS", "owasp", 288, "Define and lock system prompts so goals and permitted actions are explicit and auditable"),
 
     # ---- ASI02 Tool Misuse and Exploitation ----
     ("ASI02", "owasp", 318, "Category heading"),
@@ -67,6 +68,7 @@ REGISTER = [
     ("ASI04-RUNTIME-LOADING", "owasp", 525, "Runtime loading of external tools and agent personas"),
     ("ASI04-THIRD-PARTY-AGENT", "owasp", 546, "A peer agent used to pivot, leak, or relay instructions"),
     ("ASI04-MIT", "owasp", 575, "Mitigation section heading"),
+    ("ASI04-PROMPT-REVIEW", "owasp", 583, "Prompts and orchestration scripts under version control with peer review; scan for anomalies"),
     ("ASI04-REGISTRIES", "owasp", 578, "Curated registries; block untrusted sources"),
     ("ASI04-GATEKEEPING", "owasp", 579, "Allowlist and pin; verify provenance; auto-reject unverified"),
     ("ASI04-SANDBOX", "owasp", 581, "Sandboxed containers with network or syscall limits"),
