@@ -44,7 +44,7 @@ Copy at [`targets/voltagent-agent-installer.md`](targets/voltagent-agent-install
 This agent installs executable instructions, fetched from a mutable branch reference, onto a path
 every later session on the machine loads, behind a confirmation that shows the operator none of
 the parts that carry the risk. Seven findings, two root causes: nothing verifies what arrives
-(F1, F2, F4), and nothing records or bounds what happened (F3, F7, F8).
+(F1, F2, F4), and nothing records or bounds what happened (F3, F6, F7).
 
 ## In plain terms
 
@@ -57,14 +57,14 @@ part deciding what the downloaded agent may do to your machine is never put in f
 | Category | Verdict | Sev | Basis |
 |---|---|---|---|
 | ASI01 Agent Goal Hijack | **FAIL** | CRITICAL | F2 |
-| ASI02 Tool Misuse and Exploitation | **PARTIAL** | MAJOR | F4, F8 |
+| ASI02 Tool Misuse and Exploitation | **PARTIAL** | MAJOR | F4, F7 |
 | ASI03 Identity and Privilege Abuse | **PASS** | — | Declares no credential; runs as the invoking operator, holding nothing they did not already hold. Meets [ASI03-SCOPED-TOKENS](reference/owasp-top-10-agentic-applications-2026.md#L479 "^ASI03-SCOPED-TOKENS") |
-| ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | CRITICAL | F1, F7 |
+| ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | CRITICAL | F1, F6 |
 | ASI05 Unexpected Code Execution | **PARTIAL** | MAJOR | F4 |
 | ASI06 Memory & Context Poisoning | **FAIL** | CRITICAL | F3 |
 | ASI07 Insecure Inter-Agent Communication | **N/A** | — | Single agent; neither calls nor is called by others. It writes files that *become* agents, which is ASI04 and ASI06, not messaging |
 | ASI08 Cascading Failures | **PASS** | — | Lines 34-39 are short, linear and human-initiated, no step conditioned on a previous inference, so the planner-executor coupling [ASI08-COUPLING](reference/owasp-top-10-agentic-applications-2026.md#L895 "^ASI08-COUPLING") describes cannot arise |
-| ASI09 Human-Agent Trust Exploitation | **FAIL** | MAJOR | F6 |
+| ASI09 Human-Agent Trust Exploitation | **FAIL** | MAJOR | F5 |
 | ASI10 Rogue Agents | **PASS** | — | Invoked interactively per action, no loop or schedule, operator present throughout, so there is no unattended run for the drift [ASI10-DRIFT](reference/owasp-top-10-agentic-applications-2026.md#L1071 "^ASI10-DRIFT") describes |
 
 ## Findings
@@ -93,19 +93,19 @@ part deciding what the downloaded agent may do to your machine is never put in f
 **Gap** every described task is served by `WebFetch`, `Write`, `Read` and `Glob`; line 73 routes the fetch through a shell and silences it by preference, not necessity. An agent whose purpose is ingesting third-party content then holds that shell on the host doing the ingesting
 **Ask** which described capability needs `Bash` that `WebFetch` and `Write` cannot serve, and if none, where would it have executed?
 
-### F6 · MAJOR · ASI09 · The gate shows the operator the one harmless part
+### F5 · MAJOR · ASI09 · The gate shows the operator the one harmless part
 **Artifact** line 70 "Always confirm before installing/uninstalling"; line 71 "Show the agent's description before installing if possible"
 **Standard** [ASI09-RISK-SUMMARY](reference/owasp-top-10-agentic-applications-2026.md#L1030 "^ASI09-RISK-SUMMARY") requires a "plain-language risk summary (not model-generated rationales)"; [ASI09-PREVIEW](reference/owasp-top-10-agentic-applications-2026.md#L1044 "^ASI09-PREVIEW") requires separating preview from effect with expected side effects shown
 **Gap** the gate is real, which is why ASI02 is PARTIAL. But what it surfaces is the `description` field. The `tools:` grant, the instruction body, the source commit and the install scope are all absent from the approval moment, and "if possible" makes even that discretionary
 **Ask** at the moment of confirmation, does the operator see the `tools:` line, the source commit and the install scope?
 
-### F7 · MINOR · ASI04 · Nothing records what was installed, from where, or when
+### F6 · MINOR · ASI04 · Nothing records what was installed, from where, or when
 **Artifact** no logging anywhere; line 39 confirms success to the screen, which is not a record
 **Standard** [ASI09-IMMUTABLE-LOGS](reference/owasp-top-10-agentic-applications-2026.md#L1025 "^ASI09-IMMUTABLE-LOGS") "Keep tamper-proof records of user queries and agent actions"; [ASI04-RECHECK](reference/owasp-top-10-agentic-applications-2026.md#L587 "^ASI04-RECHECK") on monitoring lineage
 **Gap** after a bad install nobody can reconstruct which upstream state arrived. With F1 unresolved this compounds: the version is unpinned *and* unrecorded, which is what turns F1 from recoverable into not
 **Ask** where would an operator look to find which commit a given installed agent came from?
 
-### F8 · MINOR · ASI02 · Uninstall deletes under a gate written for install
+### F7 · MINOR · ASI02 · Uninstall deletes under a gate written for install
 **Artifact** capability 6 at line 18; line 70 covers both operations in one clause; no workflow section describes uninstall, unlike browse, install and search at lines 28-44
 **Standard** [ASI02-CONFIRM](reference/owasp-top-10-agentic-applications-2026.md#L384 "^ASI02-CONFIRM") requires confirmation for destructive actions and "a pre-execution plan or dry-run diff before final approval"
 **Gap** delete is the only irreversible operation here and the only capability with no described procedure: no statement of what is shown, what scope is targeted, or whether a glob could match more than one file
@@ -114,10 +114,10 @@ part deciding what the downloaded agent may do to your machine is never put in f
 ## Fix order
 
 1. **Pin the source** (F1). Everything else is harder to reason about while the artifact under discussion can change between reading and writing.
-2. **Inspect before writing** (F2, F6 together). The inspection step and the thing the approval screen should show are the same work.
-3. **Record the install** (F7). Cheap, and it is what makes F1 recoverable if it recurs.
+2. **Inspect before writing** (F2, F5 together). The inspection step and the thing the approval screen should show are the same work.
+3. **Record the install** (F6). Cheap, and it is what makes F1 recoverable if it recurs.
 4. **Drop `Bash`, or say what needs it** (F4). Narrowing the grant removes the sandbox question rather than answering it.
-5. **Give uninstall its own gate** (F8).
+5. **Give uninstall its own gate** (F7).
 
 ## Scope and limits
 
@@ -157,7 +157,7 @@ Condensed into the brief format here; the reasoning is the run's own.
 
 ## Verdict
 
-**Do not deploy.** 0 pass, 6 fail, 4 partial, 0 not applicable; 2 critical, 4 major, 1 minor.
+**Do not deploy.** 0 pass, 6 fail, 4 partial, 0 not applicable; 2 critical, 3 major, 1 minor.
 
 This agent is the safety control for other autonomous loops. It decides when one has stalled,
 when to pause it, and when it may resume. Every signal that decision rests on is produced by the

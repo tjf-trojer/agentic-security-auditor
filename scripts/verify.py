@@ -260,6 +260,34 @@ def main(argv: list[str]) -> int:
                     fail("skipped", f"{rel} [{title}]: {code} has no verdict")
                 elif seen[code] > 1:
                     fail("skipped", f"{rel} [{title}]: {code} ruled on {seen[code]} times")
+            # 6b UNSOUND SEVERITY COUNT and 6c FINDING NUMBERING. Both classes
+            # shipped in this repository undetected: a severity line that did not
+            # match its own findings, and an audit whose headings skipped F5 after
+            # two findings were merged. Check 6 only ever validated the verdict
+            # arithmetic, so both passed clean.
+            sev_found = Counter(re.findall(r"^#+ F\d+ *[·・] *(CRITICAL|MAJOR|MINOR)\b",
+                                           a, re.M))
+            flat_a = re.sub(r"\s+", " ", a)
+            sev_stated = re.search(r"(\d+) critical, (\d+) major, (\d+) minor", flat_a)
+            if sev_stated and sum(sev_found.values()):
+                want = tuple(int(x) for x in sev_stated.groups())
+                got = (sev_found["CRITICAL"], sev_found["MAJOR"], sev_found["MINOR"])
+                if want != got:
+                    fail("severity", f"{rel} [{title}]: states {want[0]} critical, {want[1]} major, "
+                                     f"{want[2]} minor; the findings show {got[0]}/{got[1]}/{got[2]}")
+            nums = [int(n) for n in re.findall(r"^#+ F(\d+) [·・]", a, re.M)]
+            if nums:
+                expected = list(range(1, len(nums) + 1))
+                if sorted(nums) != expected:
+                    fail("numbering", f"{rel} [{title}]: finding headings are F{sorted(nums)}, "
+                                      f"expected F1..F{len(nums)} with no gaps")
+                referenced = {int(n) for n in re.findall(r"\bF(\d+)\b", a)}
+                missing = sorted(referenced - set(nums))
+                if missing:
+                    fail("numbering", f"{rel} [{title}]: refers to "
+                                      f"{', '.join('F'+str(m) for m in missing)} "
+                                      f"but no such finding exists")
+
             c = Counter(v for _, v in rows)
             # Tolerate a line wrap inside the arithmetic: a writer cannot control
             # where their editor breaks the line, and failing them for it produced

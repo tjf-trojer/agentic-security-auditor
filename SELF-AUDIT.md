@@ -22,7 +22,7 @@ which is the check doing its job on its own author.)
 ## Verdict
 
 **Usable, with one exposure stated plainly.** 2 pass, 0 fail, 3 partial, 5 not applicable;
-0 critical, 2 major, 1 minor.
+0 critical, 1 major, 1 minor. Two findings; the ASI01 and ASI09 rows share F1.
 
 The auditor reads agent definitions written by other people. That is untrusted content by
 definition, and it reads them in the same context as its own rules, which is the structural flaw

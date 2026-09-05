@@ -16,7 +16,7 @@ taste or your experience. Read [identity.md](identity.md) before your first audi
 | Establish what you are holding, before findings | [method/scope-gate.md](method/scope-gate.md) | it runs first, every time |
 | Find the evidence for one ASI category | [method/detection-probes.md](method/detection-probes.md) | navigation only, never cited |
 | Cite or quote a provision | [reference/](reference/) | [provisions.md](provisions.md) for the id |
-| See a worked audit | [examples.md](examples.md) | four, one a clean-room run |
+| See a worked audit | [examples.md](examples.md) | three real third-party agents, two clean-room |
 | Check this repo's own claims | `make verify` | [scripts/verify.py](scripts/verify.py) |
 | Check an audit you just wrote | `python3 scripts/verify.py <file>` | works on any file, inside the repo or not |
 | Understand why the folder is shaped this way | [decisions/](decisions/) | one decision per file |
@@ -36,7 +36,7 @@ taste or your experience. Read [identity.md](identity.md) before your first audi
 ```
 identity.md    who the auditor is and which standard it enforces
 rules.md       the seven rules: citation, ledger, sweep, severity, output, limits
-examples.md    four worked audits against the artifacts in targets/
+examples.md    three worked audits of real third-party agents
 provisions.md  the register: every citable provision, its id, its line, its words
 reference/     THE STANDARD, verbatim. Nothing here was written by this repo's author
 method/        the working layer: scope gate, detection probes. No citation authority
