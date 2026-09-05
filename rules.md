@@ -310,8 +310,14 @@ this is style; it is the difference between a checked audit and an unchecked one
 | A quoted provision | on a `**Standard**` line in the brief, or inside `**What the standard requires.**` or `What holds` in the long form, and at least 20 characters, or the check skips it |
 | An audit in a multi-audit file | under a top-level `# Audit <n>` heading |
 
-Run `python3 scripts/verify.py <your-audit.md>` before you deliver. It checks the citations, the
-quotations, the ten-category coverage and the arithmetic, on any file, inside this repo or not.
+**If you have a shell**, run `python3 scripts/verify.py <your-audit.md>` before you deliver: it
+checks the citations, the quotations, the ten-category coverage and the arithmetic, on any file,
+inside this repo or not.
+
+**If you do not** — a Claude project has no shell — then the table above is your checklist, and you
+verify by hand: for every citation, open the cited line in `reference/` and confirm it says what
+you claimed. That is the same check, done by reading. The tooling makes it fast; it is not what
+makes it true.
 
 **Lead with meaning.** Codes go in the citation line, not stacked mid-sentence.
 

@@ -80,6 +80,15 @@ is what a definition commits to in writing.
 Create a Claude project, add this folder to its knowledge (or open the folder in Claude Code),
 paste your agent definition and say **"Audit this agent definition."**
 
+**In a Claude project**, the five files the brief asks for are all you need: `identity.md`,
+`rules.md`, `examples.md`, `reference/` and this README. `provisions.md` and `method/` make it
+sharper. You can leave the PDF out of the knowledge base, since the markdown carries the same text
+and the PDF is there so a reader can check the transcription. `scripts/` and the Makefile will not
+run there and are not needed: they verify this repository's claims, they do not perform audits.
+`rules.md` tells the auditor how to verify by hand when there is no shell.
+
+**In Claude Code**, open the folder and `CLAUDE.md` routes automatically, and the tooling works.
+
 **What to feed it:** the agent's **instructions and its tools**. A `.claude/agents/*.md` file, an
 `AGENTS.md`, a Cursor rule, a system prompt plus a tool list, an n8n or LangGraph node with its
 wiring described, or a rough paragraph describing what you told it to do and what you let it

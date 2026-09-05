@@ -3,8 +3,12 @@
 _Last updated: 2026-09-05_
 
 Four audits, chosen to show the auditor discriminating rather than complaining. Three are real
-artifacts written by other people and shipped in public. The fourth is synthetic, and labelled as
-such, because it reaches the far end of the range the real ones do not.
+artifacts written by other people and shipped in public. One is synthetic, and labelled as such,
+because it reaches the far end of the range the real ones do not.
+
+Four rather than the usual two or three for one reason: an auditor that only ever fails things has
+not been shown to discriminate. Audit 2 mostly passes and argues five categories as inapplicable;
+Audit 3 fails all ten. The pair is the demonstration, and neither half means much alone.
 
 Audits 1 to 3 were written by hand while building this folder. **Audit 4 was not:** it is the
 output of a clean-room run, a fresh session given only this repository and an unseen target, with
