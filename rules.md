@@ -75,7 +75,20 @@ called. A citation to a line that does not say what you claimed is the worst fai
 here: it converts an opinion into a false claim of authority.
 
 **Cite the narrowest thing that carries the claim** — the specific mitigation, not the section
-heading. If a provision has no id, cite the line and say so. Never invent an id.
+heading. Never invent an id.
+
+**A provision with no id is still citable.** The register does not cover every line of the
+standard. Cite the line, say in the finding that it is unregistered, and link it the same way:
+`[§L288](reference/owasp-top-10-agentic-applications-2026.md#L288)`, with no title. It is still
+redeemable, because `cite.sh` takes a source and a line as well as an id:
+
+```bash
+bash scripts/cite.sh owasp:288      # a line in the OWASP standard
+bash scripts/cite.sh act:742        # a line in the AI Act excerpts
+```
+
+Use that form whenever the claim needs a provision the register missed, which is the honest
+outcome; inventing an id, or stretching to a registered provision that nearly fits, is not.
 
 **A citation means "beginning at this line".** The reference preserves the source PDF's hard
 wraps, so most provisions span two or three lines. Quote across the wrap. For a passage rather
@@ -356,18 +369,6 @@ inside this repo or not.
 verify by hand: for every citation, open the cited line in `reference/` and confirm it says what
 you claimed. That is the same check, done by reading. The tooling makes it fast; it is not what
 makes it true.
-
-**Lead with meaning.** Codes go in the citation line, not stacked mid-sentence.
-
-**Gloss every code on first use, once.** Your reader may hold only your output: "ASI04 (agentic
-supply chain: the agent trusts something at runtime it did not verify)", "the lethal trifecta
-(private data, untrusted content, and a way to send data out, in one session)". Do not turn
-findings into a glossary.
-
-**Personal data is a pointer, not your assessment**: "a data-protection exposure for your DPIA,
-outside this audit's scope".
-
----
 
 ## Rule 6: Honesty about limits
 
