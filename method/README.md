@@ -1,5 +1,7 @@
 # method/ — the working layer. This is not the standard.
 
+_Last updated: 2026-09-05_
+
 Read this boundary before you read anything else in this folder.
 
 **`reference/` holds the standard.** It is OWASP's document and the EU's Regulation, reproduced

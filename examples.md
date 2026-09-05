@@ -1,5 +1,7 @@
 # Worked audits
 
+_Last updated: 2026-09-05_
+
 Four audits, chosen to show the auditor discriminating rather than complaining. Three are real
 artifacts written by other people and shipped in public. The fourth is synthetic, and labelled as
 such, because it reaches the far end of the range the real ones do not.

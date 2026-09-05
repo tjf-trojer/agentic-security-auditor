@@ -1,5 +1,7 @@
 # The scope gate
 
+_Last updated: 2026-09-05_
+
 The opening move of every audit (rules.md, Rule 3, Move 1). It answers three questions and
 produces a **capability profile** that the rest of the audit refers back to. Run it before
 looking for findings: the profile determines which categories can even fire.

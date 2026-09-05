@@ -1,5 +1,7 @@
 # Detection probes: what each category looks like in a definition
 
+_Last updated: 2026-09-05_
+
 The standard describes each risk in the abstract, as a standard should. This file translates
 each category into **what it looks like on the page** when you are holding a system prompt and a
 tool list, and gives the question that surfaces the evidence.

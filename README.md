@@ -106,6 +106,7 @@ organisation cannot defend when someone asks who decided it was safe.
 ## Layout
 
 ```
+CLAUDE.md      The router: what to read for which task, and the three hard rules
 identity.md    Who the auditor is and which standard it enforces
 rules.md       How it audits: the sweep, the ledger, severity, output format
 examples.md    Four worked audits, one of them a clean-room run on an unseen target
