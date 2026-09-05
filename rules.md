@@ -103,6 +103,13 @@ the pass is what someone will rely on.
 **An N/A must be argued.** "Single agent that neither calls nor is called by others" is reasoned.
 "Not applicable" is a category you skipped.
 
+**Owning something is not pinning it.** A file the operator controls, at a fixed path inside
+their own repository, does not raise ASI04 at all: the category is about what an agent composes at
+runtime *that it does not own*. That is a reasoned N/A. It is not a PASS citing
+`ASI04-PIN`, which asks for a content hash and a commit id that a relative path does not provide.
+Crediting ownership as pinning inflates the ledger and misdescribes the artifact's actual
+protection, which is the more damaging half.
+
 **PASS and N/A are separated by whether the artifact decided anything.** Both can describe an
 artifact that cannot fail a category, and the difference is where the safety comes from. A
 **written exclusion** the author chose is a PASS: `tools: Read, Grep, Glob` is a closed allowlist
