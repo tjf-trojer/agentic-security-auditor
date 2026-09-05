@@ -44,6 +44,13 @@ outside the standard", marked as judgment, or it goes nowhere.
 And it reports **pass as well as fail**. Every audit opens with all ten categories and a verdict
 on each, before it reaches the failures. An audit that lists only problems is a complaint.
 
+One honest qualification on that, because it is the first thing you will notice on a real target.
+A pass has to *name a control the artifact contains*, so a terse agent definition that is simply
+silent about identity, logging and stopping will collect few passes and a thin "What holds". That
+is a real result rather than a defect: what this ledger measures is what a definition commits to
+in writing. Some artifacts earn several passes and the worked audits include one that does. Many
+will not, and the auditor is built to say so rather than to manufacture balance.
+
 ---
 
 ## Quick start
@@ -118,6 +125,22 @@ and commit ID."* Then open the artifact the finding is about, in
 [`targets/`](targets/), at the line the finding quotes. Line 24 of
 `voltagent-agent-installer.md` is a raw GitHub URL with `/main/` in the path.
 
+**Two practical notes for doing this on github.com.**
+
+*Line anchors need `?plain=1`.* GitHub renders `.md` files, and rendered markdown has no line
+numbers, so a `#L589` link lands at the top of the file rather than at line 589. Append
+`?plain=1` to see the numbered source:
+[the ASI04 pinning provision at line 589](reference/owasp-top-10-agentic-applications-2026.md?plain=1#L589).
+The links in this repository are written as plain relative links because those resolve correctly
+in an editor and after `git clone`, which is how the folder is meant to be used. If you are
+checking the work in a browser, add `?plain=1`.
+
+*Read on to the end of the sentence.* The transcription preserves the source PDF's hard line
+wraps, so most provisions run across two or three lines. A citation points at the line where the
+provision **begins**, not at a self-contained sentence. Line 589 happens to fit on one line; line
+1030 ends mid-phrase and continues on 1031. This is a property of faithful transcription rather
+than sloppy citation: reflowing the text would have meant altering the standard.
+
 Now you can decide for yourself whether the finding is right. That is the only test of an auditor
 that means anything, and every finding in this repository is built to survive it.
 
@@ -129,7 +152,8 @@ Please open an issue.
 ```
 identity.md      Who the auditor is and which standard it enforces
 rules.md         How it audits: the sweep, the ledger, severity, output format
-examples.md      Three worked audits against the artifacts in targets/
+examples.md      Four worked audits against the artifacts in targets/, one of them
+                 a clean-room run on an unseen target
 reference/       THE STANDARD. OWASP's text and the PDF. Plus the seven EU AI Act
                  articles the auditor may cite, when the scope gate says it may
 method/          The working layer: scope gate, detection probes. Written by me,
@@ -158,6 +182,8 @@ tier.
 
 **It is not a penetration test and not legal advice.** It is a design review against a published
 standard.
+
+**A short definition will score badly.** See the qualification under "What it is not".
 
 **OWASP's ten categories are not everything that can be wrong with an agent.** When something is
 concerning and no provision reaches it, it goes in "Observations outside the standard", marked as

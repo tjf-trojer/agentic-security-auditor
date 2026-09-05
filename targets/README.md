@@ -3,16 +3,17 @@
 These are the inputs. They are here so that a reader can hold the audit and the artifact side by
 side and check that every quoted line says what the finding claims it says.
 
-Two are real agent definitions written by other people and published. One is synthetic and says
-so on its face.
+Three are real agent definitions written by other people and published. One is synthetic and
+says so on its face.
 
 | File | Origin | Licence | Audited in |
 |---|---|---|---|
 | [`voltagent-agent-installer.md`](voltagent-agent-installer.md) | `categories/09-meta-orchestration/agent-installer.md` from [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents), pinned at commit [`beb9a0f`](https://github.com/VoltAgent/awesome-claude-code-subagents/blob/beb9a0f0d74a222f5e24aeb390e6d7c3005d9e27/categories/09-meta-orchestration/agent-installer.md) | MIT | Audit 1 |
 | [`eu-ai-act-map-agents.md`](eu-ai-act-map-agents.md) | `AGENTS.md` from [tjf-trojer/eu-ai-act-map](https://github.com/tjf-trojer/eu-ai-act-map) | See that repository | Audit 2 |
+| [`voltagent-it-ops-orchestrator.md`](voltagent-it-ops-orchestrator.md) | `categories/09-meta-orchestration/it-ops-orchestrator.md` from [VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents), pinned at commit [`beb9a0f`](https://github.com/VoltAgent/awesome-claude-code-subagents/blob/beb9a0f0d74a222f5e24aeb390e6d7c3005d9e27/categories/09-meta-orchestration/it-ops-orchestrator.md) | MIT | Audit 4 |
 | [`ops-copilot-synthetic.md`](ops-copilot-synthetic.md) | Written for this repository | MIT, with the rest of this repo | Audit 3 |
 
-## Why these three
+## Why these four
 
 **`agent-installer` is the centrepiece** because it is a real, shipped, permissively licensed
 agent whose job is to install other agents. It fetches third-party definitions from a mutable
@@ -27,16 +28,23 @@ case rather than padding the ledger. It is also the author's own published work,
 public with its gaps named, which is the cheapest available evidence that the auditor is not
 tuned to flatter its owner.
 
-**`ops-copilot` is synthetic and labelled as such.** Between them the two real artifacts leave
-ASI03, ASI07, ASI08 and ASI10 untested, because neither holds a broad credential, spawns
-sub-agents, runs unattended, or chains steps. Rather than pretend the standard was exercised in
-full, this file supplies an artifact that fails all ten, so the auditor's behaviour at the far
-end of the range is visible too.
+**`it-ops-orchestrator` is the multi-agent case.** A real coordinator that decomposes IT
+operations work, dispatches it to eight named specialists, and merges what comes back into a
+single answer, across Active Directory, Azure and M365. It is the only target here where ASI07
+(inter-agent communication) genuinely fires rather than being reasoned away, and it is the one
+whose findings turn on trust between agents rather than trust in fetched content. One of its own
+worked examples routes an operation that disables user accounts.
+
+**`ops-copilot` is synthetic and labelled as such.** The three real artifacts still leave the far
+end of the range untested: none of them holds administrator credentials or runs unattended in a
+continuous loop. Rather than pretend the standard was exercised in full, this file supplies an
+artifact that fails all ten, so the auditor's behaviour against a maximally bad definition is
+visible too.
 
 ## A note on auditing a live third-party artifact
 
-`agent-installer` is pinned to commit `beb9a0f` (2026-09-04) and Audit 1 is an audit of that
-state. The upstream file may have changed since. That is not incidental: it is the subject of
+The two VoltAgent artifacts are pinned to commit `beb9a0f` (2026-09-04), and Audits 1 and 4 are
+audits of that state. The upstream file may have changed since. That is not incidental: it is the subject of
 Audit 1's first finding, which is that the artifact itself resolves its installs against a moving
 `main` reference. The pin here is the discipline the audited artifact lacks, and pinning it was
 the only way to write an audit whose citations stay true.

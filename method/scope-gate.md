@@ -34,6 +34,24 @@ tools; multi-agent (one agent delegating to others); agent-spawning (agents that
 where credentials and trust inherit down a mesh). Spawning and multi-agent designs pull ASI03,
 ASI04 and ASI07 forward, and make ASI08 live rather than theoretical.
 
+### When the declared behaviour and the tool grant disagree
+
+Common, and it changes several verdicts, so resolve it here rather than mid-sweep. A definition
+often *declares* delegation in prose ("dispatch the work to the specialist", "spawn a helper")
+while its `tools:` line contains no delegation mechanism at all. Or the reverse: a narrow stated
+purpose sitting on top of a broad grant.
+
+**Audit what the artifact declares, and record the conflict as a judgment call.** A definition
+that describes delegation across twenty lines has declared delegation, and a reader adopting the
+file will get whatever the surrounding harness provides. Auditing only the tool line would let an
+artifact escape the categories it spends most of its text describing.
+
+Two things follow. Name the conflict explicitly in the capability profile, because it bounds
+everything after it. And put it first in the judgment calls, with both readings and what changes
+under each, because the owner is the only one who can say what their runtime actually does when
+the agent names a specialist. Note that the reverse case rarely rescues an artifact: a narrow
+purpose does not remove a broad grant, and the grant is what an attacker gets.
+
 ---
 
 ## Question 2: What can it do without a human confirming the action?

@@ -1,8 +1,14 @@
 # Worked audits
 
-Three audits, chosen to show the auditor discriminating rather than complaining. Two are real
-artifacts written by other people and shipped in public. The third is synthetic, and labelled as
-such, because it reaches categories the real ones cannot.
+Four audits, chosen to show the auditor discriminating rather than complaining. Three are real
+artifacts written by other people and shipped in public. The fourth is synthetic, and labelled as
+such, because it reaches the far end of the range the real ones do not.
+
+Audits 1 to 3 were written by hand while building this folder. **Audit 4 was not:** it is the
+output of a clean-room run, a fresh session given only this repository and an unseen target, with
+no knowledge of the other audits. Its thirty-eight citations were checked line by line afterwards
+and all resolved. It is here because worked examples written by an auditor's own author
+demonstrate a format, not that the format works.
 
 Every artifact audited here is in [`targets/`](targets/), so you can read the input beside the
 output. Every citation points into
@@ -14,6 +20,7 @@ by line, so you can open the provision and check that it says what the finding c
 | 1 | [`voltagent-agent-installer.md`](targets/voltagent-agent-installer.md) | Real, MIT, third party | 3 pass, 4 fail, 2 partial, 1 N/A |
 | 2 | [`eu-ai-act-map-agents.md`](targets/eu-ai-act-map-agents.md) | Real, third party | 4 pass, 1 fail, 1 partial, 4 N/A |
 | 3 | [`ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md) | Synthetic | 0 pass, 10 fail, 0 partial, 0 N/A |
+| 4 | [`voltagent-it-ops-orchestrator.md`](targets/voltagent-it-ops-orchestrator.md) | Real, MIT, third party. Clean-room run | 0 pass, 9 fail, 1 partial, 0 N/A |
 
 ---
 ---
@@ -543,3 +550,240 @@ three systems has no gate anywhere along it.
 
 **For the owner.** What is the narrowest credential each listed task actually requires, and why
 does any sub-agent hold the parent's?
+
+---
+---
+
+# Audit 4: `it-ops-orchestrator`
+
+**Artifact.** `it-ops-orchestrator`, from VoltAgent/awesome-claude-code-subagents, commit
+`beb9a0f`, MIT licensed. Copy at [`targets/voltagent-it-ops-orchestrator.md`](targets/voltagent-it-ops-orchestrator.md).
+
+**Standard.** OWASP Top 10 for Agentic Applications, Version 2026 (December 2025).
+
+**Date of audit.** 2026-09-05.
+
+**How this audit was produced, and why that matters.** The three audits above were written by
+hand while building the folder, which makes them demonstrations of the format rather than
+evidence that it works. This one was not. It is the output of a clean-room run: a fresh session
+given only this repository and this target, with no knowledge of the other audits and no
+involvement from the author. Its citations were then checked line by line, and all thirty-eight
+resolved. It is included in that form, condensed but not rewritten, because an auditor whose
+only worked examples were written by its own author has demonstrated a format and nothing else.
+
+**Why this target.** Audits 1 and 2 are single agents, so ASI07 is N/A in one and N/A in the
+other. This is the multi-agent case: a coordinator that decomposes work, dispatches it to eight
+named specialists, and merges what returns into one answer.
+
+Condensed to the ledger, the three findings that turn on multi-agent structure, and the judgment
+call that governs the rest. The full output format is demonstrated twice above.
+
+## Audit summary
+
+No. A coordinator with shell, write and edit access sits in front of Windows directory and cloud
+administration, decomposes tasks, dispatches them to eight specialists, and merges what comes
+back into a single answer. It names no gate, no identity, no log and no stop anywhere in its 60
+lines, and one of its own worked examples routes an operation that disables user accounts.
+
+Ledger: **0 pass, 9 fail, 1 partial, 0 not applicable.** Findings: 3 critical, 7 major, 1 minor.
+Several share one root cause, which is that the definition names no human at any point; the
+critical rank goes to the shortest paths from an ordinary mistake to a directory change.
+
+## Capability profile
+
+Declared multi-agent orchestrator, single agent by tool grant. Line 4 grants `Read, Write, Edit,
+Bash, Glob, Grep`. Lines 28 to 30 declare the loop: decompose, "Assign each sub-problem to the
+correct agent", "Merge responses into a coherent unified solution". Lines 54 to 60 name eight
+specialists. Operating domain, lines 15 to 20: PowerShell, .NET, Active Directory, DNS, DHCP,
+GPO, on-premises Windows, Azure, M365, Graph API.
+
+The definition places **no human in the path at any point**. The only escalation it names (line
+60) routes escalated tasks to two further agents, so an unresolved question never leaves the
+mesh. Consequential actions reachable with no human confirming: arbitrary shell, arbitrary file
+writes and edits, and dispatch of infrastructure work. Irreversible: file overwrite via `Edit`,
+and whatever the dispatched implementation carries out; line 41 names disabling AD accounts.
+
+**Declared behaviour and tool grant disagree**, and it bounds everything below. The artifact
+declares delegation across roughly twenty lines while line 4 contains no delegation mechanism.
+Audited as declared, per [`method/scope-gate.md`](method/scope-gate.md); see the judgment call.
+
+**The EU AI Act does not bind.** Internal IT operations tooling, not an Annex III use, and the
+only natural person it interacts with is the administrator who invoked it, for whom the artificial
+nature of the interaction is obvious within the Art. 50(1) exception. Account lifecycle
+administration is not an Annex III employment or worker-management decision and is not stretched
+into one here.
+
+**What could not be seen.** None of the eight specialists was supplied. This audit covers the
+coordinator only, which is itself Finding 8.
+
+## Conformity ledger
+
+| Category | Verdict | Basis |
+|---|---|---|
+| ASI01 Agent Goal Hijack | **FAIL** | Reads content it does not control and reaches a shell in the same loop, with nothing marking any input untrusted |
+| ASI02 Tool Misuse and Exploitation | **FAIL** | Line 31 asserts enforcement of "safety, least privilege, and change review workflows" but names no mechanism, and no tool on line 4 carries a scope or a gate |
+| ASI03 Identity and Privilege Abuse | **FAIL** | Finding 7 |
+| ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | Finding 8 |
+| ASI05 Unexpected Code Execution | **FAIL** | Declared output is executable material for Windows infrastructure; the same definition holds a general-purpose shell, with no sandbox named and generation not separated from execution |
+| ASI06 Memory & Context Poisoning | **FAIL** | Line 36 declares a shared cross-agent context whose stated purpose is consistency, so a planted assertion propagates deliberately. Nothing validates what enters it |
+| ASI07 Insecure Inter-Agent Communication | **FAIL** | Finding 2 |
+| ASI08 Cascading Failures | **PARTIAL** | Finding 10. A checkpoint of the shape the standard names does exist at lines 43 and 51, but it is illustration rather than rule and is absent from Example 2 |
+| ASI09 Human-Agent Trust Exploitation | **FAIL** | No approval step anywhere, and the merge on line 30 strips the provenance a reader would need |
+| ASI10 Rogue Agents | **FAIL** | No iteration cap, no budget ceiling, no kill switch, no named human, and line 28 makes ambiguity a trigger for more autonomous decomposition rather than for a stop |
+
+Zero passes. Under Rule 2 a pass must name a control, and none of the four things that come
+closest (line 31's enforcement claim, the review hops at lines 43 and 51, line 37's boundary
+highlighting, line 44's "Implementation plan" rather than "Implementation") meets what the
+standard prescribes for its category. Three are dealt with below instead.
+
+## Findings
+
+### Finding 2. Nothing authenticates what the specialists send back, and their answers become the answer. [CRITICAL]
+
+**Where, in the artifact.** Lines 29 and 30: "Assign each sub-problem to the correct agent" and
+"Merge responses into a coherent unified solution". Lines 54 to 60 name eight specialists it
+delegates to and receives from. No line states what a specialist is trusted to assert, what
+validates a response, or what a response must look like.
+
+**What the standard requires.** ASI07 (insecure inter-agent communication: messages between
+agents that nothing verifies) fires when exchanges "lack proper authentication, integrity, or
+semantic validation" ([§L780](reference/owasp-top-10-agentic-applications-2026.md#L780)). The
+mitigations require per-agent credentials and mutual authentication
+([§L823](reference/owasp-top-10-agentic-applications-2026.md#L823)), signed messages validated
+"for hidden or modified natural-language instructions"
+([§L826](reference/owasp-top-10-agentic-applications-2026.md#L826)), and "signed agent cards and
+continuous verification before accepting discovery or coordination messages"
+([§L848](reference/owasp-top-10-agentic-applications-2026.md#L848)).
+
+**The gap.** The artifact's entire value proposition is trusting eight other agents and speaking
+with one voice on their behalf. A response from `ad-security-reviewer` saying "this is safe" is
+accepted on the strength of the name in the routing table. There is no schema, no signature, no
+provenance tag, and after the merge on line 30 there is not even attribution of which specialist
+said what. A forged or simply wrong safety validation at line 43 is indistinguishable from a real
+one at the point where it matters.
+
+**For the owner.** What does `ad-security-reviewer` have to return before the orchestrator treats
+a destructive operation as validated, and what would make the orchestrator reject that response?
+
+### Finding 7. The definition delegates without ever saying what it acts as, in a domain where that is the whole question. [MAJOR]
+
+**Where, in the artifact.** No identity, credential, token, service account or scope statement
+appears anywhere in the 60 lines. Lines 17 and 18 name the reach: "AD, DNS, DHCP, GPO, on-prem
+Windows" and "Azure, M365, Graph API". Lines 29 and 36 pass work and context down to specialists
+with no statement of what travels with it. Line 31 claims "least privilege" as an outcome.
+
+**What the standard requires.** ASI03 (identity and privilege abuse: an agent acting with more
+authority than its task needs) names "Un-scoped Privilege Inheritance" as its first vulnerability,
+arising "when a high-privilege manager delegates tasks without applying least-privilege scoping
+... passing its full access context"
+([§L436](reference/owasp-top-10-agentic-applications-2026.md#L436)), and the Confused Deputy case
+where "agents often trust internal requests by default"
+([§L445](reference/owasp-top-10-agentic-applications-2026.md#L445)). Its mitigations require
+short-lived, narrowly scoped, task-bound tokens
+([§L479](reference/owasp-top-10-agentic-applications-2026.md#L479)) and, directly on point,
+"Prevent privilege inheritance across agents unless the original intent is re-validated"
+([§L500](reference/owasp-top-10-agentic-applications-2026.md#L500)).
+
+**The gap.** This artifact is the high-privilege manager of §L436 in structure: it sits above
+eight specialists and hands work down. It does not scope what goes down with the work, does not
+state what it authenticates as, and does not say whether a specialist re-validates the original
+request or accepts it as internal and therefore trusted. Silence is not neutral here; §L436
+describes un-scoped inheritance as the default that silence produces. Cannot verify from the
+definition what credentials the runtime holds. The test that settles it: enumerate the effective
+permissions of the identity the orchestrator and each specialist run under. If that identity
+carries domain or tenant administration, this finding is critical rather than major.
+
+**For the owner.** What identity does the orchestrator authenticate as, what does a specialist
+receive along with a dispatched sub-problem, and where is the original request re-validated
+before a specialist acts on it?
+
+### Finding 10. The one checkpoint in the design is a convention in two examples, not a rule. [MAJOR]
+
+**Where, in the artifact.** Line 43 places `ad-security-reviewer` between enumeration and
+implementation planning; line 51 places `powershell-security-hardening` before implementation.
+Example 2 (lines 47 and 48) routes architecture and script automation with no review hop at all.
+The "Orchestration Behaviors" section at lines 28 to 31, which is where a rule would live, does
+not require a review step; it appears only inside the illustrative examples.
+
+**What the standard requires.** ASI08 (cascading failures: one early error propagating through
+everything built on it) names "Planner-executor coupling: A hallucinating or compromised planner
+emits unsafe steps that the executor automatically performs without validation"
+([§L895](reference/owasp-top-10-agentic-applications-2026.md#L895)). Its mitigations require
+separating planning and execution via an external policy engine
+([§L944](reference/owasp-top-10-agentic-applications-2026.md#L944)), "Checkpoints, governance
+agents, or human review for high risk before agent outputs are propagated downstream"
+([§L946](reference/owasp-top-10-agentic-applications-2026.md#L946)), and "blast-radius guardrails
+such as quotas, progress caps, circuit breakers between planner and executor"
+([§L949](reference/owasp-top-10-agentic-applications-2026.md#L949)).
+
+**The gap.** This is the one category where the artifact has something, and a governance agent in
+the path is a control shape the standard names by that word at §L946, which is why ASI08 is
+PARTIAL rather than FAIL. What it does not survive is load. It is written into two worked examples
+rather than into the behaviours section, it is absent from the third, nothing states what the
+reviewer must return or what happens if it objects, and there is no quota, progress cap or circuit
+breaker anywhere. Line 28's instruction to decompose ambiguous problems means an initial
+misclassification, the earliest and least visible error in the chain, is the one thing no reviewer
+in this design is positioned to catch: every specialist downstream works the sub-problem it was
+handed rather than questioning the split.
+
+**For the owner.** Is the security-review hop a rule or an example, and if step one routes a task
+to the wrong domain expert, what in this design notices before the implementation plan is
+produced?
+
+## Judgment calls
+
+**Whether this is an orchestrator or an advisor, and the definition does not say.** The artifact
+declares delegation in its own voice: "dispatch the work to the most appropriate specialists"
+(lines 9 and 10), "Assign each sub-problem to the correct agent" (line 29), "Merge responses"
+(line 30). But the tool grant on line 4 contains no delegation mechanism at all. Two readings.
+First: delegation happens through a host mechanism the definition does not state, in which case
+ASI03, ASI07 and ASI08 are live exactly as scored. Second: nothing is ever dispatched, the routing
+is advice a human enacts by hand, in which case ASI07 collapses toward a reasoned N/A and Finding
+5 becomes the whole audit, because the output is then a confident recommendation to a person with
+no provenance attached. Audited on the first reading, because a definition that declares behaviour
+has declared it, and because the second reading does not remove `Bash`, `Write` or `Edit` from
+line 4. Turns on what the runtime does when the agent names a specialist. Owner: the builder, and
+it should be answered before anything else here, because it changes which findings apply.
+
+**Whether an agent reviewer can stand where a human gate belongs.** Line 43 puts
+`ad-security-reviewer` between enumerating stale AD accounts and planning their disablement. For:
+the standard itself lists "governance agents" among acceptable checkpoints
+([§L946](reference/owasp-top-10-agentic-applications-2026.md#L946)), the volume would exhaust a
+human, and an agent reviewer is available at three in the morning. Against: the same standard
+requires human confirmation specifically for destructive and privilege-changing actions
+([§L384](reference/owasp-top-10-agentic-applications-2026.md#L384),
+[§L1023](reference/owasp-top-10-agentic-applications-2026.md#L1023)), and nothing authenticates
+the reviewer's verdict (Finding 2), so the checkpoint rests on the same trust-by-name as
+everything else. Turns on volume and reversibility: for a handful of accounts a week with a
+documented re-enable path, defensible; for a continuous backlog, or for changes that are not
+cleanly reversible, not. Owner: the accountable IT owner, not the builder alone, because it is a
+decision about who answers for a wrong disablement.
+
+## What holds
+
+One control is genuinely doing work: lines 43 and 51 place a dedicated security reviewer between
+analysis and implementation, which is the checkpoint shape the standard names at §L946, and it is
+why ASI08 is the only category not scored FAIL.
+
+Line 44 is worth preserving in whatever replaces this file: the destructive example terminates in
+an "Implementation plan", not an implementation. That distinction is not made anywhere else in
+the artifact and a fix should not discard it.
+
+Nothing else earned a pass. That is a statement about what these 60 lines say, not a claim about
+how the deployed system behaves; several categories above turn on facts the definition does not
+record.
+
+## Observations outside the standard
+
+Line 37, "Highlight when tasks cross boundaries (e.g. AD + Azure + scripting)", is the only
+instruction in the artifact that surfaces anything to a person. It is a real design instinct
+pointed at the wrong variable: it flags complexity, where the thing worth flagging is consequence.
+Not scored under ASI09, because it is not attached to a decision point and there is no decision
+point for it to attach to, and scoring it would mean crediting a control that does not exist.
+Noted because it is the hook a fix should hang an approval moment on.
+
+The description on line 3 sells this as "orchestrating complex IT operations tasks ... by
+intelligently routing work to specialized agents". Nothing in that sentence tells a reader that
+one of the file's own worked examples disables user accounts. No provision reaches the gap between
+how an agent describes itself and what it does, so this is judgment and not a finding, but the
+person deciding whether to install this file will read line 3 and not line 41.

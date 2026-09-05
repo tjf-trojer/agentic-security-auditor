@@ -159,7 +159,7 @@ in the definition and the auditor stops reading. **The presence of a confirmatio
 question. What the human can see at the moment of confirmation is the question.** A gate that
 shows a description while the risk lives in a tool grant the human never sees is oversight
 theatre, and the standard is direct about the remedy: a plain-language risk summary rather than
-model-generated rationale ([§L1030](../reference/owasp-top-10-agentic-applications-2026.md#L1030)),
+model-generated rationale ([§L1030-L1031](../reference/owasp-top-10-agentic-applications-2026.md#L1030-L1031)),
 and separating preview from effect, with a risk badge showing source provenance and expected
 side effects ([§L1044](../reference/owasp-top-10-agentic-applications-2026.md#L1044)).
 
