@@ -31,3 +31,7 @@ belongs here, clearly labelled as navigation rather than as rule.
 | [`scope-gate.md`](scope-gate.md) | The opening move: is this an agent, what can it do unattended, does the AI Act bind |
 | [`detection-probes.md`](detection-probes.md) | Per-category detection guidance: what the failure looks like in a definition, and the question that surfaces it |
 | [`normalise-source.py`](normalise-source.py) | The script that produced the markdown in `reference/` from the official PDF, so the transformation is reproducible and auditable |
+
+The scripts that check this repository's claims live one level up in
+[`../scripts/`](../scripts/), not here, because they verify `reference/` rather than navigate it.
+`make verify` runs them.

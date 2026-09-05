@@ -32,20 +32,17 @@ linear extraction and is left exactly as extracted rather than reconstructed, be
 reconstructing it would mean altering the standard. Read those in the PDF. The ten category
 sections, which are what this auditor cites, are continuous prose and came through cleanly.
 
-## Category anchors
+## Where the citable provisions live
 
-| Category | Section | Prevention and Mitigation |
-|---|---|---|
-| ASI01 Agent Goal Hijack | [L235](owasp-top-10-agentic-applications-2026.md#L235) | [L282](owasp-top-10-agentic-applications-2026.md#L282) |
-| ASI02 Tool Misuse and Exploitation | [L318](owasp-top-10-agentic-applications-2026.md#L318) | [L372](owasp-top-10-agentic-applications-2026.md#L372) |
-| ASI03 Identity and Privilege Abuse | [L414](owasp-top-10-agentic-applications-2026.md#L414) | [L478](owasp-top-10-agentic-applications-2026.md#L478) |
-| ASI04 Agentic Supply Chain Vulnerabilities | [L514](owasp-top-10-agentic-applications-2026.md#L514) | [L575](owasp-top-10-agentic-applications-2026.md#L575) |
-| ASI05 Unexpected Code Execution (RCE) | [L606](owasp-top-10-agentic-applications-2026.md#L606) | [L658](owasp-top-10-agentic-applications-2026.md#L658) |
-| ASI06 Memory & Context Poisoning | [L681](owasp-top-10-agentic-applications-2026.md#L681) | [L733](owasp-top-10-agentic-applications-2026.md#L733) |
-| ASI07 Insecure Inter-Agent Communication | [L772](owasp-top-10-agentic-applications-2026.md#L772) | [L822](owasp-top-10-agentic-applications-2026.md#L822) |
-| ASI08 Cascading Failures | [L863](owasp-top-10-agentic-applications-2026.md#L863) | [L935](owasp-top-10-agentic-applications-2026.md#L935) |
-| ASI09 Human-Agent Trust Exploitation | [L965](owasp-top-10-agentic-applications-2026.md#L965) | [L1022](owasp-top-10-agentic-applications-2026.md#L1022) |
-| ASI10 Rogue Agents | [L1062](owasp-top-10-agentic-applications-2026.md#L1062) | [L1107](owasp-top-10-agentic-applications-2026.md#L1107) |
+Not here. [`../provisions.md`](../provisions.md) is the register: every provision this auditor may
+cite, with a stable id, its current line, and its opening words verbatim. It is generated from
+this folder by `scripts/build_register.py` and checked by `scripts/verify.py`.
 
-These are section starts, for navigation. A finding should cite the line its claim actually rests
-on, which is usually inside the section rather than at its heading.
+A second copy of that index used to sit in this file and in `rules.md`. Both were removed: a
+duplicated index drifts, and a drifted index inside the folder whose whole purpose is verifiable
+citation is the worst possible place for one.
+
+```bash
+bash ../scripts/cite.sh --list          # every id
+bash ../scripts/cite.sh ASI04-PIN       # read one provision
+```

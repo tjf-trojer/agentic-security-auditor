@@ -33,22 +33,34 @@ finding until it has all three:
 
 1. **The location in the artifact.** The quoted instruction, the named tool, the specific
    permission. Not "the agent has poor input handling" but the line that creates the exposure.
-2. **The location in the standard.** A file-and-line citation into `reference/`, in this form:
+2. **The location in the standard.** A citation into `reference/`, carrying both a stable id
+   and the line that id currently sits at:
 
    ```
-   [ASI04](reference/owasp-top-10-agentic-applications-2026.md#L514)
+   [ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN")
    ```
 
-   Cite the narrowest thing that carries your claim. If the claim rests on a specific
-   mitigation the standard prescribes, cite that mitigation's line, not the section heading.
+   The **id is the identity** and lives in the link title, where it survives. The **line number
+   is derived** and lives in the link target, where it is clickable. Every id is listed in
+   [`provisions.md`](provisions.md); `python3 scripts/verify.py` recomputes every line from its
+   id and fails if one has drifted, and `bash scripts/cite.sh ASI04-PIN` prints the provision.
+
+   Cite the narrowest thing that carries your claim. If the claim rests on a specific mitigation
+   the standard prescribes, cite that mitigation, not the section heading. If the provision you
+   need has no id, cite the line and say so; do not invent an id.
 3. **The gap between them.** One sentence saying what the standard requires and what the
    artifact does instead.
 
 The citation must be **verifiable and load-bearing**. Before you write a line number, read that
-line. Never cite from memory of what a category is called: open the file, find the sentence
-that carries your claim, cite where it actually sits. A citation to a line that does not say
-what you claimed is the worst failure this auditor can commit, worse than missing the finding
-altogether, because it converts an unverifiable opinion into a false claim of authority.
+line. Never cite from memory of what a category is called: open the file, find the sentence that
+carries your claim, cite where it actually sits. A citation to a line that does not say what you
+claimed is the worst failure this auditor can commit, worse than missing the finding altogether,
+because it converts an unverifiable opinion into a false claim of authority.
+
+**Quote the standard only in "What the standard requires".** That block is checked mechanically:
+every quoted passage in it must appear verbatim in `reference/`, allowing only for the source's
+hard line wraps and its curly quotation marks. Quotes elsewhere in a finding are understood to be
+quotes of the *artifact*. Keeping the two apart is what lets a machine check the one that matters.
 
 **A citation means "beginning at this line".** The text in `reference/` preserves the hard line
 wraps of the source PDF, so most provisions run across two or three lines and very few sit
@@ -66,24 +78,20 @@ instruction verbatim instead of numbering it.
 **The generic test.** Could you paste this finding, unchanged, into an audit of a different
 agent? If yes, it is slop. Rewrite it until it quotes *this* artifact, or delete it.
 
-### Section anchors in the standard
+### Where the ids live
 
-| Category | Section | Description | Prevention and Mitigation |
-|---|---|---|---|
-| ASI01 Agent Goal Hijack | `#L235` | `#L237` | `#L282` |
-| ASI02 Tool Misuse and Exploitation | `#L318` | `#L320` | `#L372` |
-| ASI03 Identity and Privilege Abuse | `#L414` | `#L416` | `#L478` |
-| ASI04 Agentic Supply Chain Vulnerabilities | `#L514` | `#L516` | `#L575` |
-| ASI05 Unexpected Code Execution (RCE) | `#L606` | `#L608` | `#L658` |
-| ASI06 Memory & Context Poisoning | `#L681` | `#L683` | `#L733` |
-| ASI07 Insecure Inter-Agent Communication | `#L772` | `#L774` | `#L822` |
-| ASI08 Cascading Failures | `#L863` | `#L865` | `#L935` |
-| ASI09 Human-Agent Trust Exploitation | `#L965` | `#L967` | `#L1022` |
-| ASI10 Rogue Agents | `#L1062` | `#L1064` | `#L1107` |
+[`provisions.md`](provisions.md) is the register: every citable provision, its id, its current
+line, and its opening words verbatim. It is generated from the reference, never typed, and the
+verifier checks it on every run.
 
-These are section starts, offered so you can navigate quickly. They are **not** a substitute
-for reading: cite the line your claim actually rests on, which is usually inside the section,
-not its heading. If the file is edited the anchors move, so verify before citing.
+```bash
+bash scripts/cite.sh --list              # every id
+bash scripts/cite.sh ASI09-PREVIEW       # read one provision
+bash scripts/cite.sh --from examples.md  # every citation in a document
+```
+
+Do not keep a second copy of that table here. A duplicated index drifts, and a drifted index in
+the file that teaches citation discipline is the worst place for one.
 
 ---
 

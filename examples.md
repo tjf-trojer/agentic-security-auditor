@@ -96,10 +96,10 @@ The path segment is `main`, a moving branch pointer, not a commit or a content h
 downloads from that URL and line 38 saves it.
 
 **What the standard requires.** ASI04 prescribes pinning "prompts, tools, and configs by content
-hash and commit ID" ([§L589](reference/owasp-top-10-agentic-applications-2026.md#L589)), and
+hash and commit ID" ([§L589](reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN")), and
 under dependency gatekeeping, "Allowlist and pin; ... verify provenance before install or
 activation; auto-reject unsigned or unverified"
-([§L579](reference/owasp-top-10-agentic-applications-2026.md#L579)).
+([§L579](reference/owasp-top-10-agentic-applications-2026.md#L579 "^ASI04-GATEKEEPING")).
 
 **The gap.** Nothing in the definition pins, hashes, or verifies. The file that lands is whatever
 `main` resolves to at the moment of the fetch. A user who reads a description at 10:00 and
@@ -119,10 +119,10 @@ modify agent files)." Lines 35-38 write that content into `~/.claude/agents/` or
 
 **What the standard requires.** ASI01 identifies the root cause as agents that "cannot reliably
 distinguish instructions from related content"
-([§L240](reference/owasp-top-10-agentic-applications-2026.md#L240)), and its first mitigation is
+([§L240](reference/owasp-top-10-agentic-applications-2026.md#L240 "^ASI01-ONE-CHANNEL")), and its first mitigation is
 to treat all natural-language input, including retrieved content, as untrusted and route it
 through injection safeguards "before they can influence goal selection, planning, or tool calls"
-([§L283](reference/owasp-top-10-agentic-applications-2026.md#L283)).
+([§L283](reference/owasp-top-10-agentic-applications-2026.md#L283 "^ASI01-UNTRUSTED-INPUT")).
 
 **The gap.** The content fetched here is not merely read, it is *installed as a system prompt
 with its own tool grant*. A downloaded file whose frontmatter reads `tools: Bash` and whose body
@@ -141,7 +141,7 @@ instruction body, and what would cause the install to be refused?
 
 **What the standard requires.** ASI06 covers adversaries corrupting or seeding retained context
 "causing future reasoning, planning, or tool use to become biased, unsafe, or aid exfiltration"
-([§L688](reference/owasp-top-10-agentic-applications-2026.md#L688)).
+([§L688](reference/owasp-top-10-agentic-applications-2026.md#L688 "^ASI06-POISONING")).
 
 **The gap.** An agent definition written into `~/.claude/agents/` is not transient context. It is
 loaded by future sessions, across every project on that machine, until someone removes it. The
@@ -159,7 +159,7 @@ on later load, and how would an operator discover that an installed agent had ch
 "WebFetch or Bash with curl" for the same fetch. Line 73: "Use `curl -s` for silent downloads."
 
 **What the standard requires.** ASI02 prescribes "enforcing least privilege for agent tools"
-([§L286](reference/owasp-top-10-agentic-applications-2026.md#L286)). The standard's Least-Agency
+([§L286](reference/owasp-top-10-agentic-applications-2026.md#L286 "^ASI01-LEAST-PRIVILEGE")). The standard's Least-Agency
 framing extends this: capability deployed where it is not needed expands attack surface without
 adding value.
 
@@ -179,7 +179,7 @@ filesystem. Nothing in the definition mentions a container, a sandbox, or a netw
 
 **What the standard requires.** ASI04 mitigation 3: "Run sensitive agents in sandboxed containers
 with strict network or syscall limits"
-([§L581](reference/owasp-top-10-agentic-applications-2026.md#L581)).
+([§L581](reference/owasp-top-10-agentic-applications-2026.md#L581 "^ASI04-SANDBOX")).
 
 **The gap.** An agent whose entire purpose is to ingest third-party content holds shell on the
 host that ingests it, with no isolation named. Marked MAJOR rather than CRITICAL because no path
@@ -197,9 +197,9 @@ be attacker-influenced?
 
 **What the standard requires.** ASI09 mitigation 4 calls for a "plain-language risk summary (not
 model-generated rationales)" at the point of decision
-([§L1030](reference/owasp-top-10-agentic-applications-2026.md#L1030)), and mitigation 7 requires
+([§L1030](reference/owasp-top-10-agentic-applications-2026.md#L1030 "^ASI09-RISK-SUMMARY")), and mitigation 7 requires
 separating preview from effect, displaying "a risk badge with source provenance and expected side
-effects" ([§L1044](reference/owasp-top-10-agentic-applications-2026.md#L1044)).
+effects" ([§L1044](reference/owasp-top-10-agentic-applications-2026.md#L1044 "^ASI09-PREVIEW")).
 
 **The gap.** The gate exists, which is why ASI02 is scored PARTIAL rather than FAIL, and line 70
 is a genuine control. But what it puts in front of the operator is the `description` field: the
@@ -220,9 +220,9 @@ source commit, and the install scope, and if not, what is the confirmation for?
 
 **What the standard requires.** ASI09 mitigation 2: "Immutable logs: Keep tamper-proof records of
 user queries and agent actions for audit and forensics"
-([§L1025](reference/owasp-top-10-agentic-applications-2026.md#L1025)). ASI04 mitigation 6
+([§L1025](reference/owasp-top-10-agentic-applications-2026.md#L1025 "^ASI09-IMMUTABLE-LOGS")). ASI04 mitigation 6
 requires re-checking signatures, hashes and SBOMs at runtime and monitoring lineage
-([§L587](reference/owasp-top-10-agentic-applications-2026.md#L587)). Observability is named in
+([§L587](reference/owasp-top-10-agentic-applications-2026.md#L587 "^ASI04-RECHECK")). Observability is named in
 the standard's front matter as non-negotiable.
 
 **The gap.** After a bad install, an operator cannot reconstruct which upstream state they
@@ -241,7 +241,7 @@ section describes uninstall, unlike browse, install and search (lines 28-44).
 
 **What the standard requires.** ASI02 pairs least privilege with "requiring human approval for
 high-impact or goal-changing actions"
-([§L286](reference/owasp-top-10-agentic-applications-2026.md#L286)).
+([§L286](reference/owasp-top-10-agentic-applications-2026.md#L286 "^ASI01-LEAST-PRIVILEGE")).
 
 **The gap.** Delete is the only irreversible operation in the artifact and it is the only
 capability with no described procedure: no statement of what is shown, what scope is targeted, or
@@ -290,7 +290,7 @@ The description field (line 3) says the agent installs from "the awesome-claude-
 repository", and the endpoints on lines 22-24 hard-code that one repository. A single named
 upstream is a meaningfully smaller attack surface than an arbitrary URL, and it is close to what
 ASI04 calls a curated registry
-([§L578](reference/owasp-top-10-agentic-applications-2026.md#L578)). I have not scored it as a
+([§L578](reference/owasp-top-10-agentic-applications-2026.md#L578 "^ASI04-REGISTRIES")). I have not scored it as a
 pass, because the standard's curated-registry language is paired with signing and attestation
 that are absent here, and a hard-coded source is not the same thing as a verified one. Noting it
 as a real design decision that a fix should preserve rather than discard.
@@ -373,7 +373,7 @@ anywhere in the 62 lines. Line 13 implies read and grep over the repository; not
 boundary, and nothing forbids anything.
 
 **What the standard requires.** ASI02's mitigations are built on "enforcing least privilege for
-agent tools" ([§L286](reference/owasp-top-10-agentic-applications-2026.md#L286)). Least privilege
+agent tools" ([§L286](reference/owasp-top-10-agentic-applications-2026.md#L286 "^ASI01-LEAST-PRIVILEGE")). Least privilege
 presupposes a stated privilege.
 
 **The gap.** The artifact inherits whatever the surrounding harness grants. Run under a
@@ -397,7 +397,7 @@ trusted, why, or what would happen if it were altered.
 
 **What the standard requires.** ASI01's first mitigation is to treat retrieved content as
 untrusted and validate it before it influences the agent's reasoning
-([§L283](reference/owasp-top-10-agentic-applications-2026.md#L283)).
+([§L283](reference/owasp-top-10-agentic-applications-2026.md#L283 "^ASI01-UNTRUSTED-INPUT")).
 
 **The gap.** The trust is almost certainly justified: the corpus is version-controlled in the
 same repository, carries a provenance header, and is not user-writable at runtime. That is a good
@@ -518,10 +518,10 @@ read it and follow whatever instructions it contains." Combined with `read_inbox
 
 **What the standard requires.** ASI01 identifies that agents "cannot reliably distinguish
 instructions from related content"
-([§L240](reference/owasp-top-10-agentic-applications-2026.md#L240)) and requires that all
+([§L240](reference/owasp-top-10-agentic-applications-2026.md#L240 "^ASI01-ONE-CHANNEL")) and requires that all
 retrieved content be treated as untrusted and validated "before they can influence goal
 selection, planning, or tool calls"
-([§L283](reference/owasp-top-10-agentic-applications-2026.md#L283)).
+([§L283](reference/owasp-top-10-agentic-applications-2026.md#L283 "^ASI01-UNTRUSTED-INPUT")).
 
 **The gap.** The definition does not merely fail to separate content from instruction, it
 instructs the collapse explicitly. Any person who can send mail to the ops inbox can attach a
@@ -539,9 +539,9 @@ enforces that distinction outside the model?
 same `ops-admin` credentials".
 
 **What the standard requires.** ASI03 covers identity and privilege abuse
-([§L414](reference/owasp-top-10-agentic-applications-2026.md#L414)); ASI02's mitigations rest on
+([§L414](reference/owasp-top-10-agentic-applications-2026.md#L414 "^ASI03")); ASI02's mitigations rest on
 least privilege for agent tools
-([§L286](reference/owasp-top-10-agentic-applications-2026.md#L286)).
+([§L286](reference/owasp-top-10-agentic-applications-2026.md#L286 "^ASI01-LEAST-PRIVILEGE")).
 
 **The gap.** The blast radius on hijack is not the task, it is three production systems including
 customer payment data, and it multiplies across every spawned sub-agent because credentials
@@ -647,13 +647,13 @@ validates a response, or what a response must look like.
 
 **What the standard requires.** ASI07 (insecure inter-agent communication: messages between
 agents that nothing verifies) fires when exchanges "lack proper authentication, integrity, or
-semantic validation" ([§L780](reference/owasp-top-10-agentic-applications-2026.md#L780)). The
+semantic validation" ([§L780](reference/owasp-top-10-agentic-applications-2026.md#L780 "^ASI07-NO-AUTH")). The
 mitigations require per-agent credentials and mutual authentication
-([§L823](reference/owasp-top-10-agentic-applications-2026.md#L823)), signed messages validated
+([§L823](reference/owasp-top-10-agentic-applications-2026.md#L823 "^ASI07-CHANNELS")), signed messages validated
 "for hidden or modified natural-language instructions"
-([§L826](reference/owasp-top-10-agentic-applications-2026.md#L826)), and "signed agent cards and
+([§L826](reference/owasp-top-10-agentic-applications-2026.md#L826 "^ASI07-SIGNING")), and "signed agent cards and
 continuous verification before accepting discovery or coordination messages"
-([§L848](reference/owasp-top-10-agentic-applications-2026.md#L848)).
+([§L848](reference/owasp-top-10-agentic-applications-2026.md#L848 "^ASI07-AGENT-CARDS")).
 
 **The gap.** The artifact's entire value proposition is trusting eight other agents and speaking
 with one voice on their behalf. A response from `ad-security-reviewer` saying "this is safe" is
@@ -676,13 +676,13 @@ with no statement of what travels with it. Line 31 claims "least privilege" as a
 authority than its task needs) names "Un-scoped Privilege Inheritance" as its first vulnerability,
 arising "when a high-privilege manager delegates tasks without applying least-privilege scoping
 ... passing its full access context"
-([§L436](reference/owasp-top-10-agentic-applications-2026.md#L436)), and the Confused Deputy case
+([§L436](reference/owasp-top-10-agentic-applications-2026.md#L436 "^ASI03-INHERITANCE")), and the Confused Deputy case
 where "agents often trust internal requests by default"
-([§L445](reference/owasp-top-10-agentic-applications-2026.md#L445)). Its mitigations require
+([§L445](reference/owasp-top-10-agentic-applications-2026.md#L445 "^ASI03-CONFUSED-DEPUTY")). Its mitigations require
 short-lived, narrowly scoped, task-bound tokens
-([§L479](reference/owasp-top-10-agentic-applications-2026.md#L479)) and, directly on point,
+([§L479](reference/owasp-top-10-agentic-applications-2026.md#L479 "^ASI03-SCOPED-TOKENS")) and, directly on point,
 "Prevent privilege inheritance across agents unless the original intent is re-validated"
-([§L500](reference/owasp-top-10-agentic-applications-2026.md#L500)).
+([§L500](reference/owasp-top-10-agentic-applications-2026.md#L500 "^ASI03-REVALIDATE")).
 
 **The gap.** This artifact is the high-privilege manager of §L436 in structure: it sits above
 eight specialists and hands work down. It does not scope what goes down with the work, does not
@@ -708,13 +708,13 @@ not require a review step; it appears only inside the illustrative examples.
 **What the standard requires.** ASI08 (cascading failures: one early error propagating through
 everything built on it) names "Planner-executor coupling: A hallucinating or compromised planner
 emits unsafe steps that the executor automatically performs without validation"
-([§L895](reference/owasp-top-10-agentic-applications-2026.md#L895)). Its mitigations require
+([§L895](reference/owasp-top-10-agentic-applications-2026.md#L895 "^ASI08-COUPLING")). Its mitigations require
 separating planning and execution via an external policy engine
-([§L944](reference/owasp-top-10-agentic-applications-2026.md#L944)), "Checkpoints, governance
+([§L944](reference/owasp-top-10-agentic-applications-2026.md#L944 "^ASI08-POLICY-ENGINE")), "Checkpoints, governance
 agents, or human review for high risk before agent outputs are propagated downstream"
-([§L946](reference/owasp-top-10-agentic-applications-2026.md#L946)), and "blast-radius guardrails
+([§L946](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES")), and "blast-radius guardrails
 such as quotas, progress caps, circuit breakers between planner and executor"
-([§L949](reference/owasp-top-10-agentic-applications-2026.md#L949)).
+([§L949](reference/owasp-top-10-agentic-applications-2026.md#L949 "^ASI08-BLAST-RADIUS")).
 
 **The gap.** This is the one category where the artifact has something, and a governance agent in
 the path is a control shape the standard names by that word at §L946, which is why ASI08 is
@@ -748,11 +748,11 @@ it should be answered before anything else here, because it changes which findin
 **Whether an agent reviewer can stand where a human gate belongs.** Line 43 puts
 `ad-security-reviewer` between enumerating stale AD accounts and planning their disablement. For:
 the standard itself lists "governance agents" among acceptable checkpoints
-([§L946](reference/owasp-top-10-agentic-applications-2026.md#L946)), the volume would exhaust a
+([§L946](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES")), the volume would exhaust a
 human, and an agent reviewer is available at three in the morning. Against: the same standard
 requires human confirmation specifically for destructive and privilege-changing actions
-([§L384](reference/owasp-top-10-agentic-applications-2026.md#L384),
-[§L1023](reference/owasp-top-10-agentic-applications-2026.md#L1023)), and nothing authenticates
+([§L384](reference/owasp-top-10-agentic-applications-2026.md#L384 "^ASI02-CONFIRM"),
+[§L1023](reference/owasp-top-10-agentic-applications-2026.md#L1023 "^ASI09-EXPLICIT-CONFIRM")), and nothing authenticates
 the reviewer's verdict (Finding 2), so the checkpoint rests on the same trust-by-name as
 everything else. Turns on volume and reversibility: for a handful of accounts a week with a
 documented re-enable path, defensible; for a continuous backlog, or for changes that are not

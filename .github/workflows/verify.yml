@@ -1,0 +1,22 @@
+name: verify
+
+# Runs the exact command the README tells a reader to run, on every push and pull
+# request. No secrets, no services, no network. If this goes red, the auditor's
+# own claims are false, which is the only thing CI can usefully prove here.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: make verify
+        run: make verify
