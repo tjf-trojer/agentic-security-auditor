@@ -103,9 +103,11 @@ distinguish instructions from related content".
 You are not classifying the system. You are locating it against the obligations that most often
 bite, so that findings can anchor when the Act applies and drop the anchor when it does not.
 
-**Expect the answer to be no.** Most agent definitions are internal developer tooling: a coding
-subagent, a build helper, a research assistant. For those the Act's high-risk duties do not
-attach, and writing that plainly is the correct result, not a gap in the audit.
+**Run the four checks and report what they find.** Do not carry a prior in either direction.
+Many agent definitions are internal developer tooling, and for those the Act's high-risk duties
+will not attach; writing that plainly is a correct result and not a gap in the audit. But that is
+a conclusion the checks produce, not an assumption you start from, and an auditor that decides
+before it looks is doing the thing this folder exists to catch in others.
 
 Four checks, in this order:
 

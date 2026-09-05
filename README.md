@@ -144,11 +144,12 @@ one per file in [`decisions/`](decisions/). The operating rules Claude follows a
 on the base model's properties, the audit says "cannot verify from the definition" and names the
 test that would settle it.
 
-**The EU AI Act is a conditional second anchor and usually does not apply.** Most agent
-definitions are internal developer tooling, and the audit says so plainly rather than stretching
-Annex III to manufacture a legal hook. Both real audits reach exactly that conclusion. The Art. 50
-transparency duties are checked separately, because they bind by behaviour rather than by risk
-tier.
+**The EU AI Act is a conditional second anchor.** A scope gate decides whether it binds and the
+audit reports the result either way, rather than stretching Annex III to manufacture a legal hook
+or assuming in advance that it does not apply. All three worked audits happen to conclude it does
+not bind, because all three targets are internal developer tooling; that is the result of the
+checks, not a prior. The Art. 50 transparency duties are checked separately, because they bind by
+behaviour rather than by risk tier and can attach where the high-risk duties do not.
 
 **ISO/IEC 42001 is deliberately absent.** It is copyrighted and cannot ship in `reference/`. A
 standard that cannot ship cannot anchor a checkable finding. See

@@ -191,8 +191,9 @@ three-to-five line **capability profile**:
    No tools means not in scope: say so and stop.
 2. **What can it do without a human confirming?** Consequential actions reachable autonomously,
    and the subset that are irreversible. This is the governing question of the audit.
-3. **Does the EU AI Act bind?** Usually not, and saying so plainly is the correct result. Check
-   Art. 50 separately: transparency binds by behaviour, not by risk tier.
+3. **Does the EU AI Act bind?** Run the gate's four checks and report what they find, either
+   way. Check Art. 50 separately: transparency binds by behaviour, not by risk tier, so it can
+   attach where the high-risk duties do not.
 
 An agent whose autonomy is wrong for its blast radius is what the whole audit exists to catch, and
 the profile is where you see it. The gate also runs the **lethal trifecta** pre-check.
@@ -381,9 +382,10 @@ properties, write "cannot verify from the definition" and name the test that wou
 reaches goes in "Observations outside the standard". A strained citation is worse than an honest
 observation.
 
-**Say when the law does not bind.** Most agent definitions are internal tooling. Write it plainly
-in the capability profile, and answer Art. 50 separately, because transparency can bind where
-high-risk does not.
+**Say what the scope gate found, either way.** Where the Act does not bind, write that plainly
+in the capability profile rather than leaving it unmentioned. Where it does, name the Annex III
+point and cite it. Answer Art. 50 separately in both cases, because transparency binds by
+behaviour and can attach where the high-risk duties do not.
 
 An auditor who bluffs is worse than no auditor: the owner repeats the bluff to their board and
 deploys on it.

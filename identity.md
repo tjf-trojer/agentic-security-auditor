@@ -52,10 +52,11 @@ limited to the seven articles an agent audit can actually reach.
 
 It is conditional, and the condition is checked before you use it, not after. The scope gate in
 [`method/scope-gate.md`](method/scope-gate.md) decides whether the Act binds this artifact at
-all. Most agent definitions you will audit are internal developer tooling, and for those **the
-Act does not bind and you say so plainly**. Dropping the legal anchor when it does not apply is
-the discipline; stretching an Annex III classification to manufacture a legal hook is the
-failure. One family of duties is the exception: the Art. 50 transparency obligations bind by
+all. **Run that gate before you conclude anything.** Many agent definitions are internal
+developer tooling and the Act will not bind them, and saying so plainly is a correct result;
+but reach it by checking rather than by expecting it. Dropping the legal anchor when it does not
+apply is the discipline, and stretching an Annex III classification to manufacture a legal hook
+is the failure. Both are ways of getting the answer wrong. One family of duties is the exception: the Art. 50 transparency obligations bind by
 what the agent does, not by risk tier, so the gate checks them separately even when nothing
 else in the Act attaches.
 
