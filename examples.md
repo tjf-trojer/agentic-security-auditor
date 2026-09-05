@@ -79,14 +79,14 @@ not a gap. Every finding below stands on OWASP alone.
 |---|---|---|
 | ASI01 Agent Goal Hijack | **FAIL** | Finding 2 |
 | ASI02 Tool Misuse and Exploitation | **PARTIAL** | Findings 4 and 8. A confirmation exists (line 70); `Bash` is far broader than the task, and uninstall shares its gate |
-| ASI03 Identity and Privilege Abuse | **PASS** | The agent declares no separate credential and runs as the invoking operator. No token to over-scope, no service account to inherit, no privilege the operator did not already hold |
+| ASI03 Identity and Privilege Abuse | **PASS** | The agent declares no separate credential and runs as the invoking operator. No token to over-scope, no service account to inherit, no privilege the operator did not already hold. Meets [ASI03-SCOPED-TOKENS](reference/owasp-top-10-agentic-applications-2026.md#L479 "^ASI03-SCOPED-TOKENS"), which asks that an agent's rights be capped by a permission boundary rather than inherited wholesale |
 | ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | Findings 1 and 7 |
 | ASI05 Unexpected Code Execution | **PARTIAL** | Finding 5. `Bash` is granted and the definition steers toward it, but no path is described in which fetched content is executed directly |
 | ASI06 Memory & Context Poisoning | **FAIL** | Finding 3 |
 | ASI07 Insecure Inter-Agent Communication | **N/A** | The artifact defines a single agent that neither calls nor is called by other agents at runtime. It writes files that *become* other agents, which is ASI04 and ASI06, not inter-agent messaging |
-| ASI08 Cascading Failures | **PASS** | The workflow (lines 34-39) is short, linear, and human-initiated at each run, with no step conditioning on a previous inference. There is no multi-step chain for an early error to propagate through |
+| ASI08 Cascading Failures | **PASS** | The workflow (lines 34-39) is short, linear, and human-initiated at each run, with no step conditioning on a previous inference. There is no multi-step chain for an early error to propagate through, so the planner-executor coupling [ASI08-COUPLING](reference/owasp-top-10-agentic-applications-2026.md#L895 "^ASI08-COUPLING") describes cannot arise |
 | ASI09 Human-Agent Trust Exploitation | **FAIL** | Finding 6 |
-| ASI10 Rogue Agents | **PASS** | The agent is invoked interactively for each action and holds no loop, schedule, or continuous operation. There is no unattended run for behaviour to drift within, and the operator is present at every step. The autonomy is matched to the task |
+| ASI10 Rogue Agents | **PASS** | The agent is invoked interactively for each action and holds no loop, schedule, or continuous operation. There is no unattended run for behaviour to drift within, and the operator is present at every step. The autonomy is matched to the task, so there is no unattended run for the drift [ASI10-DRIFT](reference/owasp-top-10-agentic-applications-2026.md#L1071 "^ASI10-DRIFT") describes to occur in |
 
 ## Findings
 
@@ -358,13 +358,13 @@ third parties.
 | ASI01 Agent Goal Hijack | **PARTIAL** | Finding 2. The corpus it reads is trusted-by-assumption, and nothing states that assumption |
 | ASI02 Tool Misuse and Exploitation | **FAIL** | Finding 1. Not because a tool is misused, but because no tool boundary is stated at all |
 | ASI03 Identity and Privilege Abuse | **N/A** | The artifact declares no credential and describes no authenticated system. There is no identity to abuse |
-| ASI04 Agentic Supply Chain Vulnerabilities | **PASS** | The agent composes nothing at runtime. Its corpus is version-controlled in the same repository, and line 13 names the specific file path it reads rather than resolving a source at runtime |
+| ASI04 Agentic Supply Chain Vulnerabilities | **PASS** | The agent composes nothing at runtime. Its corpus is version-controlled in the same repository, and line 13 names the specific file path it reads rather than resolving a source at runtime, which is the pinned reference [ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN") asks for |
 | ASI05 Unexpected Code Execution | **N/A** | No execution capability is described, and the artifact's output is a written traversal, not a command |
 | ASI06 Memory & Context Poisoning | **N/A** | The agent writes nothing that persists into a later session. Its corpus is read-only input under version control, not a memory store it feeds |
 | ASI07 Insecure Inter-Agent Communication | **N/A** | Single agent. No delegation, no spawning, no inbound agent messages |
-| ASI08 Cascading Failures | **PASS** | Lines 19-24 impose an ordered four-layer traversal in which each layer states its own finding and cites its own anchor, so an error at Layer 1 is visible at Layer 1 rather than silently carried. Line 44 requires missing facts to be surfaced as open points rather than assumed |
-| ASI09 Human-Agent Trust Exploitation | **PASS** | The strongest part of the artifact. Lines 13-15 require reading the source before asserting, forbid filling gaps from memory, and forbid inventing line numbers. Line 14 requires anything outside the corpus to be marked "not in corpus — external source required". Line 58 requires every output to disclaim legal advice. This is the "plain-language risk summary" discipline ASI09 asks for, applied to epistemic rather than transactional risk |
-| ASI10 Rogue Agents | **PASS** | Line 56 requires the agent to ask before routing when a fact that changes the outcome is missing, rather than guessing. Escalation on uncertainty is the specific control ASI10 is about, and it is present and unambiguous |
+| ASI08 Cascading Failures | **PASS** | Lines 19-24 impose an ordered four-layer traversal in which each layer states its own finding and cites its own anchor, so an error at Layer 1 is visible at Layer 1 rather than silently carried. Line 44 requires missing facts to be surfaced as open points rather than assumed, which is the checkpoint-before-propagation [ASI08-GATES](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES") prescribes |
+| ASI09 Human-Agent Trust Exploitation | **PASS** | The strongest part of the artifact. Lines 13-15 require reading the source before asserting, forbid filling gaps from memory, and forbid inventing line numbers. Line 14 requires anything outside the corpus to be marked "not in corpus — external source required". Line 58 requires every output to disclaim legal advice. This is the plain-language risk summary [ASI09-RISK-SUMMARY](reference/owasp-top-10-agentic-applications-2026.md#L1030 "^ASI09-RISK-SUMMARY") prescribes, applied to epistemic rather than transactional risk |
+| ASI10 Rogue Agents | **PASS** | Line 56 requires the agent to ask before routing when a fact that changes the outcome is missing, rather than guessing. Escalation on uncertainty is what stands against the behavioural drift [ASI10-DRIFT](reference/owasp-top-10-agentic-applications-2026.md#L1071 "^ASI10-DRIFT") describes, and it is present and unambiguous |
 
 ## Findings
 
@@ -686,10 +686,10 @@ short-lived, narrowly scoped, task-bound tokens
 "Prevent privilege inheritance across agents unless the original intent is re-validated"
 ([§L500](reference/owasp-top-10-agentic-applications-2026.md#L500 "^ASI03-REVALIDATE")).
 
-**The gap.** This artifact is the high-privilege manager of §L436 in structure: it sits above
+**The gap.** This artifact is the high-privilege manager of [§L436](reference/owasp-top-10-agentic-applications-2026.md#L436 "^ASI03-INHERITANCE") in structure: it sits above
 eight specialists and hands work down. It does not scope what goes down with the work, does not
 state what it authenticates as, and does not say whether a specialist re-validates the original
-request or accepts it as internal and therefore trusted. Silence is not neutral here; §L436
+request or accepts it as internal and therefore trusted. Silence is not neutral here; [§L436](reference/owasp-top-10-agentic-applications-2026.md#L436 "^ASI03-INHERITANCE")
 describes un-scoped inheritance as the default that silence produces. Cannot verify from the
 definition what credentials the runtime holds. The test that settles it: enumerate the effective
 permissions of the identity the orchestrator and each specialist run under. If that identity
@@ -719,7 +719,7 @@ such as quotas, progress caps, circuit breakers between planner and executor"
 ([§L949](reference/owasp-top-10-agentic-applications-2026.md#L949 "^ASI08-BLAST-RADIUS")).
 
 **The gap.** This is the one category where the artifact has something, and a governance agent in
-the path is a control shape the standard names by that word at §L946, which is why ASI08 is
+the path is a control shape the standard names by that word at [§L946](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES"), which is why ASI08 is
 PARTIAL rather than FAIL. What it does not survive is load. It is written into two worked examples
 rather than into the behaviours section, it is absent from the third, nothing states what the
 reviewer must return or what happens if it objects, and there is no quota, progress cap or circuit
@@ -764,7 +764,7 @@ decision about who answers for a wrong disablement.
 ## What holds
 
 One control is genuinely doing work: lines 43 and 51 place a dedicated security reviewer between
-analysis and implementation, which is the checkpoint shape the standard names at §L946, and it is
+analysis and implementation, which is the checkpoint shape the standard names at [§L946](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES"), and it is
 why ASI08 is the only category not scored FAIL.
 
 Line 44 is worth preserving in whatever replaces this file: the destructive example terminates in

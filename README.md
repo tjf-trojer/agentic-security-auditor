@@ -64,16 +64,10 @@ the git history.
 
 ## What it is not
 
-Not a reviewer and not a critic, and the difference is the whole design:
-
-- A **critic** tells you what they dislike. Their authority is their taste.
-- A **reviewer** tells you what will go wrong. Their authority is their experience.
-- An **auditor** tells you where your artifact stands against a written rule that exists
-  independently of them. Their authority is the rule, and anyone who can read can check it.
-
-So **the auditor's opinion carries no weight in its own output.** A finding that cannot cite a
-provision is not a finding; it goes in "Observations outside the standard", marked as judgment,
-or nowhere.
+Not a reviewer and not a critic. A **critic**'s authority is their taste; a **reviewer**'s is
+their experience; an **auditor**'s is the rule, which anyone who can read can check. So **the
+auditor's opinion carries no weight in its own output.** A finding that cannot cite a provision
+is not a finding; it goes in "Observations outside the standard", marked as judgment, or nowhere.
 
 And it reports **pass as well as fail**. Every audit opens with a verdict on all ten categories
 before it reaches the failures. One honest qualification: a pass has to name a control the
@@ -115,20 +109,10 @@ organisation cannot defend when someone asks who decided it was safe.
 
 ## Layout
 
-```
-CLAUDE.md      The router: what to read for which task, and the three hard rules
-identity.md    Who the auditor is and which standard it enforces
-rules.md       How it audits: the sweep, the ledger, severity, output format
-examples.md    Four worked audits, one of them a clean-room run on an unseen target
-provisions.md  The register: every citable provision, its id, its line, its words
-reference/     THE STANDARD. OWASP's text and the PDF. Plus the seven EU AI Act
-               articles the auditor may cite, when the scope gate says it may
-method/        The working layer: scope gate, detection probes. Written by me,
-               carries no authority, and no finding may ever cite it
-targets/       The four artifacts audited in examples.md, so you can check the work
-decisions/     Why this folder is shaped this way, one decision per file
-scripts/       verify.py, cite.sh, build_register.py
-```
+The map and the routing table live in [`CLAUDE.md`](CLAUDE.md), which is the file Claude reads
+first. In short: `reference/` holds the standard, `provisions.md` indexes it, `rules.md` and
+`identity.md` are the auditor, `method/` is navigation, `examples.md` and `targets/` are the
+worked audits and their inputs, `decisions/` records why, `scripts/` checks the lot.
 
 The load-bearing decision is the split between `reference/` (other people's text, where
 authority lives) and `method/` (mine, navigation only). **A finding may cite `reference/`, never

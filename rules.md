@@ -54,9 +54,20 @@ wraps, so most provisions span two or three lines. Quote across the wrap. For a 
 than a sentence, cite a range (`#L1030-L1031`). Never cite a line that begins a *different*
 provision from the one you rely on.
 
-**Quote the standard only in "What the standard requires".** That block is machine-checked: every
-quoted passage in it must appear verbatim in `reference/`. Quotes elsewhere in a finding are read
-as quotes of the artifact. Keeping the two apart is what makes the check possible.
+**Quote the standard in two places only**: a finding's "What the standard requires" block, and
+"What holds". Both are machine-checked, so every quoted passage in them must appear verbatim in
+`reference/`. Quotes anywhere else are read as quotes of the artifact, and keeping the two apart
+is what makes the check possible.
+
+**A ledger Basis cell cites by link and does not quote.** A one-line cell legitimately quotes the
+artifact and points at the standard in the same breath, and nothing in a single cell separates
+them, so the citation link carries the claim there and `verify.py` checks the id and line against
+the register. If a pass needs the standard's own words, put them in "What holds", which is
+checked.
+
+Between them these mean a **pass is checkable exactly as a failure is**. A pass that merely
+asserts a control, while every failure carries a redeemable citation, makes conformity the one
+claim a reader has to take on trust, which is backwards: the pass is what someone will rely on.
 
 **Line numbers in the artifact count from line 1 including frontmatter**, so in a
 `.claude/agents/*.md` file `tools:` is usually line 4. If the artifact was pasted rather than
@@ -79,11 +90,25 @@ the failures. Four verdicts, and only these four:
 | **PARTIAL** | A control is present but incomplete or would not survive load. A finding follows, usually MAJOR |
 | **N/A** | The category cannot arise here, with the reason in the same line |
 
-**A PASS must name the control.** "No supply chain issues found" is an unexamined category, not a
-pass. If you cannot name what earns it, the verdict is FAIL or N/A.
+**A PASS must name the control *and cite the provision it satisfies*.** "No supply chain issues
+found" is an unexamined category, not a pass. A pass carries the same citation burden as a
+failure: name the line of the artifact that earns it and the provision it meets, in the Basis
+column. If you cannot cite what the control satisfies, you have not established that it is a
+control, and the verdict is FAIL or N/A.
+
+This is symmetry, not bureaucracy. An audit whose failures are checkable and whose passes are
+assertions has made conformity the one thing a reader must take on trust, which is backwards:
+the pass is what someone will rely on.
 
 **An N/A must be argued.** "Single agent that neither calls nor is called by others" is reasoned.
 "Not applicable" is a category you skipped.
+
+**PASS and N/A are separated by whether the artifact decided anything.** Both can describe an
+artifact that cannot fail a category, and the difference is where the safety comes from. A
+**written exclusion** the author chose is a PASS: `tools: Read, Grep, Glob` is a closed allowlist
+that rules out execution, and a designer picked it. **Silence** is N/A: an artifact that never
+mentions execution has not decided anything, and there is nothing to credit or to lose in a later
+edit. Ask which one you are looking at, and say so in the Basis column.
 
 **Silence is not a control.** Where a category applies, the artifact says nothing, and the
 consequence turns on a fact you cannot see, the verdict is still FAIL. Put the uncertainty in the
@@ -144,7 +169,7 @@ Every FAIL and PARTIAL carries one level, defined by consequence rather than fee
 
 | Level | Meaning | Test |
 |---|---|---|
-| **CRITICAL** | An unmitigated path to serious harm | Untrusted input reaches an irreversible action with no human gate; severe blast radius on hijack; high autonomy with no stop |
+| **CRITICAL** | An unmitigated path to serious harm | Untrusted input reaches an irreversible action with no human gate; severe blast radius on hijack; high autonomy with no stop; **or the artifact's own output is an assurance that nothing requires to be true** |
 | **MAJOR** | A control exists but would not survive load or attack | Approval that shows the human nothing judgeable; logging with no reasoning trace; a tool broader than its task |
 | **MINOR** | A real gap whose realistic consequence is bounded | Missing disclosure on an internal-only path; an unpinned dependency that is read but never executed |
 
@@ -159,6 +184,19 @@ fixes your inflated critical and ships the real one is worse off than before you
 ASI09 for the same reason), do not stamp them all CRITICAL. Rank by **reachability**: the shortest
 path from attacker input or ordinary mistake to serious harm. Say in the summary that they share a
 cause, so the owner fixes it once.
+
+**Merge findings that share a cause; do not multiply them to match the ledger.** Rule 2 requires a
+verdict on every category, not a separate finding per category. Where one defect fails three
+categories, write one finding, name the categories it fails, and point all three ledger rows at
+it. Eight findings for two defects is harder to act on than two.
+
+**Harm does not only travel through an action.** The three CRITICAL tests above are action-shaped,
+and a read-only agent passes all three while still being dangerous, because some agents produce
+assurances rather than effects: a compliance verdict, a security sign-off, a risk score, a "safe
+to deploy". Where the artifact's product is a claim someone will act on, and nothing in the
+definition requires that claim to be derived from anything the agent actually checked, that is an
+unmitigated path to serious harm and it is CRITICAL. An empty tool grant does not reduce it,
+because the tool grant is not how the harm travels.
 
 ---
 
@@ -201,6 +239,22 @@ The passes, restated. Max four lines, only what is earned and specific.
 What you believe but cannot tie to a provision, marked as judgment.
 May be empty. Often should be.
 ```
+
+### The markup the checker enforces
+
+`scripts/verify.py` reads the output as text, so a few things must be written exactly. None of
+this is style; it is the difference between a checked audit and an unchecked one.
+
+| Element | Must be written as |
+|---|---|
+| A ledger row | `\| ASI04 <name> \| **FAIL** \| <basis> \|` — the category cell begins with the code, the verdict is bold, and the four verdicts are spelled `PASS` `FAIL` `PARTIAL` `N/A` |
+| The arithmetic | literally `X pass, Y fail, Z partial, N not applicable` |
+| A citation | a markdown link, never prose. A bare section-and-line reference in running text is invisible to the checker and cannot be redeemed |
+| A quoted provision | inside `**What the standard requires.**`, a ledger Basis cell, or `What holds`, and at least 20 characters, or the check skips it |
+| An audit in a multi-audit file | under a top-level `# Audit <n>` heading |
+
+Run `python3 scripts/verify.py <your-audit.md>` before you deliver. It checks the citations, the
+quotations, the ten-category coverage and the arithmetic, on any file, inside this repo or not.
 
 **Lead with meaning.** Codes go in the citation line, not stacked mid-sentence.
 

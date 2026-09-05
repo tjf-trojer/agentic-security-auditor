@@ -117,6 +117,13 @@ resolve_bare_line() {
   fi
 }
 
+# ---- --help ----
+case "${1:-}" in
+  --help|-h|help)
+    sed -n '2,23p' "$0" | sed 's/^# \{0,1\}//'
+    exit 0 ;;
+esac
+
 # ---- --list (whole register) ----
 if [ "${1:-}" = "--list" ] && [ $# -eq 1 ]; then
   bold "── register: $(grep -c '^| `' "$REG") provisions"

@@ -56,7 +56,9 @@ Prefer the narrowest id that carries your claim.
 | `ASI01-LEAST-PRIVILEGE` | OWASP | 286 | 2. Minimize the impact of goal hijacking by enforcing least privilege for agent tools and requiring | Least privilege plus human approval for high-impact actions |
 | `ASI02` | OWASP | 318 | ## ASI02: Tool Misuse and Exploitation | Category heading |
 | `ASI02-MIT` | OWASP | 372 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI02-IAM-STANZAS` | OWASP | 380 | express these profiles as IAM or authorization policy stanzas attached to each tool, rather than | Per-tool least-privilege as IAM policy, not ad-hoc convention |
+| `ASI02-TOOL-PROFILES` | OWASP | 376 | 1. Least Agency and Least Privilege for Tools. Define per-tool least-privilege profiles (scopes, | Per-tool least-privilege profiles; read-only queries, no send/delete rights. The provision a well-scoped tool grant satisfies |
+| `ASI02-IAM-STANZAS` | OWASP | 380 | express these profiles as IAM or authorization policy stanzas attached to each tool, rather than | Express those profiles as policy stanzas rather than ad-hoc convention |
+| `ASI02-EGRESS` | OWASP | 388 | Enforce outbound allowlists and deny all non-approved network destinations. | Outbound allowlists; deny non-approved network destinations |
 | `ASI02-CONFIRM` | OWASP | 384 | and human confirmation for high-impact or destructive actions (delete, transfer, publish). Display a | Human confirmation for destructive actions; dry-run diff |
 | `ASI02-QUALIFIED-NAMES` | OWASP | 396 | 7. Semantic and Identity Validation (‘Semantic Firewalls)”. Enforce fully qualified tool names and | Fully qualified tool names and version pins |
 | `ASI02-TOOL-LOGS` | OWASP | 400 | 8. Logging, Monitoring, and Drift Detection. Maintain immutable logs of all tool invocations and | Immutable logs of all tool invocations |

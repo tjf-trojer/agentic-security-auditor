@@ -45,7 +45,9 @@ REGISTER = [
     # ---- ASI02 Tool Misuse and Exploitation ----
     ("ASI02", "owasp", 318, "Category heading"),
     ("ASI02-MIT", "owasp", 372, "Mitigation section heading"),
-    ("ASI02-IAM-STANZAS", "owasp", 380, "Per-tool least-privilege as IAM policy, not ad-hoc convention"),
+    ("ASI02-TOOL-PROFILES", "owasp", 376, "Per-tool least-privilege profiles; read-only queries, no send/delete rights. The provision a well-scoped tool grant satisfies"),
+    ("ASI02-IAM-STANZAS", "owasp", 380, "Express those profiles as policy stanzas rather than ad-hoc convention"),
+    ("ASI02-EGRESS", "owasp", 388, "Outbound allowlists; deny non-approved network destinations"),
     ("ASI02-CONFIRM", "owasp", 384, "Human confirmation for destructive actions; dry-run diff"),
     ("ASI02-QUALIFIED-NAMES", "owasp", 396, "Fully qualified tool names and version pins"),
     ("ASI02-TOOL-LOGS", "owasp", 400, "Immutable logs of all tool invocations"),

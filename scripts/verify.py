@@ -142,6 +142,7 @@ def main(argv: list[str]) -> int:
         files = md_files()
 
     total_cites = rewritten = ledger_count = 0
+    out_of_scope = False
     for f in files:
         path = Path(f)
         if not path.exists():
@@ -149,6 +150,8 @@ def main(argv: list[str]) -> int:
             continue
         original = path.read_text(encoding="utf-8")
         rel = f if f in set(md_files()) else str(path)
+        if re.search(r"\b(?:out of scope|not an agent|not in scope)\b", original, re.I):
+            out_of_scope = True
 
         # 2 INVENTED CITATION, 3 MISLABELLED ID
         for m in CITE.finditer(original):
@@ -171,9 +174,20 @@ def main(argv: list[str]) -> int:
                     elif rln != ln:
                         fail("id", f"{rel}: ^{pid} cited at L{ln}, register says L{rln}")
 
-        # 4 MISQUOTED STANDARD
-        for para in re.findall(r"\*\*What the standard requires[.:]\*\*(.*?)(?=\n\n|\Z)",
-                               original, re.S):
+        # 4 MISQUOTED STANDARD. Three contexts may quote the standard (rules.md,
+        # Rule 1): a finding's "What the standard requires" block, a ledger row's
+        # Basis cell, and "What holds". A pass has to be checkable the same way a
+        # failure is, so the ledger and "What holds" are checked too.
+        blocks = re.findall(r"\*\*What the standard requires[.:]\*\*(.*?)(?=\n\n|\Z)",
+                            original, re.S)
+        blocks += re.findall(r"^#+ What holds\s*$(.*?)(?=^#+ |\Z)", original, re.M | re.S)
+        # Ledger cells are deliberately NOT scanned for quotations. A one-line Basis
+        # cell legitimately quotes the artifact and cites the standard in the same
+        # breath, and nothing in a single cell distinguishes the two. So the rule is
+        # that a ledger cell cites by link and quotes the standard nowhere; the link
+        # is what verify.py checks there (id and line against the register), and a
+        # pass that wants to quote does it in "What holds", which is scanned.
+        for para in blocks:
             if REF_NAME not in para:
                 continue
             para = re.sub(r"\]\([^)]*\)", "] ", para)
@@ -184,6 +198,31 @@ def main(argv: list[str]) -> int:
                 if parts and missing:
                     fail("misquote", f"{rel}: in a \"What the standard requires\" block, not "
                                      f"verbatim in the standard: \"{missing[0][:80]}\"")
+
+        # 4b UNLINKED CITATION. A citation written as prose ("§L1008", "line 376")
+        # resolves for a human reader and is invisible to every other check here,
+        # so "OK" would mean "the citations you formatted correctly are fine" while
+        # an unredeemable one sits in the text looking supported. That is the exact
+        # direction of failure this repository exists to prevent, so it is an error.
+        # Spans that are already part of a formatted citation: the URL itself, and
+        # the link *text* in front of it, which is commonly written "[§L965](...)".
+        linked_spans = [(m.start(), m.end()) for m in CITE.finditer(original)]
+        linked_spans += [(m.start(), m.end()) for m in
+                         re.finditer(r"\[[^\]\n]*\]\([^)\n]*\)", original)]
+        for m in re.finditer(r"(?:§\s*L(\d+)\b|\bline (\d{2,4})\b(?=[^\n]{0,40}"
+                             r"(?:standard|OWASP|reference|provision)))", original):
+            if any(a_ <= m.start() < b_ for a_, b_ in linked_spans):
+                continue
+            # A reference to a line of the audited artifact is not a citation.
+            window = original[max(0, m.start() - 160):m.start()]
+            if re.search(r"\b(?:in the artifact|Where, in the artifact|artifact)\b", window):
+                continue
+            if not m.group(1):
+                continue
+            fail("unlinked", f"{rel}: \"§L{m.group(1)}\" reads as a citation but is not a link, "
+                             f"so it cannot be redeemed and no other check sees it. Write it as "
+                             f"[..](reference/<file>#L{m.group(1)}) or say plainly that it is not "
+                             f"a citation.")
 
         # 5 SKIPPED CATEGORY, 6 UNSOUND LEDGER. Runs on any document that contains
         # audits, not only examples.md, so a user can check their own work.
@@ -234,9 +273,15 @@ def main(argv: list[str]) -> int:
     notes.append(f"citations: {total_cites} checked")
     notes.append(f"ledgers: {ledger_count} audit(s), all ten categories each")
     if targets and total_cites == 0 and ledger_count == 0:
-        fail("input", "nothing to check in the file(s) given: no citations to either "
-                      "reference document and no conformity ledger. If this is an audit, "
-                      "it does not cite the standard, which Rule 1 requires.")
+        # An out-of-scope result is the correct output for an artifact that is not an
+        # agent, and it has nothing to cite by design. Failing it would punish a user
+        # for following the scope gate.
+        if out_of_scope:
+            notes.append("out-of-scope result: nothing to cite, which is correct here")
+        else:
+            fail("input", "nothing to check in the file(s) given: no citations to either "
+                          "reference document and no conformity ledger. If this is an audit, "
+                          "it does not cite the standard, which Rule 1 requires.")
     if relink:
         notes.append(f"relink: rewrote citations in {rewritten} file(s)")
 
