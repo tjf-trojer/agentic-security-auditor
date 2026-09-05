@@ -89,11 +89,25 @@ print_provision() {
   # heading, or the next numbered item — except where the extraction lost the
   # paragraph break, which happens in the front matter. There a short line ending
   # in a full stop is the paragraph end, and is the only signal available.
-  awk -v s="$start" 'NR>=s && NR<s+8 {
-        if (NR>s && ($0 ~ /^#{1,6} / || $0 ~ /^[0-9]+\. / || $0 ~ /^$/)) exit
-        printf "  %s\n", $0
-        if ($0 ~ /[.!?][")\u201d]?[ \t]*$/ && length($0) < 90) exit
-      }' "$file"
+  # Where a provision ends, and it differs by source. The OWASP extraction runs a
+  # provision across consecutive lines, so a blank line ends it. The AI Act
+  # extraction puts a blank line BETWEEN the wrapped lines of one provision, so
+  # stopping at the first blank truncates it to a single line — which it did, on
+  # Annex III point 4, the provision that decides whether the Act binds at all.
+  if [ "$src" = "act" ]; then
+    awk -v s="$start" 'NR>=s && NR<s+14 {
+          if (NR>s && ($0 ~ /^## / || ($0 ~ /^\([a-z]\)/ && seen))) exit
+          if ($0 ~ /^$/) { blanks++; if (blanks>=2) exit; next } else blanks=0
+          if ($0 ~ /^\([a-z]\)/) seen=1
+          printf "  %s\n", $0
+        }' "$file"
+  else
+    awk -v s="$start" 'NR>=s && NR<s+8 {
+          if (NR>s && ($0 ~ /^#{1,6} / || $0 ~ /^[0-9]+\. / || $0 ~ /^$/)) exit
+          printf "  %s\n", $0
+          if ($0 ~ /[.!?][")\u201d]?[ \t]*$/ && length($0) < 90) exit
+        }' "$file"
+  fi
   dim "   (github.com: add ?plain=1 to the URL to see line numbers)"
   echo
 }

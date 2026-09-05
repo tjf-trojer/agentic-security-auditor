@@ -131,6 +131,13 @@ the failures. Four verdicts, and only these four:
 | **PARTIAL** | A control is present but incomplete or would not survive load. A finding follows, usually MAJOR |
 | **N/A** | The category cannot arise here, with the reason in the same line |
 
+The ledger has ten rows because the standard has ten categories. **A finding that rests on the
+EU AI Act and on no ASI category still belongs in the audit**: number it in the same F-sequence,
+put the article in the heading where an ASI code would go, and say in the Verdict line that the
+ledger arithmetic does not cover it. A missing Art. 50 disclosure is often the thing a deployer is
+most likely to be sanctioned for, and a ledger that silently omits it understates the audit by its
+most consequential item.
+
 **The Sev column grades the row, not the finding.** Where one finding is cited by three rows,
 each row carries the severity *for that category*, which is often not the same. A shared root
 cause can be critical in the category where it is most reachable and major in the others; say so
@@ -148,6 +155,14 @@ the pass is what someone will rely on.
 
 **An N/A must be argued.** "Single agent that neither calls nor is called by others" is reasoned.
 "Not applicable" is a category you skipped.
+
+**A PASS may rest on a capability the artifact does not grant, and then the citation is the
+least-privilege clause, not a mitigation about using the thing safely.** A closed tool allowlist
+containing no shell earns ASI05, but ASI05's mitigations are all about running code safely and
+none of them says "grant no execution tool". Cite the least-privilege or scope clause nearest the
+category and say in the Basis cell that the control is an exclusion rather than a safeguard.
+Do not stretch a mitigation about sandboxing into a claim about a tool that was never granted; if
+no clause reaches it at all, the honest verdict is N/A with the exclusion named.
 
 **Owning something is not pinning it.** A file the operator controls, at a fixed path inside
 their own repository, does not raise ASI04 at all: the category is about what an agent composes at

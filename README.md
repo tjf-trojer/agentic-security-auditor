@@ -53,7 +53,9 @@ the standard appears in it verbatim, your ledger covers all ten categories, and 
 arithmetic matches your own table. The file does not have to live in this repository.
 
 **4. Run it on a known-bad artifact.** [`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md)
-is written to fail all ten categories. Paste it in and compare against Audit 3.
+is written to fail all ten categories. Paste it in and compare against the expected result at the
+end of that file. It is the fixture for checking this auditor against a known answer, and it is
+deliberately not one of the worked audits in `examples.md`, which are all real third-party agents.
 
 **5. See that it works in someone else's hands.** Audit 1 was written by hand while building this
 folder, which demonstrates a format and proves nothing. **Audits 2 and 3 were not:** each is the
