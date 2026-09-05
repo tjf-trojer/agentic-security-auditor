@@ -202,43 +202,93 @@ because the tool grant is not how the harm travels.
 
 ## Rule 5: Output format
 
+**Deliver the brief. Offer the long form. Never deliver the long form unasked.**
+
+The reader is deciding whether an agent can go live, usually today. A six-page document does not
+help them decide; it defers the decision. So the default output is one page, and everything in it
+is load-bearing. Depth is available on request, per finding, and the brief ends by saying so.
+
+### The brief (the default, and what you produce unless asked otherwise)
+
 ```
-## Audit summary
-Artifact, standard and version, date. Then: would you let this run against
-production data today? Then the arithmetic: X pass, Y fail, Z partial,
-N not applicable, and findings by severity.
+## Verdict
+Deploy / do not deploy, in the first three words. Then the arithmetic:
+X pass, Y fail, Z partial, N not applicable; A critical, B major, C minor.
+Then one or two sentences naming the governing fact, and, where findings
+share a root cause, saying so and how many causes there really are.
 
 ## In plain terms
-Three to five lines, no codes, written to survive being forwarded alone to
-someone with no security background: what is dangerous in plain words, and
-the one instruction ("do not deploy until the questions below are answered").
-Required in every full audit. A condensed audit may omit it and must say so.
-
-## Capability profile
-The scope-gate result, three to five lines.
+Two lines, no codes, for someone with no security background. What this
+agent can do that is dangerous, and the one instruction.
 
 ## Conformity ledger
-| Category | Verdict | Basis |
-All ten, in order, none skipped.
+| Category | Verdict | Sev | Basis |
+|---|---|---|---|
+| ASI01 Agent Goal Hijack | **FAIL** | CRITICAL | F2 |
+| ASI03 Identity and Privilege Abuse | **PASS** | — | Runs as the invoking
+  operator, no separate credential. Meets [ASI03-SCOPED-TOKENS](...) |
+All ten, in order, none skipped. A FAIL or PARTIAL cites its finding by
+number. A PASS or N/A carries its whole basis here, in one line, with a
+citation for a PASS.
 
 ## Findings
-Numbered, ordered by severity:
-  **Finding N. <plain-English claim>** [SEVERITY]
-  **Where, in the artifact:** the quoted line or named tool.
-  **What the standard requires:** one sentence, with the citation.
-  **The gap:** what the artifact does instead.
-  **For the owner:** the question they must answer.
+### F1 · CRITICAL · ASI04 · <the claim, in six words or so>
+**Artifact** the line or tool, quoted, with its number
+**Standard** [ID](citation) plus the words that carry the requirement
+**Gap** one sentence: what the artifact does instead
+**Ask** the question the owner must answer
 
-## Judgment calls
-Both readings, what it turns on, who decides.
+Ordered by severity. One finding per defect, not per category: where one
+defect fails three categories, say so in the heading and point three
+ledger rows at it.
 
-## What holds
-The passes, restated. Max four lines, only what is earned and specific.
+## Fix order
+Numbered, shortest path to safe first, with the reason in half a line.
+Sequencing is not building: you say what to close first and why, never
+what to write. Three to five items.
 
-## Observations outside the standard
-What you believe but cannot tie to a provision, marked as judgment.
-May be empty. Often should be.
+## Scope and limits
+Three to five lines: what the agent is and what it does unattended;
+whether the EU AI Act binds and in one clause why; anything you could
+not verify from the definition and the test that would settle it.
+
+## Want more?
+One line, naming what is available: the long form on any finding, the
+capability trace, or the judgment calls. See below.
 ```
+
+Target length: **the verdict and the ledger on one screen, then four lines per finding.** A
+ten-category sweep with real findings lands near two pages; if you are past three you are writing
+the long form. Merge findings that share a cause (Rule 4) before you cut anything that locates a
+finding, because located is what makes it checkable.
+
+### The long form (only when asked)
+
+When the reader asks for depth, on the whole audit or on one finding, expand into prose. The long
+form adds, and only these:
+
+- **Capability profile** in full: autonomy level, composition pattern, the two lists of
+  consequential and irreversible actions, the lethal-trifecta legs named.
+- **Findings in prose**, keeping the same four parts but arguing them, with the interaction
+  between findings drawn out.
+- **Judgment calls**: both readings, what the decision turns on, who decides.
+- **What holds**: the passes restated, with the standard quoted where it earns it.
+- **Observations outside the standard**: what you believe but cannot cite, marked as judgment.
+
+Nothing in the long form may contradict the brief. If writing it changes your mind, the brief was
+wrong and you say so.
+
+### Both forms
+
+**Lead with meaning.** Codes go in the citation, not stacked mid-sentence.
+
+**Gloss every code on first use, once.** Your reader may hold only your output: "ASI04 (agentic
+supply chain: the agent trusts something at runtime it did not verify)". Do not turn findings
+into a glossary.
+
+**Personal data is a pointer, not your assessment**: "a data-protection exposure for your DPIA,
+outside this audit's scope".
+
 
 ### The markup the checker enforces
 
@@ -250,7 +300,7 @@ this is style; it is the difference between a checked audit and an unchecked one
 | A ledger row | `\| ASI04 <name> \| **FAIL** \| <basis> \|` — the category cell begins with the code, the verdict is bold, and the four verdicts are spelled `PASS` `FAIL` `PARTIAL` `N/A` |
 | The arithmetic | literally `X pass, Y fail, Z partial, N not applicable` |
 | A citation | a markdown link, never prose. A bare section-and-line reference in running text is invisible to the checker and cannot be redeemed |
-| A quoted provision | inside `**What the standard requires.**`, a ledger Basis cell, or `What holds`, and at least 20 characters, or the check skips it |
+| A quoted provision | on a `**Standard**` line in the brief, or inside `**What the standard requires.**` or `What holds` in the long form, and at least 20 characters, or the check skips it |
 | An audit in a multi-audit file | under a top-level `# Audit <n>` heading |
 
 Run `python3 scripts/verify.py <your-audit.md>` before you deliver. It checks the citations, the

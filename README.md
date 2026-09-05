@@ -89,23 +89,26 @@ If you were handed a running assistant rather than a document, ask whoever built
 two things: the system prompt, and the list of what it is allowed to do and touch. If they cannot
 produce those, that is itself worth knowing.
 
-**What comes back:**
+**What comes back: a brief, not an essay.** Around two pages, scannable, ending with an offer of
+more depth if you want it.
 
 ```
-Audit summary          Verdict, ledger arithmetic, findings by severity
-In plain terms         Three lines, no codes, for forwarding on its own
-Capability profile     What it is, what it does unattended, whether the AI Act binds
-Conformity ledger      All ten categories: PASS / FAIL / PARTIAL / N/A
-Findings               Numbered, by severity, each citing the standard by line
-Judgment calls         Decisions that must be made rather than left implicit
-What holds             The passes, restated
-Observations           Anything real but outside the standard, marked as judgment
+Verdict            Deploy or not, in the first three words, then the arithmetic
+In plain terms     Two lines, no codes, for someone with no security background
+Conformity ledger  All ten categories: PASS / FAIL / PARTIAL / N/A, with severity
+Findings           Four lines each: Artifact · Standard · Gap · Ask
+Fix order          What to close first, and why
+Scope and limits   What it is, what it does unattended, what could not be verified
+Want more?         The long form, on any finding, on request
 ```
 
-Every finding has four parts: **where in your artifact**, **what the standard requires** with the
-citation, **the gap**, and **the question you have to answer**. It never hands you fixed
-configuration. An agent whose owner did not reason their way to why it is safe is one the
-organisation cannot defend when someone asks who decided it was safe.
+Every finding has the same four parts: **where in your artifact**, **what the standard requires**
+with the citation, **the gap**, and **the question you have to answer**.
+
+It never hands you fixed configuration. It does tell you what to fix **first**, which is
+sequencing rather than building, and is what makes the output actionable without making the
+result something you cannot defend. An agent whose owner did not reason their way to why it is
+safe is one the organisation cannot defend when someone asks who decided it was safe.
 
 ## Layout
 

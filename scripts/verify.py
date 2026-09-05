@@ -180,6 +180,8 @@ def main(argv: list[str]) -> int:
         # failure is, so the ledger and "What holds" are checked too.
         blocks = re.findall(r"\*\*What the standard requires[.:]\*\*(.*?)(?=\n\n|\Z)",
                             original, re.S)
+        # The brief's equivalent block, one line per finding.
+        blocks += re.findall(r"^\*\*Standard\*\*(.*)$", original, re.M)
         blocks += re.findall(r"^#+ What holds\s*$(.*?)(?=^#+ |\Z)", original, re.M | re.S)
         # Ledger cells are deliberately NOT scanned for quotations. A one-line Basis
         # cell legitimately quotes the artifact and cites the standard in the same
@@ -207,6 +209,7 @@ def main(argv: list[str]) -> int:
         # Spans that are already part of a formatted citation: the URL itself, and
         # the link *text* in front of it, which is commonly written "[§L965](...)".
         linked_spans = [(m.start(), m.end()) for m in CITE.finditer(original)]
+        linked_spans += [(m.start(), m.end()) for m in re.finditer(r"```.*?```", original, re.S)]
         linked_spans += [(m.start(), m.end()) for m in
                          re.finditer(r"\[[^\]\n]*\]\([^)\n]*\)", original)]
         for m in re.finditer(r"(?:§\s*L(\d+)\b|\bline (\d{2,4})\b(?=[^\n]{0,40}"
@@ -290,8 +293,8 @@ def main(argv: list[str]) -> int:
         broken = 0
         for f in md_files():
             d = os.path.dirname(f)
-            for m in re.finditer(r"\[[^\]]*\]\(([^)#\s?]+)(?:\?[^)#]*)?(?:#[^)]*)?\)",
-                                 Path(f).read_text(encoding="utf-8")):
+            body = re.sub(r"```.*?```", "", Path(f).read_text(encoding="utf-8"), flags=re.S)
+            for m in re.finditer(r"\[[^\]]*\]\(([^)#\s?]+)(?:\?[^)#]*)?(?:#[^)]*)?\)", body):
                 t = m.group(1)
                 if t.startswith(("http", "mailto")) or f in VERBATIM:
                     continue
