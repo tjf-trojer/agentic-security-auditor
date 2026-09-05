@@ -20,6 +20,7 @@ taste or your experience. Read [identity.md](identity.md) before your first audi
 | Check this repo's own claims | `make verify` | [scripts/verify.py](scripts/verify.py) |
 | Check an audit you just wrote | `python3 scripts/verify.py <file>` | works on any file, inside the repo or not |
 | Understand why the folder is shaped this way | [decisions/](decisions/) | one decision per file |
+| See this auditor audited against its own standard | [SELF-AUDIT.md](SELF-AUDIT.md) | 2 pass, 3 partial, 5 N/A |
 
 ## The three hard rules
 
