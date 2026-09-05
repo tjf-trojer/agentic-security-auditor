@@ -11,9 +11,9 @@ by line, so you can open the provision and check that it says what the finding c
 
 | # | Artifact | Real? | Result |
 |---|---|---|---|
-| 1 | [`voltagent-agent-installer.md`](targets/voltagent-agent-installer.md) | Real, MIT, third party | 2 pass, 5 fail, 2 partial, 1 N/A |
+| 1 | [`voltagent-agent-installer.md`](targets/voltagent-agent-installer.md) | Real, MIT, third party | 3 pass, 4 fail, 2 partial, 1 N/A |
 | 2 | [`eu-ai-act-map-agents.md`](targets/eu-ai-act-map-agents.md) | Real, third party | 4 pass, 1 fail, 1 partial, 4 N/A |
-| 3 | [`ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md) | Synthetic | 0 pass, 9 fail, 0 partial, 1 N/A |
+| 3 | [`ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md) | Synthetic | 0 pass, 10 fail, 0 partial, 0 N/A |
 
 ---
 ---
@@ -33,7 +33,7 @@ No. This agent installs executable instructions fetched from a mutable third-par
 onto a path that every later session on the machine will load, behind a confirmation that shows
 the human none of the parts that carry the risk.
 
-Ledger: **2 pass, 5 fail, 2 partial, 1 not applicable.** Findings: 2 critical, 3 major, 2 minor,
+Ledger: **3 pass, 4 fail, 2 partial, 1 not applicable.** Findings: 3 critical, 3 major, 2 minor,
 plus 2 judgment calls.
 
 ## In plain terms
@@ -69,15 +69,15 @@ not a gap. Every finding below stands on OWASP alone.
 | Category | Verdict | Basis |
 |---|---|---|
 | ASI01 Agent Goal Hijack | **FAIL** | Finding 2 |
-| ASI02 Tool Misuse and Exploitation | **PARTIAL** | Finding 4. A confirmation exists (line 70); `Bash` is far broader than the task |
+| ASI02 Tool Misuse and Exploitation | **PARTIAL** | Findings 4 and 8. A confirmation exists (line 70); `Bash` is far broader than the task, and uninstall shares its gate |
 | ASI03 Identity and Privilege Abuse | **PASS** | The agent declares no separate credential and runs as the invoking operator. No token to over-scope, no service account to inherit, no privilege the operator did not already hold |
-| ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | Finding 1 |
+| ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | Findings 1 and 7 |
 | ASI05 Unexpected Code Execution | **PARTIAL** | Finding 5. `Bash` is granted and the definition steers toward it, but no path is described in which fetched content is executed directly |
 | ASI06 Memory & Context Poisoning | **FAIL** | Finding 3 |
 | ASI07 Insecure Inter-Agent Communication | **N/A** | The artifact defines a single agent that neither calls nor is called by other agents at runtime. It writes files that *become* other agents, which is ASI04 and ASI06, not inter-agent messaging |
 | ASI08 Cascading Failures | **PASS** | The workflow (lines 34-39) is short, linear, and human-initiated at each run, with no step conditioning on a previous inference. There is no multi-step chain for an early error to propagate through |
 | ASI09 Human-Agent Trust Exploitation | **FAIL** | Finding 6 |
-| ASI10 Rogue Agents | **FAIL** | Finding 7 |
+| ASI10 Rogue Agents | **PASS** | The agent is invoked interactively for each action and holds no loop, schedule, or continuous operation. There is no unattended run for behaviour to drift within, and the operator is present at every step. The autonomy is matched to the task |
 
 ## Findings
 
@@ -127,7 +127,7 @@ looked at. Integrity without verification is not a control.
 **For the owner.** Before a fetched file is written, what inspects its `tools:` grant and its
 instruction body, and what would cause the install to be refused?
 
-### Finding 3. What is installed persists into every later session on the machine. [CRITICAL, filed here as the ASI06 finding]
+### Finding 3. What is installed persists into every later session on the machine. [CRITICAL]
 
 **Where, in the artifact.** Line 35 offers global installation to `~/.claude/agents/`. Capability
 4 (line 16) states the same. This is a user-level directory, not a project one.
@@ -272,6 +272,10 @@ operator who *does* read the installed file reads what upstream published.
 
 The workflow is short, linear and human-initiated, with no step conditioning on a previous
 inference, which is why ASI08 passes on structure rather than on luck.
+
+The autonomy level is matched to the task. This agent is invoked for one action at a time and
+holds no loop, schedule, or unattended run, so ASI10 passes on design rather than on the absence
+of an opportunity to drift. Given what it installs, that restraint is doing real work.
 
 ## Observations outside the standard
 
@@ -447,14 +451,17 @@ runs unattended (ASI10 at full autonomy), or chains enough steps for an error to
 across the whole standard. It is clearly marked as synthetic and no claim is made that anyone
 shipped it.
 
-Condensed to the ledger and the two leading findings; the full format is demonstrated above.
+Condensed to the ledger and the two leading findings, since the full output format is
+demonstrated twice above. The ledger's Basis column carries the substance of the other eight.
 
 ## Audit summary
 
 No, and not close. A fully autonomous agent with administrator credentials, no approval step, no
 log, and no stop condition, instructed to follow instructions found in documents it reads.
 
-Ledger: **0 pass, 9 fail, 0 partial, 1 not applicable.** Findings: 6 critical, 3 major.
+Ledger: **0 pass, 10 fail, 0 partial, 0 not applicable.** Ten failures, of which six reach
+CRITICAL. The two leading ones are written out below; the remaining eight are summarised in the
+ledger.
 
 ## Capability profile
 
@@ -489,12 +496,11 @@ queue that people write into, and nothing discloses to them that a machine is ac
 | ASI08 Cascading Failures | **FAIL** | Works a backlog continuously with no verification between steps and no check before the final action |
 | ASI09 Human-Agent Trust Exploitation | **FAIL** | "No approval steps configured." There is no oversight moment to evaluate |
 | ASI10 Rogue Agents | **FAIL** | No iteration cap, no budget limit, no kill switch, no escalation on uncertainty, running continuously |
-| *(none)* | **N/A** | No category is inapplicable to this artifact, which is itself the summary finding |
 
-Note on the N/A row: nine categories fail and one, ASI07, would be N/A for a single agent but
-fires here because the definition spawns sub-agents. The ledger above therefore records ten
-failures and no genuine N/A. An artifact for which no category can be excluded is one whose
-autonomy is wrong for its blast radius in every direction at once.
+Ten categories, ten failures, no N/A. ASI07 would ordinarily be N/A for a single agent, but it
+fires here because the definition spawns sub-agents on inherited credentials. An artifact for
+which not one category can be honestly excluded is one whose autonomy is wrong for its blast
+radius in every direction at once.
 
 ## Finding 1. The definition instructs the agent to follow instructions found in untrusted documents. [CRITICAL]
 
