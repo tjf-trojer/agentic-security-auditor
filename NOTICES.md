@@ -51,20 +51,24 @@ legal purpose, use the Official Journal text at the link above.
 
 ## Audited artifacts
 
-### `agent-installer`
+All are reproduced byte-for-byte, because the audits cite them by line. No modifications.
 
+### `agent-installer`
 - **File:** `targets/voltagent-agent-installer.md`
 - **Source:** `categories/09-meta-orchestration/agent-installer.md` from
-  <https://github.com/VoltAgent/awesome-claude-code-subagents>, at commit
+  <https://github.com/VoltAgent/awesome-claude-code-subagents>, commit
   `beb9a0f0d74a222f5e24aeb390e6d7c3005d9e27` (2026-09-04)
 - **Licence:** MIT
-- **Modifications:** none. Reproduced byte-for-byte, because Audit 1 cites it by line.
 
-### `eu-ai-act-map` AGENTS.md
+### `loop-operator`
+- **File:** `targets/ecc-loop-operator.md`
+- **Source:** `agents/loop-operator.md` from <https://github.com/affaan-m/ECC>, commit `e04ea0b`
+- **Licence:** MIT
 
-- **File:** `targets/eu-ai-act-map-agents.md`
-- **Source:** `AGENTS.md` from <https://github.com/tjf-trojer/eu-ai-act-map>
-- **Modifications:** none. Reproduced byte-for-byte, because Audit 2 cites it by line.
+### SWE-agent `config/default.yaml`
+- **File:** `targets/swe-agent-default.yaml`
+- **Source:** `config/default.yaml` from <https://github.com/SWE-agent/SWE-agent>
+- **Licence:** MIT
 
 ## Everything else
 

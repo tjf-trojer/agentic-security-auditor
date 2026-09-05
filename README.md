@@ -55,12 +55,16 @@ arithmetic matches your own table. The file does not have to live in this reposi
 **4. Run it on a known-bad artifact.** [`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md)
 is written to fail all ten categories. Paste it in and compare against Audit 3.
 
-**5. See that it works in someone else's hands.** Audits 1 to 3 were written by hand while
-building this folder, which demonstrates a format and proves nothing. **Audit 4 was produced by a
-clean-room run**: a fresh session given only this repository and a target it had never seen, with
-no knowledge of the other audits. All thirty-eight of its citations were then checked and
-resolved. That run also found four real defects in these rules, which are fixed and recorded in
-the git history.
+**5. See that it works in someone else's hands.** Audit 1 was written by hand while building this
+folder, which demonstrates a format and proves nothing. **Audits 2 and 3 were not:** each is the
+output of a clean-room run, a fresh session given only this repository and a target it had never
+seen, with no knowledge of the other audits. Their citations were checked line by line afterwards
+and all resolved. Those runs also found real defects in these rules, all fixed and recorded in the
+git history.
+
+All three audited artifacts are real agent definitions published by other people, from three
+different projects, vendored byte-for-byte and pinned. None is mine: an auditor demonstrated only
+on artifacts its author controls has demonstrated very little.
 
 ## What it is not
 

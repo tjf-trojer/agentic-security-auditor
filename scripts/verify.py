@@ -181,7 +181,7 @@ def main(argv: list[str]) -> int:
         blocks = re.findall(r"\*\*What the standard requires[.:]\*\*(.*?)(?=\n\n|\Z)",
                             original, re.S)
         # The brief's equivalent block, one line per finding.
-        blocks += re.findall(r"^\*\*Standard\*\*(.*)$", original, re.M)
+        blocks += re.findall(r"^\*\*Standard\*\*(.*?)(?=\n\*\*|\n\n|\Z)", original, re.M | re.S)
         blocks += re.findall(r"^#+ What holds\s*$(.*?)(?=^#+ |\Z)", original, re.M | re.S)
         # Ledger cells are deliberately NOT scanned for quotations. A one-line Basis
         # cell legitimately quotes the artifact and cites the standard in the same
@@ -249,7 +249,11 @@ def main(argv: list[str]) -> int:
                 elif seen[code] > 1:
                     fail("skipped", f"{rel} [{title}]: {code} ruled on {seen[code]} times")
             c = Counter(v for _, v in rows)
-            stated = re.search(r"(\d+) pass, (\d+) fail, (\d+) partial, (\d+) not applicable", a)
+            # Tolerate a line wrap inside the arithmetic: a writer cannot control
+            # where their editor breaks the line, and failing them for it produced
+            # a misleading "no stated ledger arithmetic" in testing.
+            flat = re.sub(r"\s+", " ", a)
+            stated = re.search(r"(\d+) pass, (\d+) fail, (\d+) partial, (\d+) not applicable", flat)
             if not stated:
                 fail("ledger", f"{rel} [{title}]: no stated ledger arithmetic")
             else:
