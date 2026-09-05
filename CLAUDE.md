@@ -18,6 +18,7 @@ taste or your experience. Read [identity.md](identity.md) before your first audi
 | Cite or quote a provision | [reference/](reference/) | [provisions.md](provisions.md) for the id |
 | See a worked audit | [examples.md](examples.md) | four, one a clean-room run |
 | Check this repo's own claims | `make verify` | [scripts/verify.py](scripts/verify.py) |
+| Check an audit you just wrote | `python3 scripts/verify.py <file>` | works on any file, inside the repo or not |
 | Understand why the folder is shaped this way | [decisions/](decisions/) | one decision per file |
 
 ## The three hard rules

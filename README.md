@@ -42,10 +42,20 @@ installs from a moving `main` branch, and line 24 of
 GitHub URL with `/main/` in it. Decide for yourself whether the finding is right. That is the only
 test of an auditor that means anything.
 
-**3. Run it on a known-bad artifact.** [`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md)
+**3. Check your own audit, once you have one.** The same checker runs against any file:
+
+```bash
+python3 scripts/verify.py my-audit.md
+```
+
+It confirms your citations resolve, your ids match the register, every passage you quoted from
+the standard appears in it verbatim, your ledger covers all ten categories, and your stated
+arithmetic matches your own table. The file does not have to live in this repository.
+
+**4. Run it on a known-bad artifact.** [`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md)
 is written to fail all ten categories. Paste it in and compare against Audit 3.
 
-**4. See that it works in someone else's hands.** Audits 1 to 3 were written by hand while
+**5. See that it works in someone else's hands.** Audits 1 to 3 were written by hand while
 building this folder, which demonstrates a format and proves nothing. **Audit 4 was produced by a
 clean-room run**: a fresh session given only this repository and a target it had never seen, with
 no knowledge of the other audits. All thirty-eight of its citations were then checked and
@@ -120,17 +130,13 @@ decisions/     Why this folder is shaped this way, one decision per file
 scripts/       verify.py, cite.sh, build_register.py
 ```
 
-Two decisions carry the rest, and both are written up in [`decisions/`](decisions/):
+The load-bearing decision is the split between `reference/` (other people's text, where
+authority lives) and `method/` (mine, navigation only). **A finding may cite `reference/`, never
+`method/`.** A reader who trusts nothing here can delete `method/` and still check every finding.
 
-**`reference/` versus `method/`.** `reference/` is other people's text and is where authority
-lives. `method/` is mine and is navigation. A finding may cite `reference/`, never `method/`. A
-reader who trusts nothing here can delete `method/` and still check every finding.
-
-**Ids, not line numbers.** Line numbers move, and a moved citation still looks authoritative. So
-every provision has a stable id in [`provisions.md`](provisions.md), the line number is derived
-from it, and `verify.py` recomputes the lines and fails if one drifted. The id is bound to the
-provision's own words rather than to a marker inserted into the text, because nothing was
-inserted into the text.
+That decision and three others, including why ids rather than bare line numbers, are written up
+one per file in [`decisions/`](decisions/). The operating rules Claude follows are in
+[`CLAUDE.md`](CLAUDE.md) and [`rules.md`](rules.md); this README does not restate them.
 
 ## Scope and honesty
 

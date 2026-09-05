@@ -119,12 +119,14 @@ Four checks, in this order:
    read narrowly: a developer who invoked the agent themselves qualifies; a customer or member
    of the public almost never does.
 
-2. **Is the underlying use high-risk?** If the agent operates in an Annex III domain (employment
-   and worker management, essential public and private services, credit, law enforcement,
-   migration, education, critical infrastructure), deployer obligations attach and Art. 14 human
-   oversight is mandatory rather than optional. Name which Annex III point plausibly applies. Do
-   not assert the final classification. **Never stretch Annex III to manufacture a legal hook**;
-   an audit that invents jurisdiction is worse than one that reports none.
+2. **Is the underlying use high-risk?** If the agent operates in an Annex III domain, deployer
+   obligations attach and Art. 14 human oversight is mandatory rather than optional. Annex III
+   ships in full at [`AIA-ANNEX-III`](../reference/eu-ai-act-2024-1689-excerpts.md#L871 "^AIA-ANNEX-III"),
+   with each of its eight points separately citable (`AIA-III-1` to `AIA-III-8`), so **name the
+   point and cite it** rather than asserting one from memory. Read the point before naming it:
+   several are narrower than their headings suggest. Do not assert the final classification,
+   which is a lawyer's call. **Never stretch Annex III to manufacture a legal hook**; an audit
+   that invents jurisdiction is worse than one that reports none.
 
 3. **Is the reader a bound deployer?** Public bodies, private providers of public services, and
    Annex III deployers carry the heaviest duties.

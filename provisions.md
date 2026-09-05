@@ -6,8 +6,10 @@
 
 # The register: every provision this auditor may cite
 
-A finding cites a line of the standard. Line numbers move. A citation that has
-moved is worse than no citation, because it still looks authoritative.
+_Last updated: 2026-09-05_
+
+A finding cites a line. Line numbers move. A citation that has moved is worse than
+no citation, because it still looks authoritative.
 
 So every citable provision has a **stable id**, and the line number in a citation
 is a *derived*, clickable form of that id:
@@ -16,76 +18,139 @@ is a *derived*, clickable form of that id:
 [ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN")
 ```
 
-The id sits in the link title, where it survives; the line number sits in the
-link target, where it is convenient. `scripts/verify.py` recomputes every line
+The id sits in the link title, where it survives; the line number sits in the link
+target, where it is convenient. `python3 scripts/verify.py` recomputes every line
 from its id and fails if any has drifted.
 
 **The id resolves against the provision's own words, not against a marker.** The
-reference text is OWASP's, redistributed unaltered, so nothing was inserted into
-it to serve as an anchor. Each id is bound to the opening words of its provision,
-recorded below, and located by matching them. If OWASP publishes a new edition and
-a provision is reworded, that match fails and names the id, which is exactly when a
+reference texts are OWASP's and the EU's, redistributed unaltered, so nothing was
+inserted into them to serve as an anchor. Each id is bound to the opening words of
+its provision, recorded below, and located by matching them. If a new edition
+rewords a provision, that match fails and names the id, which is exactly when a
 human should look. A marker would have moved with the edit and kept a stale
 citation looking correct.
 
-**To read a provision without opening a file:**
+**This register is not a substitute for reading the standard.** Each row holds one
+line, and most provisions wrap across two or three. Open the category in
+`reference/` and read it before you cite it. `cite.sh` prints the whole provision:
 
 ```bash
-bash scripts/cite.sh ASI04-PIN          # print the provision
-bash scripts/cite.sh --from examples.md # every citation in a document
+bash scripts/cite.sh ASI04-PIN           # print the provision
+bash scripts/cite.sh AIA-50-1            # works for the AI Act too
+bash scripts/cite.sh --from examples.md  # every citation in a document
 ```
 
-Ids ending in `-MIT` are the mitigation-section headings, cited when a finding
-rests on a category's remedies as a whole rather than on one of them. Bare
-category ids (`ASI04`) are the section headings.
+Ids ending in `-MIT` are mitigation-section headings, cited when a finding rests on
+a category's remedies as a whole. Bare category ids (`ASI04`) are section headings.
+Prefer the narrowest id that carries your claim.
 
-| id | line | the provision, verbatim | cited for |
-|---|---|---|---|
-| `ASI00-LEAST-AGENCY` | 182 | agentic behavior where it is not needed expands the attack surface without adding value. Similarly, strong | The standard's Least-Agency principle, cross-cutting |
-| `ASI00-OBSERVABILITY` | 183 | observability becomes non-negotiable: without clear visibility into what agents are doing, why they are doing | Observability as non-negotiable, cross-cutting |
-| `ASI01` | 235 | ## ASI01: Agent Goal Hijack | Category heading: Agent Goal Hijack |
-| `ASI01-ONE-CHANNEL` | 240 | underlying model cannot reliably distinguish instructions from related content. | Root cause: instructions and content are indistinguishable |
-| `ASI01-MIT` | 282 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI01-UNTRUSTED-INPUT` | 283 | 1. Treat all natural-language inputs (e.g., user-provided text, uploaded documents, retrieved content) | Treat all natural-language input as untrusted, before it reaches tool calls |
-| `ASI01-LEAST-PRIVILEGE` | 286 | 2. Minimize the impact of goal hijacking by enforcing least privilege for agent tools and requiring | Least privilege for tools plus human approval for high-impact actions |
-| `ASI02` | 318 | ## ASI02: Tool Misuse and Exploitation | Category heading: Tool Misuse and Exploitation |
-| `ASI02-MIT` | 372 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI02-CONFIRM` | 384 | and human confirmation for high-impact or destructive actions (delete, transfer, publish). Display a | Human confirmation for destructive actions; pre-execution plan or dry-run diff |
-| `ASI03` | 414 | ## ASI03: Identity and Privilege Abuse | Category heading: Identity and Privilege Abuse |
-| `ASI03-INHERITANCE` | 436 | 1. Un-scoped Privilege Inheritance. Occurs when a high-privilege manager delegates tasks without | Un-scoped privilege inheritance from a high-privilege manager |
-| `ASI03-CONFUSED-DEPUTY` | 445 | 3. Cross-Agent Trust Exploitation (Confused Deputy). In multi-agent systems, agents often trust | Cross-agent trust exploitation: internal requests trusted by default |
-| `ASI03-MIT` | 478 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI03-SCOPED-TOKENS` | 479 | 1. Enforce Task-Scoped, Time-Bound Permissions: Issue short-lived, narrowly scoped tokens per | Short-lived, narrowly scoped, task-bound tokens |
-| `ASI03-REVALIDATE` | 500 | context switch. Prevent privilege inheritance across agents unless the original intent is re-validated. | Prevent privilege inheritance across agents unless intent is re-validated |
-| `ASI04` | 514 | ## ASI04: Agentic Supply Chain Vulnerabilities | Category heading: Agentic Supply Chain Vulnerabilities |
-| `ASI04-MIT` | 575 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI04-REGISTRIES` | 578 | use curated registries and block untrusted sources. | Curated registries; block untrusted sources |
-| `ASI04-GATEKEEPING` | 579 | 2. Dependency gatekeeping: Allowlist and pin; scan for typosquats (PyPI, npm, LangChain, | Allowlist and pin; verify provenance before install; auto-reject unverified |
-| `ASI04-SANDBOX` | 581 | 3. Containment and builds: Run sensitive agents in sandboxed containers with strict network or | Run sensitive agents in sandboxed containers with network or syscall limits |
-| `ASI04-RECHECK` | 587 | 6. Continuous validation and monitoring: Re-check signatures, hashes, and SBOMs (incl. AIBOMs) at | Re-check signatures, hashes and SBOMs at runtime; monitor lineage |
-| `ASI04-PIN` | 589 | 7. Pinning: Pin prompts, tools, and configs by content hash and commit ID. Require staged rollout with | Pin prompts, tools and configs by content hash and commit id |
-| `ASI05` | 606 | ## ASI05: Unexpected Code Execution (RCE) | Category heading: Unexpected Code Execution (RCE) |
-| `ASI05-MIT` | 658 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI06` | 681 | ## ASI06: Memory & Context Poisoning | Category heading: Memory and Context Poisoning |
-| `ASI06-POISONING` | 688 | In Memory and Context Poisoning, adversaries corrupt or seed this context with malicious or misleading | Adversaries corrupt or seed retained context, biasing future reasoning |
-| `ASI06-MIT` | 733 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI07` | 772 | ## ASI07: Insecure Inter-Agent Communication | Category heading: Insecure Inter-Agent Communication |
-| `ASI07-NO-AUTH` | 780 | Insecure Inter-Agent Communication occurs when these exchanges lack proper authentication, integrity, or | Exchanges lacking authentication, integrity or semantic validation |
-| `ASI07-MIT` | 822 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI07-CHANNELS` | 823 | 1. Secure agent channels: Use end-to-end encryption with per-agent credentials and mutual | Per-agent credentials and mutual authentication |
-| `ASI07-SIGNING` | 826 | 2. Message integrity and semantic protection: Digitally sign messages, hash both payload and | Sign messages; validate for hidden or modified instructions |
-| `ASI07-AGENT-CARDS` | 848 | attestation of agent identity, provenance, and descriptor integrity. Require signed agent cards and | Signed agent cards and continuous verification before accepting coordination |
-| `ASI08` | 863 | ## ASI08: Cascading Failures | Category heading: Cascading Failures |
-| `ASI08-COUPLING` | 895 | 1. Planner–executor coupling: A hallucinating or compromised planner emits unsafe steps that the | Planner-executor coupling: unsafe steps performed without validation |
-| `ASI08-MIT` | 935 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI08-POLICY-ENGINE` | 944 | 4. Independent policy enforcement: Separate planning and execution via an external policy engine to | Separate planning and execution via an external policy engine |
-| `ASI08-GATES` | 946 | 5. Output validation and human gates: Checkpoints, governance agents, or human review for high risk | Checkpoints, governance agents, or human review before outputs propagate |
-| `ASI08-BLAST-RADIUS` | 949 | 7. Implement blast-radius guardrails such as quotas, progress caps, circuit breakers between planner | Quotas, progress caps, circuit breakers between planner and executor |
-| `ASI09` | 965 | ## ASI09: Human-Agent Trust Exploitation | Category heading: Human-Agent Trust Exploitation |
-| `ASI09-MIT` | 1022 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
-| `ASI09-EXPLICIT-CONFIRM` | 1023 | 1. Explicit confirmations: Require multi-step approval or “human in the loop” before accessing extra | Multi-step approval or human in the loop before risky actions |
-| `ASI09-IMMUTABLE-LOGS` | 1025 | 2. Immutable logs: Keep tamper-proof records of user queries and agent actions for audit and | Tamper-proof records of queries and agent actions |
-| `ASI09-RISK-SUMMARY` | 1030 | 4. Allow reporting of suspicious interactions: In user-interactive systems, provide plain-language risk | Plain-language risk summary, not model-generated rationales |
-| `ASI09-PREVIEW` | 1044 | 7. Separate preview from effect: Block any network or state-changing calls during preview context | Separate preview from effect; risk badge with provenance and side effects |
-| `ASI10` | 1062 | ## ASI10: Rogue Agents | Category heading: Rogue Agents |
-| `ASI10-MIT` | 1107 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| id | source | line | the provision, verbatim | cited for |
+|---|---|---|---|---|
+| `ASI00-LEAST-AGENCY` | OWASP | 182 | agentic behavior where it is not needed expands the attack surface without adding value. Similarly, strong | Least-Agency: autonomy where not needed is attack surface |
+| `ASI00-OBSERVABILITY` | OWASP | 183 | observability becomes non-negotiable: without clear visibility into what agents are doing, why they are doing | Observability as non-negotiable |
+| `ASI01` | OWASP | 235 | ## ASI01: Agent Goal Hijack | Category heading |
+| `ASI01-ONE-CHANNEL` | OWASP | 240 | underlying model cannot reliably distinguish instructions from related content. | Root cause: instructions and content are indistinguishable |
+| `ASI01-VECTORS` | OWASP | 242 | variety of techniques - including, but not limited to, prompt-based manipulation, deceptive tool outputs, | Vectors incl. deceptive tool outputs and forged agent messages |
+| `ASI01-MIT` | OWASP | 282 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI01-UNTRUSTED-INPUT` | OWASP | 283 | 1. Treat all natural-language inputs (e.g., user-provided text, uploaded documents, retrieved content) | Treat all natural-language input as untrusted before tool calls |
+| `ASI01-LEAST-PRIVILEGE` | OWASP | 286 | 2. Minimize the impact of goal hijacking by enforcing least privilege for agent tools and requiring | Least privilege plus human approval for high-impact actions |
+| `ASI02` | OWASP | 318 | ## ASI02: Tool Misuse and Exploitation | Category heading |
+| `ASI02-MIT` | OWASP | 372 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI02-IAM-STANZAS` | OWASP | 380 | express these profiles as IAM or authorization policy stanzas attached to each tool, rather than | Per-tool least-privilege as IAM policy, not ad-hoc convention |
+| `ASI02-CONFIRM` | OWASP | 384 | and human confirmation for high-impact or destructive actions (delete, transfer, publish). Display a | Human confirmation for destructive actions; dry-run diff |
+| `ASI02-QUALIFIED-NAMES` | OWASP | 396 | 7. Semantic and Identity Validation (‘Semantic Firewalls)”. Enforce fully qualified tool names and | Fully qualified tool names and version pins |
+| `ASI02-TOOL-LOGS` | OWASP | 400 | 8. Logging, Monitoring, and Drift Detection. Maintain immutable logs of all tool invocations and | Immutable logs of all tool invocations |
+| `ASI03` | OWASP | 414 | ## ASI03: Identity and Privilege Abuse | Category heading |
+| `ASI03-INHERITANCE` | OWASP | 436 | 1. Un-scoped Privilege Inheritance. Occurs when a high-privilege manager delegates tasks without | Un-scoped privilege inheritance from a high-privilege manager |
+| `ASI03-CONFUSED-DEPUTY` | OWASP | 445 | 3. Cross-Agent Trust Exploitation (Confused Deputy). In multi-agent systems, agents often trust | Internal requests trusted by default |
+| `ASI03-SYNTHETIC-IDENTITY` | OWASP | 452 | 5. Synthetic Identity Injection. Attackers impersonate internal agents by using unverified descriptors | Impersonation via unverified self-declared descriptors |
+| `ASI03-MIT` | OWASP | 478 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI03-SCOPED-TOKENS` | OWASP | 479 | 1. Enforce Task-Scoped, Time-Bound Permissions: Issue short-lived, narrowly scoped tokens per | Short-lived, narrowly scoped, task-bound tokens |
+| `ASI03-REVALIDATE` | OWASP | 500 | context switch. Prevent privilege inheritance across agents unless the original intent is re-validated. | No privilege inheritance unless intent is re-validated |
+| `ASI04` | OWASP | 514 | ## ASI04: Agentic Supply Chain Vulnerabilities | Category heading |
+| `ASI04-SCOPE` | OWASP | 520 | other agents, agentic interfaces - MCP (Model Context Protocol), A2A (Agent2Agent) - agentic registries and | Other agents, MCP and A2A interfaces are in scope |
+| `ASI04-RUNTIME-LOADING` | OWASP | 525 | capabilities at runtime - loading external tools- agent personas dynamically – thereby increasing the attack | Runtime loading of external tools and agent personas |
+| `ASI04-THIRD-PARTY-AGENT` | OWASP | 546 | 4. Vulnerable Third-Party Agent (Agent→Agent). A third-party agent with unpatched vulnerabilities | A peer agent used to pivot, leak, or relay instructions |
+| `ASI04-MIT` | OWASP | 575 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI04-REGISTRIES` | OWASP | 578 | use curated registries and block untrusted sources. | Curated registries; block untrusted sources |
+| `ASI04-GATEKEEPING` | OWASP | 579 | 2. Dependency gatekeeping: Allowlist and pin; scan for typosquats (PyPI, npm, LangChain, | Allowlist and pin; verify provenance; auto-reject unverified |
+| `ASI04-SANDBOX` | OWASP | 581 | 3. Containment and builds: Run sensitive agents in sandboxed containers with strict network or | Sandboxed containers with network or syscall limits |
+| `ASI04-RECHECK` | OWASP | 587 | 6. Continuous validation and monitoring: Re-check signatures, hashes, and SBOMs (incl. AIBOMs) at | Re-check signatures, hashes and SBOMs at runtime |
+| `ASI04-PIN` | OWASP | 589 | 7. Pinning: Pin prompts, tools, and configs by content hash and commit ID. Require staged rollout with | Pin prompts, tools and configs by content hash and commit id |
+| `ASI05` | OWASP | 606 | ## ASI05: Unexpected Code Execution (RCE) | Category heading |
+| `ASI05-RUNAWAY` | OWASP | 634 | 1. Replit “Vibe Coding” Runaway Execution: During automated “vibe coding” or self-repair tasks, an | Scenario: unreviewed generated commands destroy production data |
+| `ASI05-MIT` | OWASP | 658 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI05-OUTPUT-HANDLING` | OWASP | 659 | 1. Follow the mitigations of LLM05:2025 Improper Output Handling with input validation and output | Validate and encode agent-generated code |
+| `ASI05-NO-DIRECT-PROD` | OWASP | 661 | 2. Prevent direct agent-to-production systems and operationalize use of vibe coding systems with | No direct agent-to-production; pre-production checks |
+| `ASI05-BAN-EVAL` | OWASP | 664 | 3. Ban eval in production agents: Require safe interpreters, taint-tracking on generated code. | Ban eval; safe interpreters and taint tracking |
+| `ASI05-ENV-SECURITY` | OWASP | 665 | 4. Execution environment security: Never run as root. Run code in sandboxed containers with strict | Never run as root; sandboxed containers; restrict filesystem |
+| `ASI05-SEPARATE-EXEC` | OWASP | 670 | 5. Architecture and design: Isolate per-session environments with permission boundaries; apply least | Separate code generation from execution with validation gates |
+| `ASI05-APPROVALS` | OWASP | 672 | 6. Access control and approvals: Require human approval for elevated runs; keep an allowlist for | Human approval for elevated runs; versioned auto-execution allowlist |
+| `ASI06` | OWASP | 681 | ## ASI06: Memory & Context Poisoning | Category heading |
+| `ASI06-POISONING` | OWASP | 688 | In Memory and Context Poisoning, adversaries corrupt or seed this context with malicious or misleading | Corrupted context biases future reasoning and tool use |
+| `ASI06-UNTRUSTED-SOURCES` | OWASP | 690 | sources such as uploads, API feeds, user input, or peer-agent exchanges may be untrusted or only partially | Peer-agent exchanges among untrusted ingestion sources |
+| `ASI06-CROSS-AGENT` | OWASP | 718 | 6. Cross-agent propagation: Contaminated context or shared memory spreads between cooperating | Contaminated shared memory spreads between agents |
+| `ASI06-MIT` | OWASP | 733 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI06-BASELINE` | OWASP | 734 | 1. Baseline data protection: Encryption in transit and at rest combined with least-privilege access | Encryption plus least-privilege access to memory |
+| `ASI06-VALIDATE-WRITES` | OWASP | 735 | 2. Content validation: Scan all new memory writes and model outputs (rules + AI) for malicious or | Scan all memory writes and model outputs before commit |
+| `ASI06-SEGMENTATION` | OWASP | 737 | 3. Memory segmentation: Isolate user sessions and domain contexts to prevent knowledge and | Isolate sessions and domain contexts |
+| `ASI06-CURATED-SOURCES` | OWASP | 739 | 4. Access and retention: Allow only authenticated, curated sources; enforce context-aware access | Only authenticated, curated sources; minimise retention |
+| `ASI06-PROVENANCE` | OWASP | 741 | 5. Provenance and anomalies: Require source attribution and detect suspicious updates or | Source attribution and anomaly detection on updates |
+| `ASI06-NO-SELF-INGEST` | OWASP | 744 | 6. Prevent automatic re-ingestion of an agent’s own generated outputs into trusted memory to | No automatic re-ingestion of the agent's own output (bootstrap poisoning) |
+| `ASI06-ROLLBACK` | OWASP | 746 | 7. Resilience and verification: Perform adversarial test, use snapshots/rollback and version control, | Adversarial test, snapshots, rollback, human review for high risk |
+| `ASI06-EXPIRE` | OWASP | 750 | 8. Expire unverified memory to limit poison persistence. | Expire unverified memory to limit poison persistence |
+| `ASI07` | OWASP | 772 | ## ASI07: Insecure Inter-Agent Communication | Category heading |
+| `ASI07-NO-AUTH` | OWASP | 780 | Insecure Inter-Agent Communication occurs when these exchanges lack proper authentication, integrity, or | Exchanges lacking authentication, integrity or semantic validation |
+| `ASI07-MIT` | OWASP | 822 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI07-CHANNELS` | OWASP | 823 | 1. Secure agent channels: Use end-to-end encryption with per-agent credentials and mutual | Per-agent credentials and mutual authentication |
+| `ASI07-SIGNING` | OWASP | 826 | 2. Message integrity and semantic protection: Digitally sign messages, hash both payload and | Sign messages; validate for hidden or modified instructions |
+| `ASI07-AGENT-CARDS` | OWASP | 848 | attestation of agent identity, provenance, and descriptor integrity. Require signed agent cards and | Signed agent cards; verification before accepting coordination |
+| `ASI07-TYPED-CONTRACTS` | OWASP | 852 | 9. Typed contracts and schema validation: Use versioned, typed message schemas with explicit per- | Versioned, typed message schemas with explicit audiences |
+| `ASI08` | OWASP | 863 | ## ASI08: Cascading Failures | Category heading |
+| `ASI08-COUPLING` | OWASP | 895 | 1. Planner–executor coupling: A hallucinating or compromised planner emits unsafe steps that the | Planner-executor coupling: unsafe steps performed without validation |
+| `ASI08-AUTOREMEDIATION` | OWASP | 925 | 6. Auto-remediation feedback loop: A remediation agent suppresses alerts to meet latency SLAs; a | Scenario: suppressed alerts read as success, automation widens |
+| `ASI08-MIT` | OWASP | 935 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI08-POLICY-ENGINE` | OWASP | 944 | 4. Independent policy enforcement: Separate planning and execution via an external policy engine to | Separate planning and execution via an external policy engine |
+| `ASI08-GATES` | OWASP | 946 | 5. Output validation and human gates: Checkpoints, governance agents, or human review for high risk | Checkpoints, governance agents, or human review before propagation |
+| `ASI08-BLAST-RADIUS` | OWASP | 949 | 7. Implement blast-radius guardrails such as quotas, progress caps, circuit breakers between planner | Quotas, progress caps, circuit breakers between planner and executor |
+| `ASI08-NON-REPUDIATION` | OWASP | 957 | 10. Logging and non-repudiation. Record all inter-agent messages, policy decisions, and execution | Tamper-evident logs of inter-agent messages and decisions |
+| `ASI09` | OWASP | 965 | ## ASI09: Human-Agent Trust Exploitation | Category heading |
+| `ASI09-EXPLAINABILITY` | OWASP | 986 | 1. Insufficient Explainability: Opaque reasoning forces users to trust outputs they cannot question, | Opaque reasoning forces users to trust what they cannot question |
+| `ASI09-MISSING-CONFIRM` | OWASP | 989 | 2. Missing Confirmation for Sensitive Actions: Lack of a final verification step converts user trust into | No final verification step turns trust into irreversible action |
+| `ASI09-FAKE-EXPLAIN` | OWASP | 997 | 4. Fake Explainability: The agent fabricates convincing rationales that hide malicious logic, causing | Fabricated rationales that hide unsafe logic |
+| `ASI09-MIT` | OWASP | 1022 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI09-EXPLICIT-CONFIRM` | OWASP | 1023 | 1. Explicit confirmations: Require multi-step approval or “human in the loop” before accessing extra | Multi-step approval or human in the loop before risky actions |
+| `ASI09-IMMUTABLE-LOGS` | OWASP | 1025 | 2. Immutable logs: Keep tamper-proof records of user queries and agent actions for audit and | Tamper-proof records of queries and agent actions |
+| `ASI09-RISK-SUMMARY` | OWASP | 1030 | 4. Allow reporting of suspicious interactions: In user-interactive systems, provide plain-language risk | Plain-language risk summary, not model-generated rationales |
+| `ASI09-CONTENT-PROVENANCE` | OWASP | 1040 | 6. Content provenance and policy enforcement: Attach verifiable metadata-source identifiers, | Verifiable metadata on all recommendations and external data |
+| `ASI09-PREVIEW` | OWASP | 1044 | 7. Separate preview from effect: Block any network or state-changing calls during preview context | Separate preview from effect; risk badge with side effects |
+| `ASI10` | OWASP | 1062 | ## ASI10: Rogue Agents | Category heading |
+| `ASI10-DEFINITION` | OWASP | 1065 | Rogue Agents are malicious or compromised AI Agents that deviate from their intended function or | Agents deviating from intended function or authorised scope |
+| `ASI10-DRIFT` | OWASP | 1071 | on the loss of behavioral integrity and governance once the drift begins, not the initial intrusion itself. | Loss of behavioural integrity once drift begins |
+| `ASI10-REWARD-HACKING` | OWASP | 1089 | 4. Reward Hacking and Optimization Abuse: Agents game their assigned reward systems by | Agents game flawed metrics into misaligned strategies |
+| `ASI10-REWARD-SCENARIO` | OWASP | 1104 | 4. Reward Hacking → Critical Data Loss: Agents tasked with minimizing cloud costs learn that | Scenario: cost-minimising agent deletes production backups |
+| `ASI10-MIT` | OWASP | 1107 | ### Prevention and Mitigation Guidelines | Mitigation section heading |
+| `ASI10-AUDIT-LOGS` | OWASP | 1108 | 1. Governance & Logging: Maintain comprehensive, immutable and signed audit logs of all agent | Immutable, signed audit logs of all actions and tool calls |
+| `ASI10-ISOLATION` | OWASP | 1111 | 2. Isolation & Boundaries: Assign Trust Zones with strict inter-zone communication rules and deploy | Trust zones and restricted execution environments |
+| `ASI10-WATCHDOG` | OWASP | 1114 | 3. Monitoring & Detection: Deploy behavioral detection, such as watchdog agents to validate peer | Behavioural detection; watchdog agents validating peer output |
+| `ASI10-KILL-SWITCH` | OWASP | 1117 | 4. Containment & Response: Implement rapid mechanisms like kill-switches and credential | Kill switches and credential revocation to disable rogue agents |
+| `ASI10-ATTESTATION` | OWASP | 1120 | 5. Identity Attestation and Behavioral Integrity Enforcement: Implement per-agent cryptographic | Per-agent cryptographic identity attestation |
+| `ASI10-MANIFESTS` | OWASP | 1122 | Attach signed behavioral manifests declaring expected capabilities, tools, and goals that are | Signed behavioural manifests validated before each action |
+| `AIA-3` | AI Act | 58 | Definitions | Article 3, definitions |
+| `AIA-3-23` | AI Act | 167 | (23) ‘substantial modification’ means a change to an AI system after its placing on the market or putting into service which | 3(23) substantial modification |
+| `AIA-12` | AI Act | 418 | Record-keeping | Article 12, record-keeping |
+| `AIA-14` | AI Act | 460 | Human oversight | Article 14, human oversight |
+| `AIA-25` | AI Act | 538 | Responsibilities along the AI value chain | Article 25, responsibilities along the value chain |
+| `AIA-26` | AI Act | 607 | Obligations of deployers of high-risk AI systems | Article 26, deployer obligations |
+| `AIA-50-1` | AI Act | 742 | Providers shall ensure that AI systems intended to interact directly with natural persons are designed and developed in | 50(1) disclosure that a person is interacting with an AI system |
+| `AIA-50-2` | AI Act | 750 | Providers of AI systems, including general-purpose AI systems, generating synthetic audio, image, video or text | 50(2) machine-readable marking of synthetic output |
+| `AIA-72` | AI Act | 825 | Post-market monitoring by providers and post-market monitoring plan for high-risk AI systems | Article 72, post-market monitoring |
+| `AIA-ANNEX-III` | AI Act | 871 | High-risk AI systems referred to in Article 6(2) | Annex III, the list of high-risk uses |
+| `AIA-III-1` | AI Act | 877 | Biometrics, in so far as their use is permitted under relevant Union or national law: | Annex III(1) biometrics |
+| `AIA-III-2` | AI Act | 892 | Critical infrastructure: AI systems intended to be used as safety components in the management and operation of | Annex III(2) critical infrastructure |
+| `AIA-III-3` | AI Act | 897 | Education and vocational training: | Annex III(3) education and vocational training |
+| `AIA-III-4` | AI Act | 917 | Employment, workers’ management and access to self-employment: | Annex III(4) employment and workers' management |
+| `AIA-III-5` | AI Act | 930 | Access to and enjoyment of essential private services and essential public services and benefits: | Annex III(5) essential private and public services |
+| `AIA-III-6` | AI Act | 959 | Law enforcement, in so far as their use is permitted under relevant Union or national law: | Annex III(6) law enforcement |
+| `AIA-III-7` | AI Act | 986 | Migration, asylum and border control management, in so far as their use is permitted under relevant Union or | Annex III(7) migration, asylum and border control |
+| `AIA-III-8` | AI Act | 1008 | Administration of justice and democratic processes: | Annex III(8) administration of justice and democratic processes |

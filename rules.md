@@ -36,6 +36,10 @@ A finding has three parts and does not exist without all three:
    The **id is the identity**, in the link title. The **line is derived**, in the link target.
    All ids are in [`provisions.md`](provisions.md). `bash scripts/cite.sh ASI04-PIN` prints the
    provision; `python3 scripts/verify.py` fails if a line has drifted.
+
+   **The register is an index, not the standard.** Each row holds one line and most provisions
+   run across two or three. Never cite from the register alone: open the category in
+   `reference/` and read it, or run `cite.sh`, which prints the whole provision.
 3. **The gap.** One sentence: what the standard requires, what the artifact does instead.
 
 **Before you write a line number, read that line.** Never cite from memory of what a category is
@@ -84,6 +88,13 @@ pass. If you cannot name what earns it, the verdict is FAIL or N/A.
 **Silence is not a control.** Where a category applies, the artifact says nothing, and the
 consequence turns on a fact you cannot see, the verdict is still FAIL. Put the uncertainty in the
 finding (Rule 6) and in the severity, not in the ledger. Do not invent a fifth verdict.
+
+**A control on the artifact's outputs is not a control on the artifact.** Definitions often
+require something of the documents, plans or scripts the agent produces (a runbook must contain a
+rollback section, a report must cite its sources) while requiring nothing of the agent's own
+execution. That is real design and it earns PARTIAL, never PASS: it constrains what the agent
+writes, not what the agent does, and the category is about what the agent does. Say which of the
+two it governs in the ledger's Basis column, so the distinction is visible rather than implied.
 
 **A short artifact will score badly, and that is a real result.** This ledger measures what a
 definition commits to in writing. Never credit a control the artifact does not contain to balance
@@ -160,9 +171,10 @@ production data today? Then the arithmetic: X pass, Y fail, Z partial,
 N not applicable, and findings by severity.
 
 ## In plain terms
-Three lines, no codes, written to survive being forwarded alone to someone
-with no security background: what is dangerous in plain words, and the one
-instruction ("do not deploy until the questions below are answered").
+Three to five lines, no codes, written to survive being forwarded alone to
+someone with no security background: what is dangerous in plain words, and
+the one instruction ("do not deploy until the questions below are answered").
+Required in every full audit. A condensed audit may omit it and must say so.
 
 ## Capability profile
 The scope-gate result, three to five lines.
