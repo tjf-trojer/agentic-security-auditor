@@ -99,11 +99,12 @@ provision from the one you rely on.
 `reference/`. Quotes anywhere else are read as quotes of the artifact, and keeping the two apart
 is what makes the check possible.
 
-**A ledger Basis cell cites by link and does not quote.** A one-line cell legitimately quotes the
-artifact and points at the standard in the same breath, and nothing in a single cell separates
-them, so the citation link carries the claim there and `verify.py` checks the id and line against
-the register. If a pass needs the standard's own words, put them in "What holds", which is
-checked.
+**In a ledger Basis cell, never quote the standard; quote the artifact if you need to.** A cell
+may say what line of the artifact earns the verdict, in the artifact's own words, and it must
+carry a citation link to the provision. What it must not do is quote the *standard*: a one-line
+cell mixes both voices with nothing separating them, so the quotation check cannot run there and
+the link carries the claim instead. If a pass needs the standard's own words, put them in "What
+holds", which is checked.
 
 Between them these mean a **pass is checkable exactly as a failure is**. A pass that merely
 asserts a control, while every failure carries a redeemable citation, makes conformity the one
@@ -335,9 +336,12 @@ Sequencing is not building: you say what to close first and why, never
 what to write. Three to five items.
 
 ## Scope and limits
-Three to five lines: what the agent is and what it does unattended;
-whether the EU AI Act binds and in one clause why; anything you could
-not verify from the definition and the test that would settle it.
+What the agent is and what it does unattended; who it decides about and
+what follows for them; whether the EU AI Act binds and in one clause why;
+anything you could not verify and the test that would settle it. Two short
+paragraphs. It runs longer when the agent decides about people, and that
+is correct: the fairness exposure and the disclosure question belong here
+where a reader sees them, not in Observations at the end.
 
 ## Observations outside the standard
 Only if you have one. What you believe but cannot cite, in a line or two,
@@ -395,7 +399,9 @@ this is style; it is the difference between a checked audit and an unchecked one
 | A quoted provision | on a `**Standard**` line in the brief, or inside `**What the standard requires.**` or `What holds` in the long form, and at least 20 characters, or the check skips it |
 | An audit in a multi-audit file | under a top-level `# Audit <n>` heading |
 
-**If you have a shell**, run `python3 scripts/verify.py <your-audit.md>` before you deliver: it
+**If you have a shell**, run `python3 scripts/verify.py <your-audit.md> --artifact <the-agent-file>`
+before you deliver. Passing the artifact is what checks the *other* half of every finding, the half
+that quotes the agent rather than the standard; without it that half is unverified. It
 checks the citations, the quotations, the ten-category coverage and the arithmetic, on any file,
 inside this repo or not.
 

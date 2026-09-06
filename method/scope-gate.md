@@ -2,7 +2,7 @@
 
 _Last updated: 2026-09-05_
 
-The opening move of every audit (rules.md, Rule 3, Move 1). It answers three questions and
+The opening move of every audit (rules.md, Rule 3, Move 1). It answers four questions and
 produces a **capability profile** that the rest of the audit refers back to. Run it before
 looking for findings: the profile determines which categories can even fire.
 
@@ -114,8 +114,9 @@ Three sub-questions. Answer them in one line each, or say "nobody" and move on.
    score in a file somebody later reads, a flag that changes how they are treated. Say whether it
    is reversible *for them*, which is not the same as reversible for the operator: a rejection
    email that can be followed by an apology has still been received.
-3. **Do they know, and can they contest it?** Is the person told an AI system was involved, are
-   they given anything they could argue with, and is there a route back to a human.
+3. **Is there a route back to a human?** Can the person reach someone who can change the outcome,
+   and are they given anything they could argue with. (Whether they are *told* an AI was involved
+   is Question 4's Art. 50 check; do not answer it twice.)
 
 **What changes when the answer is not "nobody".**
 
@@ -133,10 +134,17 @@ Three sub-questions. Answer them in one line each, or say "nobody" and move on.
 - **A data-protection pointer becomes mandatory**, in one line, marked as outside this audit's
   scope. Do not assess it.
 
+**Severity, when the subject is a person.** Do not reach for Rule 4's fourth CRITICAL test unless
+it actually fits: that one is about an artifact whose *output is an assurance nothing requires to
+be true*, which is a different failure from deciding about someone. An agent that rejects people on
+an honestly derived score, with no fabricated rationale, trips this question and not that test.
+Grade it on reachability like anything else, and let the consequence for the person carry the
+weight: an irreversible outcome delivered to someone with no route back to a human is a short path
+from an ordinary mistake to serious harm, which is CRITICAL on the first test, not the fourth.
+
 The trap this question exists to catch: an agent whose tool grant is narrow and whose subject is a
 person can look clean on every action-shaped check while being the most consequential artifact you
-will audit. Rule 4's fourth CRITICAL test is where that lands, and this question is how you reach
-it.
+audit.
 
 ---
 
@@ -168,7 +176,10 @@ Four checks, in this order:
    ships in full at [`AIA-ANNEX-III`](../reference/eu-ai-act-2024-1689-excerpts.md#L871 "^AIA-ANNEX-III"),
    with each of its eight points separately citable (`AIA-III-1` to `AIA-III-8`), so **name the
    point and cite it** rather than asserting one from memory. Read the point before naming it:
-   several are narrower than their headings suggest. Do not assert the final classification,
+   several are narrower than their headings suggest. **Art. 6(3), the derogation that decides
+   whether an Annex III system is actually high-risk, is not shipped in `reference/`**, so say it
+   was not checked rather than implying the classification is settled. Do not assert the final
+   classification,
    which is a lawyer's call. **Never stretch Annex III to manufacture a legal hook**; an audit
    that invents jurisdiction is worse than one that reports none.
 

@@ -24,6 +24,8 @@ each check exists because one of them actually happened while this repo was buil
 
     python3 scripts/verify.py             # check everything, exit 1 on failure
     python3 scripts/verify.py --relink    # rewrite citations to carry their ids
+    python3 scripts/verify.py audit.md --artifact agent.md   # also check the
+                                          # findings' claims about the artifact
 """
 from __future__ import annotations
 
@@ -35,6 +37,10 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+# Resolve command-line paths against the caller's working directory BEFORE moving
+# to the repo root, or a relative path silently resolves against the wrong place
+# and the run then reports the file as citing nothing.
+_ARGV = [str(Path(a).resolve()) if not a.startswith("-") else a for a in sys.argv[1:]]
 os.chdir(ROOT)
 
 REF_NAME = "owasp-top-10-agentic-applications-2026.md"
@@ -116,8 +122,20 @@ def md_files() -> list[str]:
 
 
 def main(argv: list[str]) -> int:
-    targets = [a for a in argv[1:] if not a.startswith("-")]
+    targets = [a for a in _ARGV if not a.startswith("-")]
     relink = "--relink" in argv
+    artifact_lines = None
+    if "--artifact" in _ARGV:
+        i = _ARGV.index("--artifact")
+        if i + 1 < len(_ARGV):
+            ap = Path(_ARGV[i + 1])
+            targets = [t for t in targets if t != str(ap)]
+            if ap.exists():
+                artifact_lines = ap.read_text(encoding="utf-8", errors="replace").split("\n")
+                notes.append(f"artifact: checking claims against {ap.name} "
+                             f"({len(artifact_lines)} lines)")
+            else:
+                fail("input", f"--artifact {ap}: no such file")
 
     ref_lines = REF.read_text(encoding="utf-8").split("\n") if REF.exists() else []
     act_lines = ACT.read_text(encoding="utf-8").split("\n") if ACT.exists() else []
@@ -226,6 +244,27 @@ def main(argv: list[str]) -> int:
                     fail("misquote", f"{rel}: quoted passage is not inside any provision cited in "
                                      f"its own block ({where}): \"{missing[0][:70]}\"")
 
+        # 4c FABRICATED ARTIFACT CLAIM. Only runs with --artifact. Until this existed
+        # the audited file was never opened, so half of every finding — the half the
+        # README leads with, "quoting the line of your agent that creates the
+        # exposure" — was unverified. A finding claiming a tool grant the artifact
+        # does not contain, at a line the artifact does not have, passed clean.
+        if artifact_lines is not None:
+            art_join = fold("\n".join(artifact_lines))
+            for para in re.findall(r"^\*\*Artifact\*\*(.*?)(?=\n\*\*|\n\n|\Z)",
+                                   original, re.M | re.S):
+                for n in {int(x) for x in re.findall(r"\blines?\s+(\d+)", para)}:
+                    if not 0 < n <= len(artifact_lines):
+                        fail("artifact", f"{rel}: cites line {n} of the artifact, which has "
+                                         f"{len(artifact_lines)} lines")
+                clean = re.sub(r"\]\([^)]*\)", "] ", para)
+                for q in re.findall(r"[\"`]([^\"`]{12,300})[\"`]", clean):
+                    if len(norm(q)) < 12:
+                        continue
+                    if fold(q) not in art_join:
+                        fail("artifact", f"{rel}: quoted as being in the artifact but not found "
+                                         f"there: \"{q[:70]}\"")
+
         # 4b UNLINKED CITATION. A citation written as prose ("§L1008", "line 376")
         # resolves for a human reader and is invisible to every other check here,
         # so "OK" would mean "the citations you formatted correctly are fine" while
@@ -301,6 +340,18 @@ def main(argv: list[str]) -> int:
                                       f"{', '.join('F'+str(m) for m in missing)} "
                                       f"but no such finding exists")
 
+            # 2b UNCITED PASS. Rule 2 requires a PASS to name the control AND cite the
+            # provision it satisfies, and that is the rule this repository argues
+            # hardest for: a pass is what a reader relies on. It was unenforced, so an
+            # audit with every verdict flipped to PASS and bare finding references in
+            # the Basis cells passed clean.
+            for row in re.findall(r"^\|\s*ASI\d\d\b.*$", a, re.M):
+                if "**PASS**" in row and not CITE.search(row):
+                    code = re.match(r"^\|\s*(ASI\d\d)", row).group(1)
+                    fail("uncited-pass", f"{rel} [{title}]: {code} is PASS with no citation in its "
+                                         f"Basis cell. Rule 2 requires a pass to cite the provision "
+                                         f"it satisfies, or the verdict is FAIL or N/A")
+
             c = Counter(v for _, v in rows)
             # Tolerate a line wrap inside the arithmetic: a writer cannot control
             # where their editor breaks the line, and failing them for it produced
@@ -332,7 +383,8 @@ def main(argv: list[str]) -> int:
 
     notes.append(f"citations: {total_cites} checked")
     notes.append(f"ledgers: {ledger_count} audit(s), all ten categories each")
-    if targets and total_cites == 0 and ledger_count == 0:
+    missing_input = any(f.startswith("[input]") for f in failures)
+    if targets and total_cites == 0 and ledger_count == 0 and not missing_input:
         # An out-of-scope result is the correct output for an artifact that is not an
         # agent, and it has nothing to cite by design. Failing it would punish a user
         # for following the scope gate.

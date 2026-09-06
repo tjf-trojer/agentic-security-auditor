@@ -22,10 +22,22 @@ make verify          # prove the standard is intact and every citation is honest
 
 Two minutes, no account, no API key, nothing to install.
 
-**1. Verify the auditor's own claims.** `make verify` runs nine offline checks: every registered
-provision still sits where the register says, every citation resolves, every passage quoted from
-the standard appears in it verbatim, every audit ruled on all ten categories, and the stated
-ledger arithmetic matches the tables. It exits non-zero if any of that is false.
+**1. Verify the auditor's own claims.** `make verify` runs twelve offline checks: every registered
+provision still sits where the register says, every citation resolves and its id matches the
+register, every passage quoted from the standard appears inside the provision actually cited,
+every audit ruled on all ten categories, every PASS carries a citation, and the stated verdict and
+severity counts match the tables. It exits non-zero if any of that is false.
+
+**What it does not check, so you know what a green result is worth.** It cannot tell you a verdict
+is right; no script can. And by default it never opens the artifact under audit, so the half of a
+finding that quotes *your agent* is unverified. Pass the artifact to check that half too:
+
+```bash
+python3 scripts/verify.py my-audit.md --artifact my-agent.md
+```
+
+That catches a finding claiming a line the artifact does not have, or quoting text that is not in
+it. Use it on any audit you did not write yourself.
 
 **2. Redeem any citation from the terminal.**
 

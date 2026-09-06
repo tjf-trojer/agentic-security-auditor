@@ -32,6 +32,14 @@ linear extraction and is left exactly as extracted rather than reconstructed, be
 reconstructing it would mean altering the standard. Read those in the PDF. The ten category
 sections, which are what this auditor cites, are continuous prose and came through cleanly.
 
+## What is deliberately not here
+
+**Art. 6(3), the derogation.** It decides whether a system that falls inside Annex III is
+*actually* high-risk, so it is the article an Annex III audit most wants next. It is not shipped,
+because this auditor stops at "which Annex III point plausibly applies" and does not make the
+final classification, which is a lawyer's call. An audit that reaches Annex III should say the
+derogation was not checked rather than imply the classification is settled.
+
 ## Where the citable provisions live
 
 Not here. [`../provisions.md`](../provisions.md) is the register: every provision this auditor may
