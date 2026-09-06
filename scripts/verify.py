@@ -42,6 +42,8 @@ REF = Path("reference") / REF_NAME
 ACT = Path("reference") / "eu-ai-act-2024-1689-excerpts.md"
 REGISTER = Path("provisions.md")
 SOURCE_NAME = {"owasp": "the OWASP standard", "act": "the AI Act excerpts"}
+# Longest a single provision may run when nothing is registered after it.
+SPAN_CAP = 14
 
 # Links inside a byte-for-byte copy of someone else's artifact point at their
 # repository, not ours. Rewriting them would corrupt the thing being audited.
@@ -123,6 +125,12 @@ def main(argv: list[str]) -> int:
     ref_variants = hyphen_variants(REF.read_text(encoding="utf-8")) if REF.exists() else []
     reg = load_register()
     line_to_id = {(src, ln): pid for pid, (src, ln, _) in reg.items()}
+    # Registered line numbers per source, sorted: used to bound a provision's span.
+    reg_lines: dict[str, list[int]] = {}
+    for _pid, (src, ln, _t) in reg.items():
+        reg_lines.setdefault(src, []).append(ln)
+    for v in reg_lines.values():
+        v.sort()
 
     # 1. DRIFTED PROVISION. Always runs: it is what makes every other check mean
     # something, and it is cheap.
@@ -189,7 +197,6 @@ def main(argv: list[str]) -> int:
                             original, re.S)
         blocks += re.findall(r"^\*\*Standard\*\*(.*?)(?=\n\*\*|\n\n|\Z)", original, re.M | re.S)
         blocks += re.findall(r"^#+ What holds\s*$(.*?)(?=^#+ |\Z)", original, re.M | re.S)
-        WINDOW = 12
         for para in blocks:
             cites = [(("owasp" if m.group("file").startswith("owasp") else "act"),
                       int(m.group("line")),
@@ -197,21 +204,27 @@ def main(argv: list[str]) -> int:
                      for m in CITE.finditer(para)]
             if not cites:
                 continue
-            # The text a quotation in this block is allowed to have come from.
+            # The text a quotation in this block may have come from: the span of the
+            # provision actually cited, not a fixed window around it. A window let a
+            # quote lifted from a NEIGHBOURING provision pass, which is the same
+            # class of error as citing the wrong line in the first place. A
+            # provision runs from its own registered line to the next registered
+            # line in the same source, capped so an unregistered tail cannot
+            # swallow the rest of the file.
             allowed = []
             for src, a_, b_ in cites:
                 lines_ = src_lines.get(src, [])
-                lo = max(0, a_ - 1 - WINDOW)
-                hi = min(len(lines_), b_ + WINDOW)
-                allowed.extend(hyphen_variants("\n".join(lines_[lo:hi])))
+                nxt = next((ln for ln in reg_lines.get(src, []) if ln > b_), None)
+                hi = min(len(lines_), (nxt - 1) if nxt else b_ + SPAN_CAP, b_ + SPAN_CAP)
+                allowed.extend(hyphen_variants("\n".join(lines_[a_ - 1:hi])))
             para_txt = re.sub(r"\]\([^)]*\)", "] ", para)
             for q in re.findall(r"\"([^\"]{20,400})\"", para_txt):
                 parts = [x for x in re.split(r"\s*\.\.\.\s*", q) if len(norm(x)) >= 20]
                 missing = [x for x in parts if not any(fold(x) in v for v in allowed)]
                 if parts and missing:
                     where = ", ".join(f"{SOURCE_NAME[s]} L{a_}" for s, a_, _ in cites)
-                    fail("misquote", f"{rel}: quoted passage is not within {WINDOW} lines of any "
-                                     f"citation in its own block ({where}): \"{missing[0][:70]}\"")
+                    fail("misquote", f"{rel}: quoted passage is not inside any provision cited in "
+                                     f"its own block ({where}): \"{missing[0][:70]}\"")
 
         # 4b UNLINKED CITATION. A citation written as prose ("§L1008", "line 376")
         # resolves for a human reader and is invisible to every other check here,

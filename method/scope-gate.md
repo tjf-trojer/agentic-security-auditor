@@ -98,7 +98,49 @@ distinguish instructions from related content".
 
 ---
 
-## Question 3: Does the EU AI Act bind, and how?
+## Question 3: Who does this agent decide about?
+
+Questions 1 and 2 ask what the agent can do *to systems*. This one asks what it can do *to
+people*, and it is a different question with a different answer. An agent with no shell, no
+credential and no irreversible tool can still rank a person, score them, flag them, filter them
+out, or write something into their record. The lethal trifecta does not see that, and neither
+does an action-shaped severity test.
+
+Three sub-questions. Answer them in one line each, or say "nobody" and move on.
+
+1. **Whose case does it decide or shape?** Job applicants, customers, claimants, patients,
+   employees, students, tenants, beneficiaries. Name the population, not the data.
+2. **What follows from its output for that person?** A rejection, a price, a queue position, a
+   score in a file somebody later reads, a flag that changes how they are treated. Say whether it
+   is reversible *for them*, which is not the same as reversible for the operator: a rejection
+   email that can be followed by an apology has still been received.
+3. **Do they know, and can they contest it?** Is the person told an AI system was involved, are
+   they given anything they could argue with, and is there a route back to a human.
+
+**What changes when the answer is not "nobody".**
+
+- **ASI09 changes shape.** It stops being only about whether an operator's approval screen shows
+  enough, and becomes about whether anyone at all sees the decision before the person does. A
+  review that runs after the affected party has been told is not a gate, whatever it is called.
+- **The Annex III check in Question 4 has something to bite on.** Most of Annex III is defined by
+  who is affected rather than by what the system touches, so an artifact that decides about people
+  is where the Act is most likely to bind.
+- **Fairness exposure gets named in the capability profile**, not left for Observations. If the
+  agent scores people on proxies (tenure, gaps, similarity to an existing population, postcode,
+  institution), say so in the profile. It is usually not citable against this standard, and it is
+  usually the most consequential thing in the artifact, so it belongs where a reader will see it
+  rather than at the end.
+- **A data-protection pointer becomes mandatory**, in one line, marked as outside this audit's
+  scope. Do not assess it.
+
+The trap this question exists to catch: an agent whose tool grant is narrow and whose subject is a
+person can look clean on every action-shaped check while being the most consequential artifact you
+will audit. Rule 4's fourth CRITICAL test is where that lands, and this question is how you reach
+it.
+
+---
+
+## Question 4: Does the EU AI Act bind, and how?
 
 You are not classifying the system. You are locating it against the obligations that most often
 bite, so that findings can anchor when the Act applies and drop the anchor when it does not.
@@ -156,7 +198,8 @@ Three to five lines. Two worked shapes:
 > actions: outbound mail to third parties. Lethal trifecta present (CRM data, inbound mail,
 > `send_email`). The Act's high-risk duties do not clearly attach, as this is not an Annex III
 > use, but Art. 50(1) binds on its own because the agent mails people who cannot tell it is an
-> agent, and nothing in the definition discloses it.
+> agent, and nothing in the definition discloses it. Decides about: customers whose tickets it
+> triages and refunds, reversibly; they are not told a machine handled them.
 
 > **Capability profile.** Supervised developer utility, single agent plus tools, invoked
 > interactively. Fetches files from a third-party GitHub repository and writes them into the
@@ -166,6 +209,6 @@ Three to five lines. Two worked shapes:
 > content, outbound fetch and shell). The EU AI Act does not bind: this is internal developer
 > tooling, not an Annex III use, and the only natural person it interacts with is the developer
 > who invoked it, for whom the AI nature of the interaction is obvious within the Art. 50(1)
-> exception. The OWASP findings below stand on their own.
+> exception. Decides about: nobody. The OWASP findings below stand on their own.
 
 Then sweep the ten categories against that profile.
