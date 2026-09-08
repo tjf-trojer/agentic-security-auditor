@@ -6,7 +6,7 @@
 
 # The register: every provision this auditor may cite
 
-_Last updated: 2026-09-05_
+_Last updated: 2026-09-08_
 
 A finding cites a line. Line numbers move. A citation that has moved is worse than
 no citation, because it still looks authoritative.
@@ -23,8 +23,8 @@ target, where it is convenient. `python3 scripts/verify.py` recomputes every lin
 from its id and fails if any has drifted.
 
 **The id resolves against the provision's own words, not against a marker.** The
-reference texts are OWASP's and the EU's, redistributed unaltered, so nothing was
-inserted into them to serve as an anchor. Each id is bound to the opening words of
+reference text is OWASP's, redistributed unaltered, so nothing was inserted into
+it to serve as an anchor. Each id is bound to the opening words of
 its provision, recorded below, and located by matching them. If a new edition
 rewords a provision, that match fails and names the id, which is exactly when a
 human should look. A marker would have moved with the edit and kept a stale
@@ -36,7 +36,6 @@ line, and most provisions wrap across two or three. Open the category in
 
 ```bash
 bash scripts/cite.sh ASI04-PIN           # print the provision
-bash scripts/cite.sh AIA-50-1            # works for the AI Act too
 bash scripts/cite.sh --from examples.md  # every citation in a document
 ```
 
@@ -140,21 +139,3 @@ Prefer the narrowest id that carries your claim.
 | `ASI10-KILL-SWITCH` | OWASP | 1117 | 4. Containment & Response: Implement rapid mechanisms like kill-switches and credential | Kill switches and credential revocation to disable rogue agents |
 | `ASI10-ATTESTATION` | OWASP | 1120 | 5. Identity Attestation and Behavioral Integrity Enforcement: Implement per-agent cryptographic | Per-agent cryptographic identity attestation |
 | `ASI10-MANIFESTS` | OWASP | 1122 | Attach signed behavioral manifests declaring expected capabilities, tools, and goals that are | Signed behavioural manifests validated before each action |
-| `AIA-3` | AI Act | 58 | Definitions | Article 3, definitions |
-| `AIA-3-23` | AI Act | 167 | (23) ‘substantial modification’ means a change to an AI system after its placing on the market or putting into service which | 3(23) substantial modification |
-| `AIA-12` | AI Act | 418 | Record-keeping | Article 12, record-keeping |
-| `AIA-14` | AI Act | 460 | Human oversight | Article 14, human oversight |
-| `AIA-25` | AI Act | 538 | Responsibilities along the AI value chain | Article 25, responsibilities along the value chain |
-| `AIA-26` | AI Act | 607 | Obligations of deployers of high-risk AI systems | Article 26, deployer obligations |
-| `AIA-50-1` | AI Act | 742 | Providers shall ensure that AI systems intended to interact directly with natural persons are designed and developed in | 50(1) disclosure that a person is interacting with an AI system |
-| `AIA-50-2` | AI Act | 750 | Providers of AI systems, including general-purpose AI systems, generating synthetic audio, image, video or text | 50(2) machine-readable marking of synthetic output |
-| `AIA-72` | AI Act | 825 | Post-market monitoring by providers and post-market monitoring plan for high-risk AI systems | Article 72, post-market monitoring |
-| `AIA-ANNEX-III` | AI Act | 871 | High-risk AI systems referred to in Article 6(2) | Annex III, the list of high-risk uses |
-| `AIA-III-1` | AI Act | 877 | Biometrics, in so far as their use is permitted under relevant Union or national law: | Annex III(1) biometrics |
-| `AIA-III-2` | AI Act | 892 | Critical infrastructure: AI systems intended to be used as safety components in the management and operation of | Annex III(2) critical infrastructure |
-| `AIA-III-3` | AI Act | 897 | Education and vocational training: | Annex III(3) education and vocational training |
-| `AIA-III-4` | AI Act | 917 | Employment, workers’ management and access to self-employment: | Annex III(4) employment and workers' management |
-| `AIA-III-5` | AI Act | 930 | Access to and enjoyment of essential private services and essential public services and benefits: | Annex III(5) essential private and public services |
-| `AIA-III-6` | AI Act | 959 | Law enforcement, in so far as their use is permitted under relevant Union or national law: | Annex III(6) law enforcement |
-| `AIA-III-7` | AI Act | 986 | Migration, asylum and border control management, in so far as their use is permitted under relevant Union or | Annex III(7) migration, asylum and border control |
-| `AIA-III-8` | AI Act | 1008 | Administration of justice and democratic processes: | Annex III(8) administration of justice and democratic processes |

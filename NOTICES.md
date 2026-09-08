@@ -33,22 +33,6 @@ redistributed alongside this repository's own files rather than merged into them
 `identity.md`, `rules.md`, `examples.md`, `method/` or `targets/` incorporates the standard's
 text beyond short quotation for the purpose of citation.
 
-## The conditional second anchor
-
-### Regulation (EU) 2024/1689 (EU AI Act)
-
-- **File:** `reference/eu-ai-act-2024-1689-excerpts.md`
-- **Source:** Official Journal of the European Union, L series, 12 July 2024. EUR-Lex CELEX
-  32024R1689, official English version.
-  <https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689>
-- **Licence:** Commission Decision 2011/833/EU on the reuse of Commission documents.
-  <https://eur-lex.europa.eu/eli/dec/2011/833/oj>
-
-Reuse for commercial and non-commercial purposes is permitted with acknowledgement of the source,
-given above and in the file's own header. The file contains seven articles reproduced verbatim
-and unabridged, not the full Regulation; the excerpt boundaries are stated in the file. For any
-legal purpose, use the Official Journal text at the link above.
-
 ## Audited artifacts
 
 All are reproduced byte-for-byte, because the audits cite them by line. No modifications.

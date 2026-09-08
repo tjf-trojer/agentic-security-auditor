@@ -8,35 +8,32 @@
 # rendered markdown has no line numbers. This script makes a citation redeemable
 # from the terminal, in one command, with no editor and no browser.
 #
-#   bash scripts/cite.sh ASI04-PIN                 # by register id (OWASP)
-#   bash scripts/cite.sh AIA-50-1                  # by register id (AI Act)
-#   bash scripts/cite.sh owasp:589                 # by line, source named
-#   bash scripts/cite.sh act:741                   # by line, source named
-#   bash scripts/cite.sh 589                       # by line; source inferred, or refused
+#   bash scripts/cite.sh ASI04-PIN                 # by register id
+#   bash scripts/cite.sh 589                       # by line
+#   bash scripts/cite.sh owasp:589                 # by line, source named explicitly
 #   bash scripts/cite.sh --from examples.md        # every citation in a document
 #   bash scripts/cite.sh --from <file> --list      # just the list, no text
 #   bash scripts/cite.sh --list                    # the whole register
 #
-# This repository holds TWO reference documents. A bare line number is therefore
-# ambiguous, and the script refuses to guess: it resolves one only if exactly one
-# document has a registered provision there. Silently reading the wrong document
-# would be the worst failure available to a tool whose job is verification.
+# This repository holds ONE reference document, the OWASP standard, so a bare line
+# number is unambiguous and is resolved directly. The explicit `owasp:` form is
+# still accepted, and a line with no registered provision is printed anyway, with
+# the register id omitted rather than invented.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
 OWASP="reference/owasp-top-10-agentic-applications-2026.md"
-ACT="reference/eu-ai-act-2024-1689-excerpts.md"
 REG="provisions.md"
 
 bold() { printf '\033[1m%s\033[0m\n' "$1"; }
 dim()  { printf '\033[2m%s\033[0m\n' "$1"; }
 
-for f in "$OWASP" "$ACT" "$REG"; do
+for f in "$OWASP" "$REG"; do
   [ -f "$f" ] || { echo "missing $f (run from the repo root, and clone it fully)"; exit 2; }
 done
 
-path_for_src() { case "$1" in owasp) printf '%s' "$OWASP";; act) printf '%s' "$ACT";; *) return 1;; esac; }
-label_for_src() { case "$1" in owasp) printf 'OWASP';; act) printf 'AI Act';; esac; }
+path_for_src() { case "$1" in owasp) printf '%s' "$OWASP";; *) return 1;; esac; }
+label_for_src() { case "$1" in owasp) printf 'OWASP';; esac; }
 
 # Register lookup. Columns: | `id` | source | line | text | purpose |
 # Emits "src line" for an id.
@@ -45,21 +42,10 @@ lookup_id() {
     /^\| `/ {
       id=$2; gsub(/[ \t`]/, "", id)
       if (id != want) next
-      src=$3; gsub(/^[ \t]+|[ \t]+$/, "", src)
       ln=$4;  gsub(/[ \t]/, "", ln)
-      print (src ~ /^OWASP/ ? "owasp" : "act"), ln
+      print "owasp", ln
       exit
     }' "$REG"
-}
-
-# Which sources have a registered provision at this line? Emits zero or more names.
-sources_at_line() {
-  awk -F'|' -v want="$1" '
-    /^\| `/ {
-      src=$3; gsub(/^[ \t]+|[ \t]+$/, "", src)
-      ln=$4;  gsub(/[ \t]/, "", ln)
-      if (ln == want) print (src ~ /^OWASP/ ? "owasp" : "act")
-    }' "$REG" | sort -u
 }
 
 id_at() {
@@ -68,8 +54,7 @@ id_at() {
       id=$2;  gsub(/[ \t`]/, "", id)
       src=$3; gsub(/^[ \t]+|[ \t]+$/, "", src)
       ln=$4;  gsub(/[ \t]/, "", ln)
-      s = (src ~ /^OWASP/ ? "owasp" : "act")
-      if (s == ws && ln == wl) { print id; exit }
+      if (src ~ /^OWASP/ && ws == "owasp" && ln == wl) { print id; exit }
     }' "$REG"
 }
 
@@ -89,52 +74,19 @@ print_provision() {
   # heading, or the next numbered item — except where the extraction lost the
   # paragraph break, which happens in the front matter. There a short line ending
   # in a full stop is the paragraph end, and is the only signal available.
-  # Where a provision ends, and it differs by source. The OWASP extraction runs a
-  # provision across consecutive lines, so a blank line ends it. The AI Act
-  # extraction puts a blank line BETWEEN the wrapped lines of one provision, so
-  # stopping at the first blank truncates it to a single line — which it did, on
-  # Annex III point 4, the provision that decides whether the Act binds at all.
-  if [ "$src" = "act" ]; then
-    awk -v s="$start" 'NR>=s && NR<s+14 {
-          if (NR>s && ($0 ~ /^## / || ($0 ~ /^\([a-z]\)/ && seen))) exit
-          if ($0 ~ /^$/) { blanks++; if (blanks>=2) exit; next } else blanks=0
-          if ($0 ~ /^\([a-z]\)/) seen=1
-          printf "  %s\n", $0
-        }' "$file"
-  else
-    awk -v s="$start" 'NR>=s && NR<s+8 {
-          if (NR>s && ($0 ~ /^#{1,6} / || $0 ~ /^[0-9]+\. / || $0 ~ /^$/)) exit
-          printf "  %s\n", $0
-          if ($0 ~ /[.!?][")\u201d]?[ \t]*$/ && length($0) < 90) exit
-        }' "$file"
-  fi
+  awk -v s="$start" 'NR>=s && NR<s+8 {
+        if (NR>s && ($0 ~ /^#{1,6} / || $0 ~ /^[0-9]+\. / || $0 ~ /^$/)) exit
+        printf "  %s\n", $0
+        if ($0 ~ /[.!?][")\u201d]?[ \t]*$/ && length($0) < 90) exit
+      }' "$file"
   dim "   (github.com: add ?plain=1 to the URL to see line numbers)"
   echo
-}
-
-resolve_bare_line() {
-  local ln="$1" found n
-  found=$(sources_at_line "$ln"); n=$(printf '%s' "$found" | grep -c . || true)
-  if [ "$n" -eq 1 ]; then
-    print_provision "$found" "$ln" "$(id_at "$found" "$ln")"
-  elif [ "$n" -gt 1 ]; then
-    printf '  ! line %s is registered in more than one document.\n' "$ln"
-    dim "    name the source:  cite.sh owasp:$ln   |   cite.sh act:$ln"
-    return 1
-  else
-    printf '  ! no registered provision at line %s.\n' "$ln"
-    dim "    This repository holds two reference documents, so a bare line number"
-    dim "    is ambiguous and is not guessed. Name the source explicitly:"
-    dim "      bash scripts/cite.sh owasp:$ln"
-    dim "      bash scripts/cite.sh act:$ln"
-    return 1
-  fi
 }
 
 # ---- --help ----
 case "${1:-}" in
   --help|-h|help)
-    sed -n '2,23p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,21p' "$0" | sed 's/^# \{0,1\}//'
     exit 0 ;;
 esac
 
@@ -157,12 +109,11 @@ if [ "${1:-}" = "--from" ]; then
   [ -f "$src_file" ] || { echo "usage: bash scripts/cite.sh --from <file.md> [--list]"; exit 2; }
   listonly=0; [ "${3:-}" = "--list" ] && listonly=1
 
-  refs=$(grep -oE '(owasp-top-10-agentic-applications-2026|eu-ai-act-2024-1689-excerpts)\.md(\?plain=1)?#L[0-9]+( "\^[A-Za-z0-9-]+")?' "$src_file" \
-         | sed -E 's/^(owasp[^.]*|eu-ai-act[^.]*)\.md(\?plain=1)?#L([0-9]+)( "\^([A-Za-z0-9-]+)")?.*/\1 \3 \5/' \
-         | sed -E 's/^owasp[^ ]*/owasp/; s/^eu-ai-act[^ ]*/act/' \
+  refs=$(grep -oE 'owasp-top-10-agentic-applications-2026\.md(\?plain=1)?#L[0-9]+( "\^[A-Za-z0-9-]+")?' "$src_file" \
+         | sed -E 's/^owasp[^.]*\.md(\?plain=1)?#L([0-9]+)( "\^([A-Za-z0-9-]+)")?.*/owasp \2 \4/' \
          | sort -u -k1,1 -k2,2n)
   [ -n "$refs" ] && [ "$(printf '%s' "$refs" | grep -c .)" -gt 0 ] || {
-    echo "no citations to either reference document in $src_file"; exit 0; }
+    echo "no citations to the standard in $src_file"; exit 0; }
 
   bold "── $(printf '%s\n' "$refs" | grep -c .) distinct citations in $src_file"
   echo
@@ -179,11 +130,10 @@ fi
 
 # ---- single argument ----
 arg="${1:-}"
-[ -n "$arg" ] || { sed -n '4,22p' "$0" | sed 's/^# \{0,1\}//'; exit 2; }
+[ -n "$arg" ] || { sed -n '4,21p' "$0" | sed 's/^# \{0,1\}//'; exit 2; }
 
 case "$arg" in
   owasp:*) print_provision owasp "${arg#owasp:}" "$(id_at owasp "${arg#owasp:}")" ;;
-  act:*)   print_provision act   "${arg#act:}"   "$(id_at act   "${arg#act:}")"   ;;
   *[!0-9]*)
     arg_up=$(printf '%s' "$arg" | tr '[:lower:]' '[:upper:]')
     read -r src ln <<EOF
@@ -196,5 +146,5 @@ EOF
     fi
     print_provision "$src" "$ln" "$arg_up"
     ;;
-  *) resolve_bare_line "$arg" ;;
+  *) print_provision owasp "$arg" "$(id_at owasp "$arg")" ;;
 esac

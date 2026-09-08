@@ -1,8 +1,8 @@
 # The scope gate
 
-_Last updated: 2026-09-05_
+_Last updated: 2026-09-08_
 
-The opening move of every audit (rules.md, Rule 3, Move 1). It answers four questions and
+The opening move of every audit (rules.md, Rule 3, Move 1). It answers three questions and
 produces a **capability profile** that the rest of the audit refers back to. Run it before
 looking for findings: the profile determines which categories can even fire.
 
@@ -115,17 +115,15 @@ Three sub-questions. Answer them in one line each, or say "nobody" and move on.
    is reversible *for them*, which is not the same as reversible for the operator: a rejection
    email that can be followed by an apology has still been received.
 3. **Is there a route back to a human?** Can the person reach someone who can change the outcome,
-   and are they given anything they could argue with. (Whether they are *told* an AI was involved
-   is Question 4's Art. 50 check; do not answer it twice.)
+   and are they given anything they could argue with. Whether they are *told* an AI was involved
+   at all belongs here too: no ASI provision reaches non-disclosure, so it is never a finding. It
+   goes in the profile and in Scope and limits, where a reader will actually see it.
 
 **What changes when the answer is not "nobody".**
 
 - **ASI09 changes shape.** It stops being only about whether an operator's approval screen shows
   enough, and becomes about whether anyone at all sees the decision before the person does. A
   review that runs after the affected party has been told is not a gate, whatever it is called.
-- **The Annex III check in Question 4 has something to bite on.** Most of Annex III is defined by
-  who is affected rather than by what the system touches, so an artifact that decides about people
-  is where the Act is most likely to bind.
 - **Fairness exposure gets named in the capability profile**, not left for Observations. If the
   agent scores people on proxies (tenure, gaps, similarity to an existing population, postcode,
   institution), say so in the profile. It is usually not citable against this standard, and it is
@@ -146,59 +144,6 @@ The trap this question exists to catch: an agent whose tool grant is narrow and 
 person can look clean on every action-shaped check while being the most consequential artifact you
 audit.
 
----
-
-## Question 4: Does the EU AI Act bind, and how?
-
-You are not classifying the system. You are locating it against the obligations that most often
-bite, so that findings can anchor when the Act applies and drop the anchor when it does not.
-
-**Run the four checks and report what they find.** Do not carry a prior in either direction.
-Many agent definitions are internal developer tooling, and for those the Act's high-risk duties
-will not attach; writing that plainly is a correct result and not a gap in the audit. But that is
-a conclusion the checks produce, not an assumption you start from, and an auditor that decides
-before it looks is doing the thing this folder exists to catch in others.
-
-Four checks, in this order:
-
-1. **Does the agent reach natural persons? Art. 50 binds without any high-risk finding.**
-   Transparency duties attach by behaviour, not by risk tier. An agent that interacts directly
-   with people (mail, chat, voice, negotiating or purchasing on someone's behalf, including as
-   the human-facing member of a multi-agent chain) must disclose its artificial nature and the
-   person on whose behalf it acts (Art. 50(1)). Perceptible synthetic content it produces must
-   be machine-readable-marked and detectable (Art. 50(2)). The one escape from 50(1) is
-   interaction that is obvious to a reasonably well-informed member of the *actual* audience,
-   read narrowly: a developer who invoked the agent themselves qualifies; a customer or member
-   of the public almost never does.
-
-2. **Is the underlying use high-risk?** If the agent operates in an Annex III domain, deployer
-   obligations attach and Art. 14 human oversight is mandatory rather than optional. Annex III
-   ships in full at [`AIA-ANNEX-III`](../reference/eu-ai-act-2024-1689-excerpts.md#L871 "^AIA-ANNEX-III"),
-   with each of its eight points separately citable (`AIA-III-1` to `AIA-III-8`), so **name the
-   point and cite it** rather than asserting one from memory. Read the point before naming it:
-   several are narrower than their headings suggest. **Art. 6(3), the derogation that decides
-   whether an Annex III system is actually high-risk, is not shipped in `reference/`**, so say it
-   was not checked rather than implying the classification is settled. Do not assert the final
-   classification,
-   which is a lawyer's call. **Never stretch Annex III to manufacture a legal hook**; an audit
-   that invents jurisdiction is worse than one that reports none.
-
-3. **Is the reader a bound deployer?** Public bodies, private providers of public services, and
-   Annex III deployers carry the heaviest duties.
-
-4. **Could runtime behaviour exceed what was assessed?** An agent that composes new workflows at
-   runtime can drift past whatever any assessment described. Under Art. 3(23) a substantial
-   modification re-triggers obligations, and under Art. 25 a deployer that changes purpose or
-   behaviour can become a provider. Flag this as a judgment call to be named, not a settled
-   finding.
-
-Behind all four sits one question that survives even when the Act does not bind: **when this
-agent acts and something goes wrong, who is on the record as answerable, and can anyone
-actually reach them?** An agent assembled from unpinned third-party components with no
-identifiable owner is a governance failure in any jurisdiction.
-
----
-
 ## Output of the gate
 
 Three to five lines. Two worked shapes:
@@ -207,19 +152,16 @@ Three to five lines. Two worked shapes:
 > untrusted inbound mail; can `send_email`, `create_ticket` and `update_crm` without
 > confirmation; `refund_customer` is gated behind human approval. Irreversible autonomous
 > actions: outbound mail to third parties. Lethal trifecta present (CRM data, inbound mail,
-> `send_email`). The Act's high-risk duties do not clearly attach, as this is not an Annex III
-> use, but Art. 50(1) binds on its own because the agent mails people who cannot tell it is an
-> agent, and nothing in the definition discloses it. Decides about: customers whose tickets it
-> triages and refunds, reversibly; they are not told a machine handled them.
+> `send_email`). Decides about: customers whose tickets it triages and refunds, reversibly. They
+> are never told a machine handled them, which no ASI provision reaches and is named here rather
+> than as a finding.
 
 > **Capability profile.** Supervised developer utility, single agent plus tools, invoked
 > interactively. Fetches files from a third-party GitHub repository and writes them into the
 > operator's own agent directory after a stated confirmation. Consequential autonomous actions:
 > file writes into a location later sessions load; shell execution via `Bash`. Irreversible:
 > uninstall (delete). Lethal trifecta present (local filesystem read, fetched third-party
-> content, outbound fetch and shell). The EU AI Act does not bind: this is internal developer
-> tooling, not an Annex III use, and the only natural person it interacts with is the developer
-> who invoked it, for whom the AI nature of the interaction is obvious within the Art. 50(1)
-> exception. Decides about: nobody. The OWASP findings below stand on their own.
+> content, outbound fetch and shell). Decides about: nobody; the only person it interacts with
+> is the developer who invoked it.
 
 Then sweep the ten categories against that profile.

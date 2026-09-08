@@ -145,31 +145,10 @@ REGISTER = [
     ("ASI10-KILL-SWITCH", "owasp", 1117, "Kill switches and credential revocation to disable rogue agents"),
     ("ASI10-ATTESTATION", "owasp", 1120, "Per-agent cryptographic identity attestation"),
     ("ASI10-MANIFESTS", "owasp", 1122, "Signed behavioural manifests validated before each action"),
-
-    # ---- EU AI Act, the conditional second anchor ----
-    ("AIA-3", "act", 58, "Article 3, definitions"),
-    ("AIA-3-23", "act", 167, "3(23) substantial modification"),
-    ("AIA-12", "act", 418, "Article 12, record-keeping"),
-    ("AIA-14", "act", 460, "Article 14, human oversight"),
-    ("AIA-25", "act", 538, "Article 25, responsibilities along the value chain"),
-    ("AIA-26", "act", 607, "Article 26, deployer obligations"),
-    ("AIA-50-1", "act", 742, "50(1) disclosure that a person is interacting with an AI system"),
-    ("AIA-50-2", "act", 750, "50(2) machine-readable marking of synthetic output"),
-    ("AIA-72", "act", 825, "Article 72, post-market monitoring"),
-    ("AIA-ANNEX-III", "act", 871, "Annex III, the list of high-risk uses"),
-    ("AIA-III-1", "act", 877, "Annex III(1) biometrics"),
-    ("AIA-III-2", "act", 892, "Annex III(2) critical infrastructure"),
-    ("AIA-III-3", "act", 897, "Annex III(3) education and vocational training"),
-    ("AIA-III-4", "act", 917, "Annex III(4) employment and workers' management"),
-    ("AIA-III-5", "act", 930, "Annex III(5) essential private and public services"),
-    ("AIA-III-6", "act", 959, "Annex III(6) law enforcement"),
-    ("AIA-III-7", "act", 986, "Annex III(7) migration, asylum and border control"),
-    ("AIA-III-8", "act", 1008, "Annex III(8) administration of justice and democratic processes"),
 ]
 
 SOURCES = {
     "owasp": ("reference/owasp-top-10-agentic-applications-2026.md", "OWASP"),
-    "act": ("reference/eu-ai-act-2024-1689-excerpts.md", "AI Act"),
 }
 
 HEADER = """<!--
@@ -180,7 +159,7 @@ HEADER = """<!--
 
 # The register: every provision this auditor may cite
 
-_Last updated: 2026-09-05_
+_Last updated: 2026-09-08_
 
 A finding cites a line. Line numbers move. A citation that has moved is worse than
 no citation, because it still looks authoritative.
@@ -197,8 +176,8 @@ target, where it is convenient. `python3 scripts/verify.py` recomputes every lin
 from its id and fails if any has drifted.
 
 **The id resolves against the provision's own words, not against a marker.** The
-reference texts are OWASP's and the EU's, redistributed unaltered, so nothing was
-inserted into them to serve as an anchor. Each id is bound to the opening words of
+reference text is OWASP's, redistributed unaltered, so nothing was inserted into
+it to serve as an anchor. Each id is bound to the opening words of
 its provision, recorded below, and located by matching them. If a new edition
 rewords a provision, that match fails and names the id, which is exactly when a
 human should look. A marker would have moved with the edit and kept a stale
@@ -210,7 +189,6 @@ line, and most provisions wrap across two or three. Open the category in
 
 ```bash
 bash scripts/cite.sh ASI04-PIN           # print the provision
-bash scripts/cite.sh AIA-50-1            # works for the AI Act too
 bash scripts/cite.sh --from examples.md  # every citation in a document
 ```
 
@@ -255,10 +233,7 @@ def main() -> int:
         return 1
 
     OUT.write_text(HEADER + "\n".join(rows) + "\n", encoding="utf-8")
-    n_owasp = sum(1 for r in REGISTER if r[1] == "owasp")
-    n_act = sum(1 for r in REGISTER if r[1] == "act")
-    print(f"wrote {OUT.relative_to(ROOT)}: {len(rows)} provisions "
-          f"({n_owasp} OWASP, {n_act} AI Act)")
+    print(f"wrote {OUT.relative_to(ROOT)}: {len(rows)} OWASP provisions")
     return 0
 
 

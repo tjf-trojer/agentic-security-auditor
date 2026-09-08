@@ -158,16 +158,18 @@ one per file in [`decisions/`](decisions/). The operating rules Claude follows a
 on the base model's properties, the audit says "cannot verify from the definition" and names the
 test that would settle it.
 
-**The EU AI Act is a conditional second anchor.** A scope gate decides whether it binds and the
-audit reports the result either way, rather than stretching Annex III to manufacture a legal hook
-or assuming in advance that it does not apply. All three worked audits happen to conclude it does
-not bind, because all three targets are internal developer tooling; that is the result of the
-checks, not a prior. The Art. 50 transparency duties are checked separately, because they bind by
-behaviour rather than by risk tier and can attach where the high-risk duties do not.
+**One standard, and nothing else in `reference/`.** Every finding cites the OWASP Top 10 for
+Agentic Applications 2026. There is no second rulebook to fall back on when a provision does not
+quite fit, which is deliberate: a folder holding two standards audits cleanly against neither.
 
 **ISO/IEC 42001 is deliberately absent.** It is copyrighted and cannot ship in `reference/`. A
-standard that cannot ship cannot anchor a checkable finding. See
-[`decisions/`](decisions/2026-09-05-owasp-not-iso-42001.md).
+standard that cannot ship cannot anchor a checkable finding.
+
+**The EU AI Act was here and was removed** on 2026-09-08, after shipping as a conditional second
+anchor. Whether an operator is legally answerable is a real question and a different audit; across
+every worked audit here its own scope gate concluded it did not bind, so it produced nothing while
+costing this folder its one-line answer to "audits against what". Both decisions are written up in
+[`decisions/`](decisions/).
 
 **OWASP's ten categories are not everything that can be wrong with an agent.** Where something is
 concerning and no provision reaches it, it goes in "Observations outside the standard", marked as
@@ -213,9 +215,8 @@ so a citation names where a provision **begins**; `cite.sh` prints to the end of
 
 This repository's own files: MIT, see [`LICENSE`](LICENSE).
 
-The OWASP standard in `reference/` is CC BY-SA 4.0 and stays that way. The EU AI Act excerpts are
-reused under Commission Decision 2011/833/EU. The audited VoltAgent artifacts are MIT, reproduced
-byte-for-byte and pinned to a commit. Full detail, including what was changed in the OWASP
-transcription and why, is in [`NOTICES.md`](NOTICES.md).
+The OWASP standard in `reference/` is CC BY-SA 4.0 and stays that way. The audited third-party
+artifacts are MIT, reproduced byte-for-byte and pinned to a commit. Full detail, including what
+was changed in the OWASP transcription and why, is in [`NOTICES.md`](NOTICES.md).
 
-Neither OWASP nor the EU nor the authors of any audited artifact endorse this repository.
+Neither OWASP nor the authors of any audited artifact endorse this repository.

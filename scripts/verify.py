@@ -45,18 +45,18 @@ os.chdir(ROOT)
 
 REF_NAME = "owasp-top-10-agentic-applications-2026.md"
 REF = Path("reference") / REF_NAME
-ACT = Path("reference") / "eu-ai-act-2024-1689-excerpts.md"
 REGISTER = Path("provisions.md")
-SOURCE_NAME = {"owasp": "the OWASP standard", "act": "the AI Act excerpts"}
+SOURCE_NAME = {"owasp": "the OWASP standard"}
 # Longest a single provision may run when nothing is registered after it.
 SPAN_CAP = 14
 
 # Links inside a byte-for-byte copy of someone else's artifact point at their
 # repository, not ours. Rewriting them would corrupt the thing being audited.
-VERBATIM = {"targets/eu-ai-act-map-agents.md"}
+VERBATIM = {"targets/ecc-loop-operator.md",
+            "targets/voltagent-agent-installer.md"}
 
 CITE = re.compile(
-    r"(?P<file>owasp-top-10-agentic-applications-2026\.md|eu-ai-act-2024-1689-excerpts\.md)"
+    r"(?P<file>owasp-top-10-agentic-applications-2026\.md)"
     r"(?P<plain>\?plain=1)?#L(?P<line>\d+)(?:-L(?P<end>\d+))?"
     r"(?P<title>\s+\"\^(?P<id>[A-Za-z0-9-]+)\")?"
 )
@@ -112,8 +112,7 @@ def load_register() -> dict[str, tuple[str, int, str]]:
     for row in REGISTER.read_text(encoding="utf-8").splitlines():
         m = re.match(r"^\|\s*`([A-Za-z0-9-]+)`\s*\|\s*([^|]+?)\s*\|\s*(\d+)\s*\|\s*(.*?)\s*\|", row)
         if m:
-            src = "owasp" if m.group(2).upper().startswith("OWASP") else "act"
-            reg[m.group(1)] = (src, int(m.group(3)), m.group(4).replace("\\|", "|"))
+            reg[m.group(1)] = ("owasp", int(m.group(3)), m.group(4).replace("\\|", "|"))
     return reg
 
 
@@ -138,8 +137,7 @@ def main(argv: list[str]) -> int:
                 fail("input", f"--artifact {ap}: no such file")
 
     ref_lines = REF.read_text(encoding="utf-8").split("\n") if REF.exists() else []
-    act_lines = ACT.read_text(encoding="utf-8").split("\n") if ACT.exists() else []
-    src_lines = {"owasp": ref_lines, "act": act_lines}
+    src_lines = {"owasp": ref_lines}
     ref_variants = hyphen_variants(REF.read_text(encoding="utf-8")) if REF.exists() else []
     reg = load_register()
     line_to_id = {(src, ln): pid for pid, (src, ln, _) in reg.items()}
@@ -160,8 +158,7 @@ def main(argv: list[str]) -> int:
             fail("drift", f"{pid}: {SOURCE_NAME[src]} line {ln} no longer holds its recorded "
                           f"words. The standard may have been replaced. Rebuild the register "
                           f"deliberately (make register) and read the diff.")
-    notes.append(f"register: {len(reg)} provisions ({sum(1 for v in reg.values() if v[0]=='owasp')} OWASP, "
-                 f"{sum(1 for v in reg.values() if v[0]=='act')} AI Act)")
+    notes.append(f"register: {len(reg)} provisions, all from the OWASP standard")
 
     if targets:
         files = targets
@@ -184,7 +181,7 @@ def main(argv: list[str]) -> int:
         # 2 INVENTED CITATION, 3 MISLABELLED ID
         for m in CITE.finditer(original):
             total_cites += 1
-            src = "owasp" if m.group("file").startswith("owasp") else "act"
+            src = "owasp"
             lines = src_lines[src]
             ln = int(m.group("line"))
             for n in [ln] + ([int(m.group("end"))] if m.group("end") else []):
@@ -207,16 +204,15 @@ def main(argv: list[str]) -> int:
         # checked against the document(s) that block actually cites, and against a
         # window around the cited lines rather than the whole file.
         #
-        # Both refinements exist because testing found the loose version hollow: a
+        # The refinement exists because testing found the loose version hollow: a
         # quote lifted from a different provision, cited to the wrong line, passed
-        # clean; and an AI Act quotation sharing a block with an OWASP citation was
-        # checked against the OWASP text and failed for the wrong reason.
+        # clean against a fixed window around the citation.
         blocks = re.findall(r"\*\*What the standard requires[.:]\*\*(.*?)(?=\n\n|\Z)",
                             original, re.S)
         blocks += re.findall(r"^\*\*Standard\*\*(.*?)(?=\n\*\*|\n\n|\Z)", original, re.M | re.S)
         blocks += re.findall(r"^#+ What holds\s*$(.*?)(?=^#+ |\Z)", original, re.M | re.S)
         for para in blocks:
-            cites = [(("owasp" if m.group("file").startswith("owasp") else "act"),
+            cites = [("owasp",
                       int(m.group("line")),
                       int(m.group("end")) if m.group("end") else int(m.group("line")))
                      for m in CITE.finditer(para)]
@@ -370,8 +366,7 @@ def main(argv: list[str]) -> int:
             def add_id(m: re.Match) -> str:
                 if m.group("id"):
                     return m.group(0)
-                src = "owasp" if m.group("file").startswith("owasp") else "act"
-                pid = line_to_id.get((src, int(m.group("line"))))
+                pid = line_to_id.get(("owasp", int(m.group("line"))))
                 if not pid:
                     return m.group(0)
                 return (f"{m.group('file')}{m.group('plain') or ''}#L{m.group('line')}"

@@ -1,6 +1,6 @@
 # Self-audit
 
-_Last updated: 2026-09-05_
+_Last updated: 2026-09-08_
 
 **Artifact.** This repository, audited as an agent definition: `CLAUDE.md`, `identity.md` and
 `rules.md` are its instructions, and `method/` is navigation it loads.
@@ -81,8 +81,8 @@ reachable without a human: none. Irreversible: none. Two of the three lethal-tri
 present, private data and untrusted content; the third, an outbound channel, is absent, which is
 what keeps the exposure confined to the output.
 
-**The EU AI Act does not bind.** Internal developer tooling, not an Annex III use, and the only
-natural person it interacts with is the operator who invoked it.
+**Decides about nobody.** The only person it interacts with is the operator who invoked it, and
+its output is a document that operator reads, not a decision taken about anyone.
 
 **Written by the author of the folder, which is the obvious objection to it.** The two PARTIALs
 are the ones an adversary would raise, and they are here rather than argued away. An independent

@@ -1,6 +1,6 @@
 # Rules: how this auditor audits
 
-_Last updated: 2026-09-05_
+_Last updated: 2026-09-08_
 
 Seven rules, applied in order. Rule 3 is the work; the rest govern how you do it.
 Why the rules are shaped this way is in [`decisions/`](decisions/), not here.
@@ -79,11 +79,11 @@ heading. Never invent an id.
 **A provision with no id is still citable.** The register does not cover every line of the
 standard. Cite the line, say in the finding that it is unregistered, and link it the same way:
 `[§L288](reference/owasp-top-10-agentic-applications-2026.md#L288)`, with no title. It is still
-redeemable, because `cite.sh` takes a source and a line as well as an id:
+redeemable, because `cite.sh` takes a bare line number as well as an id:
 
 ```bash
-bash scripts/cite.sh owasp:288      # a line in the OWASP standard
-bash scripts/cite.sh act:742        # a line in the AI Act excerpts
+bash scripts/cite.sh 288            # a line in the standard
+bash scripts/cite.sh ASI01-MIT      # or by register id
 ```
 
 Use that form whenever the claim needs a provision the register missed, which is the honest
@@ -131,12 +131,12 @@ the failures. Four verdicts, and only these four:
 | **PARTIAL** | A control is present but incomplete or would not survive load. A finding follows, usually MAJOR |
 | **N/A** | The category cannot arise here, with the reason in the same line |
 
-The ledger has ten rows because the standard has ten categories. **A finding that rests on the
-EU AI Act and on no ASI category still belongs in the audit**: number it in the same F-sequence,
-put the article in the heading where an ASI code would go, and say in the Verdict line that the
-ledger arithmetic does not cover it. A missing Art. 50 disclosure is often the thing a deployer is
-most likely to be sanctioned for, and a ledger that silently omits it understates the audit by its
-most consequential item.
+The ledger has ten rows because the standard has ten categories, and every row is a ruling. **The
+ledger is the complete account of the audit's findings**: a numbered finding exists because a
+category was graded FAIL or PARTIAL, and there is no other route into the F-sequence. What the
+standard does not reach is not a finding and does not enter the ledger — it goes in "Observations
+outside the standard", unnumbered and marked as judgment, where a reader can tell at a glance that
+it rests on nothing citable.
 
 **The Sev column grades the row, not the finding.** Where one finding is cited by three rows,
 each row carries the severity *for that category*, which is often not the same. A shared root
@@ -219,11 +219,8 @@ three-to-five line **capability profile**:
    and the subset that are irreversible. This is the governing question of the audit.
 3. **Who does it decide about?** Name the population whose case it ranks, scores, filters or
    flags, what follows for them, and whether they are told. "Nobody" is a common and legitimate
-   answer. Anything else sharpens ASI09, makes the Annex III check live, and puts any fairness
-   exposure in the profile rather than in Observations.
-4. **Does the EU AI Act bind?** Run the gate's checks and report what they find, either way.
-   Check Art. 50 separately: transparency binds by behaviour, not by risk tier, so it can attach
-   where the high-risk duties do not.
+   answer. Anything else sharpens ASI09 and puts any fairness exposure in the profile rather than
+   in Observations.
 
 An agent whose autonomy is wrong for its blast radius is what the whole audit exists to catch, and
 the profile is where you see it. The gate also runs the **lethal trifecta** pre-check.
@@ -337,8 +334,8 @@ what to write. Three to five items.
 
 ## Scope and limits
 What the agent is and what it does unattended; who it decides about and
-what follows for them; whether the EU AI Act binds and in one clause why;
-anything you could not verify and the test that would settle it. Two short
+what follows for them; what you were not given, and anything you could
+not verify, with the test that would settle it. Two short
 paragraphs. It runs longer when the agent decides about people, and that
 is correct: the fairness exposure and the disclosure question belong here
 where a reader sees them, not in Observations at the end.
@@ -421,10 +418,11 @@ properties, write "cannot verify from the definition" and name the test that wou
 reaches goes in "Observations outside the standard". A strained citation is worse than an honest
 observation.
 
-**Say what the scope gate found, either way.** Where the Act does not bind, write that plainly
-in the capability profile rather than leaving it unmentioned. Where it does, name the Annex III
-point and cite it. Answer Art. 50 separately in both cases, because transparency binds by
-behaviour and can attach where the high-risk duties do not.
+**Say when the question is a lawyer's, not yours.** Whether an agent's operator carries a legal
+obligation — under the EU AI Act, the GDPR, or any sectoral regime — is outside this audit and
+outside `reference/`. Where a finding has an obvious regulatory shadow, name it in one clause,
+mark it for counsel, and do not rule on it. An audit that improvises jurisdiction has invented
+the only kind of authority it cannot be checked against.
 
 An auditor who bluffs is worse than no auditor: the owner repeats the bluff to their board and
 deploys on it.
