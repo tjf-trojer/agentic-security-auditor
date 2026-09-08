@@ -1,4 +1,4 @@
-# The Agentic Security Auditor — routing
+# The Agentic Security Auditor: routing
 
 _Last updated: 2026-09-08_
 
@@ -12,39 +12,28 @@ taste or your experience. Read [identity.md](identity.md) before your first audi
 
 | Task | Go to | Read first |
 |---|---|---|
-| Audit an agent definition | this folder | [identity.md](identity.md), then [rules.md](rules.md) |
-| Establish what you are holding, before findings | [method/scope-gate.md](method/scope-gate.md) | it runs first, every time |
+| Audit an agent definition | this folder | [identity.md](identity.md), then [rules.md](rules.md), then the scope gate below |
+| Establish what you are holding, before any finding | [method/scope-gate.md](method/scope-gate.md) | the first move of every audit, once the rules are read |
 | Find the evidence for one ASI category | [method/detection-probes.md](method/detection-probes.md) | navigation only, never cited |
 | Cite or quote a provision | [reference/](reference/) | [provisions.md](provisions.md) for the id |
 | See a worked audit | [examples.md](examples.md) | four real third-party agents, two clean-room |
 | Check this repo's own claims | `make verify` | [scripts/verify.py](scripts/verify.py) |
 | Check an audit you just wrote | `python3 scripts/verify.py <file>` | works on any file, inside the repo or not |
-| Understand why the folder is shaped this way | [decisions/](decisions/) | one decision per file |
-| See this auditor audited against its own standard | [SELF-AUDIT.md](SELF-AUDIT.md) | 2 pass, 3 partial, 5 N/A |
 
 ## The three hard rules
 
-1. **A finding cites [reference/](reference/) by line, or it is not a finding.** No citation means
-   it goes in "Observations outside the standard", or nowhere. (rules.md, Rule 1) `reference/`
-   holds exactly one standard, so there is no second rulebook to reach for when a provision does
-   not quite fit. (decisions/2026-09-08-one-standard.md)
-2. **A finding may never cite [method/](method/).** That folder is the author's working layer and
-   carries no authority. Where a probe and the standard disagree, the standard wins.
-3. **Rule on all ten categories, none skipped, pass as well as fail.** An audit that lists only
-   problems is a complaint. (rules.md, Rule 2)
+1. **A finding cites [reference/](reference/) by line, or it is not a finding.**
+   ([rules.md](rules.md), Rule 1)
+2. **A finding may never cite [method/](method/).** ([method/README.md](method/README.md))
+3. **Rule on all ten categories, none skipped, pass as well as fail.** ([rules.md](rules.md), Rule 2)
 
 ## Layout
 
-```
-identity.md    who the auditor is and which standard it enforces
-rules.md       the seven rules: citation, ledger, sweep, severity, output, limits
-examples.md    four worked audits of real third-party agents
-provisions.md  the register: every citable provision, its id, its line, its words
-reference/     THE STANDARD, verbatim. Nothing here was written by this repo's author
-method/        the working layer: scope gate, detection probes. No citation authority
-targets/       the artifacts audited in examples.md, so the work can be checked
-decisions/     why the folder is shaped this way
-scripts/       verify.py, cite.sh, build_register.py
-```
+The routing table above names every file you will open. Two things it does not say:
 
-Read `reference/` for authority, `method/` for navigation. Never the other way round.
+- `reference/` is other people's text and carries the authority; `method/` is this author's and
+  carries none. Read `reference/` for authority, `method/` for navigation, never the reverse.
+- `targets/` holds the artifacts audited in [examples.md](examples.md), so the work can be checked.
+
+Nine files at the repository root is the ceiling. The tenth moves `examples.md` beside
+`targets/` rather than joining them there.

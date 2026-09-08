@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""verify.py — prove this auditor's own claims, offline, in one command.
+"""verify.py: prove this auditor's own claims, offline, in one command.
 
 This script does not judge whether a verdict is right; no script can. It proves
 the things that go wrong when a language model writes a compliance document, and
@@ -241,9 +241,9 @@ def main(argv: list[str]) -> int:
                                      f"its own block ({where}): \"{missing[0][:70]}\"")
 
         # 4c FABRICATED ARTIFACT CLAIM. Only runs with --artifact. Until this existed
-        # the audited file was never opened, so half of every finding — the half the
+        # the audited file was never opened, so half of every finding, the half the
         # README leads with, "quoting the line of your agent that creates the
-        # exposure" — was unverified. A finding claiming a tool grant the artifact
+        # exposure", was unverified. A finding claiming a tool grant the artifact
         # does not contain, at a line the artifact does not have, passed clean.
         if artifact_lines is not None:
             art_join = fold("\n".join(artifact_lines))

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# cite.sh — resolve a citation and print the provision it points at.
+# cite.sh: resolve a citation and print the provision it points at.
 #
 # Why this exists. An auditor's whole claim is that its findings can be checked
 # against the standard. Without a tool, a citation is only a promise: the reader
@@ -71,7 +71,7 @@ print_provision() {
   bold "── ${id:-line $start}   [$(label_for_src "$src")]   $file#L$start"
   # Where a provision ends. The text preserves the source PDF's hard wraps, so a
   # provision is a run of ~100-character lines. It ends at a blank line, the next
-  # heading, or the next numbered item — except where the extraction lost the
+  # heading, or the next numbered item, except where the extraction lost the
   # paragraph break, which happens in the front matter. There a short line ending
   # in a full stop is the paragraph end, and is the only signal available.
   awk -v s="$start" 'NR>=s && NR<s+8 {

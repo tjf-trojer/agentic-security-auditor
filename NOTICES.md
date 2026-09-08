@@ -1,5 +1,7 @@
 # Notices: third-party content and its licences
 
+_Last updated: 2026-09-08_
+
 This repository redistributes material it did not write. Everything redistributed is listed here
 with its source and its licence. Where a licence differs from this repository's, the file's own
 licence governs that file.
@@ -52,6 +54,9 @@ All are reproduced byte-for-byte, because the audits cite them by line. No modif
 ### SWE-agent `config/default.yaml`
 - **File:** `targets/swe-agent-default.yaml`
 - **Source:** `config/default.yaml` from <https://github.com/SWE-agent/SWE-agent>
+- **Upstream commit:** not recorded when the file was copied. The copy is byte-for-byte as
+  retrieved, but unlike the two above it cannot be resolved to a specific upstream revision.
+  Audit 3 is an audit of this file as vendored here.
 - **Licence:** MIT
 
 ## Everything else
@@ -61,6 +66,6 @@ All other files in this repository are original work and are licensed under the 
 
 ## Endorsement
 
-Neither OWASP, the European Union, nor the authors of any audited artifact endorse this
+Neither OWASP nor the authors of any audited artifact endorse this
 repository or the audits in it. Citations to their work are for verification, which is the point
 of the exercise.

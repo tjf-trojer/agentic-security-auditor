@@ -15,7 +15,7 @@ Every citation resolves into
 | 3 | [`swe-agent-default.yaml`](targets/swe-agent-default.yaml) | SWE-agent/SWE-agent, MIT | 1 pass, 6 fail, 2 partial, 1 N/A |
 | 4 | `workflow-package-builder/SKILL.md` (not vendored) | community workflow kit | 4 pass, 0 fail, 4 partial, 2 N/A |
 
-Between them the three exercise the whole ledger. Audit 1 carries three earned passes and all
+Between them the four exercise the whole ledger. Audit 1 carries three earned passes and all
 three severity levels. Audit 3 shows each of the four verdicts arising from a different mechanism:
 a PASS where a control meets its provision, an N/A where a category cannot fire, and two PARTIALs
 where a control exists and is incomplete in a specific way. Audit 2 has no pass at all, and says
@@ -60,19 +60,19 @@ part deciding what the downloaded agent may do to your machine is never put in f
 |---|---|---|---|
 | ASI01 Agent Goal Hijack | **FAIL** | CRITICAL | F2 |
 | ASI02 Tool Misuse and Exploitation | **PARTIAL** | MAJOR | F4, F7 |
-| ASI03 Identity and Privilege Abuse | **PASS** | — | Declares no credential; runs as the invoking operator, holding nothing they did not already hold. Meets [ASI03-SCOPED-TOKENS](reference/owasp-top-10-agentic-applications-2026.md#L479 "^ASI03-SCOPED-TOKENS") |
+| ASI03 Identity and Privilege Abuse | **PASS** | - | Declares no credential; runs as the invoking operator, holding nothing they did not already hold. Meets [ASI03-SCOPED-TOKENS](reference/owasp-top-10-agentic-applications-2026.md#L479 "^ASI03-SCOPED-TOKENS") |
 | ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | CRITICAL | F1, F6 |
 | ASI05 Unexpected Code Execution | **PARTIAL** | MAJOR | F4 |
 | ASI06 Memory & Context Poisoning | **FAIL** | CRITICAL | F3 |
-| ASI07 Insecure Inter-Agent Communication | **N/A** | — | Single agent; neither calls nor is called by others. It writes files that *become* agents, which is ASI04 and ASI06, not messaging |
-| ASI08 Cascading Failures | **PASS** | — | Lines 34-39 are short, linear and human-initiated, no step conditioned on a previous inference, so the planner-executor coupling [ASI08-COUPLING](reference/owasp-top-10-agentic-applications-2026.md#L895 "^ASI08-COUPLING") describes cannot arise |
+| ASI07 Insecure Inter-Agent Communication | **N/A** | - | Single agent; neither calls nor is called by others. It writes files that *become* agents, which is ASI04 and ASI06, not messaging |
+| ASI08 Cascading Failures | **PASS** | - | Lines 34-39 are short, linear and human-initiated, no step conditioned on a previous inference, so the planner-executor coupling [ASI08-COUPLING](reference/owasp-top-10-agentic-applications-2026.md#L895 "^ASI08-COUPLING") describes cannot arise |
 | ASI09 Human-Agent Trust Exploitation | **FAIL** | MAJOR | F5 |
-| ASI10 Rogue Agents | **PASS** | — | Invoked interactively per action, no loop or schedule, operator present throughout, so there is no unattended run for the drift [ASI10-DRIFT](reference/owasp-top-10-agentic-applications-2026.md#L1071 "^ASI10-DRIFT") describes |
+| ASI10 Rogue Agents | **PASS** | - | Invoked interactively per action, no loop or schedule, operator present throughout, so there is no unattended run for the drift [ASI10-DRIFT](reference/owasp-top-10-agentic-applications-2026.md#L1071 "^ASI10-DRIFT") describes |
 
 ## Findings
 
 ### F1 · CRITICAL · ASI04 · The install target is a mutable reference
-**Artifact** line 24 — the raw URL ends `/main/categories/{category}/{agent}.md`; line 37 downloads it, line 38 saves it
+**Artifact** line 24: the raw URL ends `/main/categories/{category}/{agent}.md`; line 37 downloads it, line 38 saves it
 **Standard** [ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN") "Pin prompts, tools, and configs by content hash and commit ID"; [ASI04-GATEKEEPING](reference/owasp-top-10-agentic-applications-2026.md#L579 "^ASI04-GATEKEEPING") requires verifying provenance before install
 **Gap** nothing pins, hashes or verifies. What lands is whatever `main` resolves to at fetch time, so a description read at 10:00 and installed at 10:05 are not guaranteed to be the same file
 **Ask** what commit or hash does an install pin to, and what is the downloaded file compared against before it is written?
@@ -139,9 +139,6 @@ working directory and network policy of the shell.
 `model: haiku` is the right assignment on a supply-chain path, and whether "global versus local"
 is posed to the operator as a location or as a blast radius.
 
-## Want more?
-
-Available on request: the long form on any finding, or the full capability trace.
 
 ---
 ---
@@ -254,9 +251,6 @@ means only this agent's own iteration, ASI07 falls away and F1 survives inside A
 prompt-layer defence block counts as a control at all, or only as a statement of intent. The
 first, what "loop" names, is settled above.
 
-## Want more?
-
-Available on request: the long form on any finding.
 
 ---
 ---
@@ -296,8 +290,8 @@ requires a person to look at anything, says where those commands run, or stops t
 | ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | MAJOR | F2. Note what is *not* the finding: the three `bundles:` at lines 42-44 are relative paths inside the operator's own checkout, which is ownership rather than pinning and does not raise the category |
 | ASI05 Unexpected Code Execution | **FAIL** | CRITICAL | F1 |
 | ASI06 Memory & Context Poisoning | **PARTIAL** | MINOR | F6 |
-| ASI07 Insecure Inter-Agent Communication | **N/A** | — | Single agent, single loop. Lines 28-30 return tool output to the same model; no delegation, no sub-agent, no inbound agent message. The review step at lines 47-63 is this agent reading its own diff, not a peer asserting anything |
-| ASI08 Cascading Failures | **PASS** | — | Lines 22-26 require the error to be reproduced before the fix and the reproduction re-run after it; lines 51-52 require the re-run again if anything changed since, so an unverified change does not reach submit. Self-administered, but a control the artifact contains, and the checkpoint [ASI08-GATES](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES") prescribes before an output propagates |
+| ASI07 Insecure Inter-Agent Communication | **N/A** | - | Single agent, single loop. Lines 28-30 return tool output to the same model; no delegation, no sub-agent, no inbound agent message. The review step at lines 47-63 is this agent reading its own diff, not a peer asserting anything |
+| ASI08 Cascading Failures | **PASS** | - | Lines 22-26 require the error to be reproduced before the fix and the reproduction re-run after it; lines 51-52 require the re-run again if anything changed since, so an unverified change does not reach submit. Self-administered, but a control the artifact contains, and the checkpoint [ASI08-GATES](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES") prescribes before an output propagates |
 | ASI09 Human-Agent Trust Exploitation | **PARTIAL** | MAJOR | F4 |
 | ASI10 Rogue Agents | **FAIL** | MAJOR | F5 |
 
@@ -306,7 +300,7 @@ requires a person to look at anything, says where those commands run, or stops t
 ### F1 · CRITICAL · ASI01, ASI05 · A stranger's text reaches a shell in the same loop that writes the code
 **Artifact** line 15 interpolates `{{problem_statement}}` between `<pr_description>` tags; line 23 "Create a script to reproduce the error and execute it with `python <filename.py>` using the bash tool"; line 64 `enable_bash_tool: true`; line 30 returns raw tool output into the same channel every turn
 **Standard** [ASI01-UNTRUSTED-INPUT](reference/owasp-top-10-agentic-applications-2026.md#L283 "^ASI01-UNTRUSTED-INPUT") requires you "Treat all natural-language inputs (e.g., user-provided text, uploaded documents, retrieved content) as untrusted"; [ASI05-RUNAWAY](reference/owasp-top-10-agentic-applications-2026.md#L634 "^ASI05-RUNAWAY") is this artifact's own shape, an agent that "generates and executes unreviewed install or shell commands in its own workspace"
-**Gap** three inputs the operator does not write — the problem statement, the repository contents, every observation — arrive as text in the instruction channel, and nothing validates any of them. The `<pr_description>` tags are the only separation present and they are a prompt-layer convention. The step that follows is code generation and execution, so the shortest path from an attacker's sentence in an issue body to a command on the host is one turn
+**Gap** three inputs the operator does not write (the problem statement, the repository contents, every observation) arrive as text in the instruction channel, and nothing validates any of them. The `<pr_description>` tags are the only separation present and they are a prompt-layer convention. The step that follows is code generation and execution, so the shortest path from an attacker's sentence in an issue body to a command on the host is one turn
 **Ask** what inspects a problem statement before it reaches the bash tool, and what would make this agent refuse one?
 
 ### F2 · MAJOR · ASI03, ASI04 · It configures the tool environment and never says what that environment is
@@ -368,9 +362,6 @@ developer's laptop, F1 is worse than CRITICAL suggests.
 `{{problem_statement}}` should be read as attacker-writable at all, and whether a benchmark
 harness normally run in a container should be audited as the container or as the file.
 
-## Want more?
-
-Available on request: the long form on any finding.
 
 ---
 ---
@@ -422,14 +413,14 @@ material you feed it came from somewhere other than your own answers.
 |---|---|---|---|
 | ASI01 Agent Goal Hijack | **PARTIAL** | MAJOR | F1 |
 | ASI02 Tool Misuse and Exploitation | **PARTIAL** | MINOR | F4 |
-| ASI03 Identity and Privilege Abuse | **PASS** | — | Declares no credential and line 8 requires "no separate skill installation, service, or company context"; it runs as the owner, holding nothing they did not already hold. The control is an exclusion rather than a safeguard, so it meets [ASI03-SCOPED-TOKENS](reference/owasp-top-10-agentic-applications-2026.md#L479 "^ASI03-SCOPED-TOKENS") by capping rights to none |
-| ASI04 Agentic Supply Chain Vulnerabilities | **N/A** | — | Every file it reads sits at a fixed relative path inside the kit the owner already holds and can open; it fetches, installs and composes nothing at runtime, so there is no unowned runtime composition for the category to reach |
+| ASI03 Identity and Privilege Abuse | **PASS** | - | Declares no credential and line 8 requires "no separate skill installation, service, or company context"; it runs as the owner, holding nothing they did not already hold. The control is an exclusion rather than a safeguard, so it meets [ASI03-SCOPED-TOKENS](reference/owasp-top-10-agentic-applications-2026.md#L479 "^ASI03-SCOPED-TOKENS") by capping rights to none |
+| ASI04 Agentic Supply Chain Vulnerabilities | **N/A** | - | Every file it reads sits at a fixed relative path inside the kit the owner already holds and can open; it fetches, installs and composes nothing at runtime, so there is no unowned runtime composition for the category to reach |
 | ASI05 Unexpected Code Execution | **PARTIAL** | MAJOR | F3 |
 | ASI06 Memory & Context Poisoning | **PARTIAL** | MAJOR | F2 |
-| ASI07 Insecure Inter-Agent Communication | **N/A** | — | Single agent; it neither delegates nor is delegated to, and the interview-to-builder handoff is a file a person carries between two separate sessions, not a message crossing an agent boundary. That handoff is audited as untrusted input under ASI01 |
-| ASI08 Cascading Failures | **PASS** | — | Lines 60-63 require every claim traced to evidence, conflicting numbers reconciled rather than silently chosen, and every proposed path walked, before line 66 hands the package to the owner to correct; a checkpoint and a human review stand between the build and anything downstream, meeting [ASI08-GATES](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES") |
-| ASI09 Human-Agent Trust Exploitation | **PASS** | — | Line 22 "Describe reported evidence as reported, not independently verified", line 44 "A proposed test is not a passed test" and line 56's ban on claiming a file exists keep the owner's trust proportionate to what was actually checked, and line 66 puts their correction before any use, meeting [ASI09-EXPLICIT-CONFIRM](reference/owasp-top-10-agentic-applications-2026.md#L1023 "^ASI09-EXPLICIT-CONFIRM") |
-| ASI10 Rogue Agents | **PASS** | — | Invoked once per package with the owner present, no loop, schedule or self-trigger, and line 66 "No implementation begins merely because the package is complete", so there is no unattended run in which the drift at [ASI10-DRIFT](reference/owasp-top-10-agentic-applications-2026.md#L1071 "^ASI10-DRIFT") could begin |
+| ASI07 Insecure Inter-Agent Communication | **N/A** | - | Single agent; it neither delegates nor is delegated to, and the interview-to-builder handoff is a file a person carries between two separate sessions, not a message crossing an agent boundary. That handoff is audited as untrusted input under ASI01 |
+| ASI08 Cascading Failures | **PASS** | - | Lines 60-63 require every claim traced to evidence, conflicting numbers reconciled rather than silently chosen, and every proposed path walked, before line 66 hands the package to the owner to correct; a checkpoint and a human review stand between the build and anything downstream, meeting [ASI08-GATES](reference/owasp-top-10-agentic-applications-2026.md#L946 "^ASI08-GATES") |
+| ASI09 Human-Agent Trust Exploitation | **PASS** | - | Line 22 "Describe reported evidence as reported, not independently verified", line 44 "A proposed test is not a passed test" and line 56's ban on claiming a file exists keep the owner's trust proportionate to what was actually checked, and line 66 puts their correction before any use, meeting [ASI09-EXPLICIT-CONFIRM](reference/owasp-top-10-agentic-applications-2026.md#L1023 "^ASI09-EXPLICIT-CONFIRM") |
+| ASI10 Rogue Agents | **PASS** | - | Invoked once per package with the owner present, no loop, schedule or self-trigger, and line 66 "No implementation begins merely because the package is complete", so there is no unattended run in which the drift at [ASI10-DRIFT](reference/owasp-top-10-agentic-applications-2026.md#L1071 "^ASI10-DRIFT") could begin |
 
 ## Findings
 
@@ -522,7 +513,7 @@ uncertainty is carried in F4's severity, not only in its text. The test that set
 build and print the tools available to that session and any outbound request it makes.
 
 **This target is not vendored**, unlike the three above. The kit carries no licence covering its own
-text — `workflow-package-builder/LICENSE-ICM.txt` covers the upstream method it adapts, not the kit —
+text (`workflow-package-builder/LICENSE-ICM.txt` covers the upstream method it adapts, not the kit),
 so it is not copied into [`targets/`](targets/), and the quoted lines cannot be checked here against a
 pinned copy the way Audits 1 to 3 can. `verify.py --artifact` was run against the file in place and
 passed; a reader without the kit is taking that on trust, which is weaker than this repository's
@@ -547,9 +538,6 @@ carried in F4's severity; and whether the kit-local `references/` and `assets/` 
 or as a third-party supply chain the owner downloaded, taken here as owned because they sit at fixed
 paths the owner can read.
 
-## Want more?
-
-Available on request: the long form on any finding, or the full capability trace.
 
 ---
 ---

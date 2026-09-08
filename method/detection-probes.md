@@ -19,7 +19,7 @@ still cites the Top 10.
 
 ---
 
-## ASI01: Agent Goal Hijack — [§L235](../reference/owasp-top-10-agentic-applications-2026.md#L235 "^ASI01")
+## ASI01: Agent Goal Hijack ([§L235](../reference/owasp-top-10-agentic-applications-2026.md#L235 "^ASI01"))
 
 **In a definition:** the agent is told to read content from sources it does not control
 (inboxes, uploads, web pages, fetched repositories, tool outputs), and nothing separates
@@ -48,7 +48,7 @@ does next, and can it reach a tool that acts?
 
 ---
 
-## ASI02: Tool Misuse and Exploitation — [§L318](../reference/owasp-top-10-agentic-applications-2026.md#L318 "^ASI02")
+## ASI02: Tool Misuse and Exploitation ([§L318](../reference/owasp-top-10-agentic-applications-2026.md#L318 "^ASI02"))
 
 **In a definition:** two distinct shapes, and it is worth naming which one you found.
 
@@ -65,7 +65,7 @@ The standard pairs least privilege with human approval for high-impact actions
 ([§L286](../reference/owasp-top-10-agentic-applications-2026.md#L286 "^ASI01-LEAST-PRIVILEGE")).
 
 **Two shapes a per-tool review misses.** *Arguments.* A tool can be correctly scoped and still
-catastrophic through the values it accepts — quantity, recipient, path, filter, limit. Ask what
+catastrophic through the values it accepts: quantity, recipient, path, filter, limit. Ask what
 the widest legal value of each consequential argument does; "book a seat" and "book five hundred
 seats" are the same tool call. *Composition.* Two individually harmless tools make a third
 capability that neither holds alone: read plus send is exfiltration, read plus write is
@@ -76,7 +76,7 @@ not an answer. Then: name every irreversible action and name its gate. A blank i
 
 ---
 
-## ASI03: Identity and Privilege Abuse — [§L414](../reference/owasp-top-10-agentic-applications-2026.md#L414 "^ASI03")
+## ASI03: Identity and Privilege Abuse ([§L414](../reference/owasp-top-10-agentic-applications-2026.md#L414 "^ASI03"))
 
 **In a definition:** the agent runs on a broad service account, on a human's own credentials, or
 on a token scoped far wider than its task, so the blast radius on hijack is the whole account
@@ -85,7 +85,7 @@ phrases like *"authenticates as the `ops-admin` service account"* and for the ab
 identity statement at all, which usually means it inherits whatever invoked it.
 
 **Elevation with no stated end, and reach sideways.** Watch for definitions that let the agent
-raise its own privileges for a stated reason — troubleshooting, an incident, a backfill — without
+raise its own privileges for a stated reason (troubleshooting, an incident, a backfill) without
 saying what returns them. Temporary access with no expiry in the text is permanent access. Then
 ask how far one identity reaches laterally: an agent holding a single credential valid in two
 systems is a bridge between them, and the bridge is the finding, not either system.
@@ -96,7 +96,7 @@ credentials?
 
 ---
 
-## ASI04: Agentic Supply Chain Vulnerabilities — [§L514](../reference/owasp-top-10-agentic-applications-2026.md#L514 "^ASI04")
+## ASI04: Agentic Supply Chain Vulnerabilities ([§L514](../reference/owasp-top-10-agentic-applications-2026.md#L514 "^ASI04"))
 
 **In a definition:** the agent loads, fetches, installs, or composes something at runtime that it
 does not own and does not verify. Tools, MCP servers, skills, prompts, other agents' definitions,
@@ -123,7 +123,7 @@ decide; this is navigation, not authority, and the finding cites what you read.
 
 **The description is part of the supply chain.** An agent that selects a tool by what the tool
 says it does is trusting text written by whoever published it. A registry entry, an MCP server's
-advertised capability, a skill's own summary — each reaches the agent's reasoning before any
+advertised capability, a skill's own summary: each reaches the agent's reasoning before any
 human reads it, and a broad or misleading description is enough to get a tool called for work it
 should never have been given. Ask what this agent knows about a tool other than the tool's own
 claim about itself.
@@ -134,7 +134,7 @@ before use? Each unverified item is a finding.
 
 ---
 
-## ASI05: Unexpected Code Execution (RCE) — [§L606](../reference/owasp-top-10-agentic-applications-2026.md#L606 "^ASI05")
+## ASI05: Unexpected Code Execution (RCE) ([§L606](../reference/owasp-top-10-agentic-applications-2026.md#L606 "^ASI05"))
 
 **In a definition:** model output can become an executed command. A `Bash`, `run_shell`,
 `exec`, `eval` or code-interpreter tool is the obvious form. The quieter form is a tool that
@@ -143,7 +143,7 @@ shell for convenience (*"use `curl -s` for downloads"*) when a narrower tool wou
 
 **Generated configuration is executed code.** A definition that only writes files still reaches
 execution when what it writes is Terraform, a CI workflow, a Dockerfile, a migration, a cron
-entry or a systemd unit — anything a later process runs without a human reading it line by line.
+entry or a systemd unit, anything a later process runs without a human reading it line by line.
 The distance between "writes YAML" and "executes code" is one pipeline, and the definition
 usually does not mention the pipeline. Ask what consumes what this agent writes.
 
@@ -152,7 +152,7 @@ does it reach from there, and is the environment sandboxed or the operator's own
 
 ---
 
-## ASI06: Memory & Context Poisoning — [§L681](../reference/owasp-top-10-agentic-applications-2026.md#L681 "^ASI06")
+## ASI06: Memory & Context Poisoning ([§L681](../reference/owasp-top-10-agentic-applications-2026.md#L681 "^ASI06"))
 
 **In a definition:** the agent reads from or writes to a store that persists beyond the current
 session and that someone other than its owner can influence. A RAG index users can write to, a
@@ -176,15 +176,15 @@ write to what it reads?
 
 ---
 
-## ASI07: Insecure Inter-Agent Communication — [§L772](../reference/owasp-top-10-agentic-applications-2026.md#L772 "^ASI07")
+## ASI07: Insecure Inter-Agent Communication ([§L772](../reference/owasp-top-10-agentic-applications-2026.md#L772 "^ASI07"))
 
 **In a definition:** the agent delegates to, spawns, or receives messages from other agents, and
 nothing authenticates those messages. Look for *"dispatch the work to the most appropriate
 specialist"*, *"can spawn helper sub-agents"*, or an orchestrator pattern with no statement of
 what a sub-agent is trusted to assert back.
 
-**The channel is the protocol, not only the peer.** An MCP server's responses — returned
-context, tool metadata, capability lists — enter the agent's reasoning with the same weight as a
+**The channel is the protocol, not only the peer.** An MCP server's responses (returned
+context, tool metadata, capability lists) enter the agent's reasoning with the same weight as a
 sibling agent's message and are authenticated about as rarely. Watch too for consent a peer can
 satisfy on the user's behalf: a delegation step that treats an upstream approval as already given
 lets the approving party be chosen by whoever controls the upstream.
@@ -195,7 +195,7 @@ others, this is a reasoned N/A, and say so in that form.
 
 ---
 
-## ASI08: Cascading Failures — [§L863](../reference/owasp-top-10-agentic-applications-2026.md#L863 "^ASI08")
+## ASI08: Cascading Failures ([§L863](../reference/owasp-top-10-agentic-applications-2026.md#L863 "^ASI08"))
 
 **In a definition:** a multi-step agent conditions each step on the previous one with no check in
 between, so an early error (a misread, a hallucinated fact, a wrong classification) propagates
@@ -206,7 +206,7 @@ before anyone notices once.
 **Volume as its own failure.** An agent that schedules its own work, spawns helpers, or
 re-enters its own queue has no natural ceiling, and the failure mode is exhaustion rather than
 error: quota burned, budget spent, the queue filled with its own retries. The 2026 edition treats
-this as an amplifier rather than a category of its own — it survives in this category as the
+this as an amplifier rather than a category of its own. It survives in this category as the
 rate-limiting mitigation, throttle or pause on anomalies, and in ASI02 as a named contributing
 factor. Open the text before citing it, and if nothing there carries the claim, it belongs in
 observations outside the standard rather than in a finding.
@@ -216,7 +216,7 @@ is nothing, that is the finding.
 
 ---
 
-## ASI09: Human-Agent Trust Exploitation — [§L965](../reference/owasp-top-10-agentic-applications-2026.md#L965 "^ASI09")
+## ASI09: Human-Agent Trust Exploitation ([§L965](../reference/owasp-top-10-agentic-applications-2026.md#L965 "^ASI09"))
 
 **In a definition:** the artifact says a human approves, but either the throughput makes real
 review impossible, or the approval step shows the human nothing they can actually judge. A
@@ -233,7 +233,7 @@ and separating preview from effect, with a risk badge showing source provenance 
 side effects ([§L1044](../reference/owasp-top-10-agentic-applications-2026.md#L1044 "^ASI09-PREVIEW")).
 
 **The agent's output is an instruction channel back to the human.** Where an agent relays what
-it read — a link, an account number, an amount, a sequence of steps — the human acts on content
+it read (a link, an account number, an amount, a sequence of steps), the human acts on content
 the agent did not author and cannot vouch for, while the trust attaches to the agent rather than
 to the source. A definition that lets the agent render URLs or payment details drawn from fetched
 content has built a channel whose apparent sender the user already trusts. Ask which parts of the
@@ -244,7 +244,7 @@ per hour? Name the thing that carries the risk and ask whether it appears on tha
 
 ---
 
-## ASI10: Rogue Agents — [§L1062](../reference/owasp-top-10-agentic-applications-2026.md#L1062 "^ASI10")
+## ASI10: Rogue Agents ([§L1062](../reference/owasp-top-10-agentic-applications-2026.md#L1062 "^ASI10"))
 
 **In a definition:** no iteration cap, no budget limit, no kill switch, no instruction to
 escalate when uncertain. The agent can loop, amplify, or drift with nothing to halt it and

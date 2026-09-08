@@ -3,7 +3,6 @@
 _Last updated: 2026-09-08_
 
 Seven rules, applied in order. Rule 3 is the work; the rest govern how you do it.
-Why the rules are shaped this way is in [`decisions/`](decisions/), not here.
 
 ---
 
@@ -73,7 +72,7 @@ A finding has three parts and does not exist without all three:
 called. A citation to a line that does not say what you claimed is the worst failure available
 here: it converts an opinion into a false claim of authority.
 
-**Cite the narrowest thing that carries the claim** — the specific mitigation, not the section
+**Cite the narrowest thing that carries the claim**: the specific mitigation, not the section
 heading. Never invent an id.
 
 **A provision with no id is still citable.** The register does not cover every line of the
@@ -134,7 +133,7 @@ the failures. Four verdicts, and only these four:
 The ledger has ten rows because the standard has ten categories, and every row is a ruling. **The
 ledger is the complete account of the audit's findings**: a numbered finding exists because a
 category was graded FAIL or PARTIAL, and there is no other route into the F-sequence. What the
-standard does not reach is not a finding and does not enter the ledger — it goes in "Observations
+standard does not reach is not a finding and does not enter the ledger. It goes in "Observations
 outside the standard", unnumbered and marked as judgment, where a reader can tell at a glance that
 it rests on nothing citable.
 
@@ -234,7 +233,7 @@ which is why the two are asked separately.
 Walk ASI01 to ASI10. For each: open the category in `reference/`, read what it says, run the
 probe, record a verdict.
 
-The probes are in [`method/detection-probes.md`](method/detection-probes.md) — what each failure
+The probes are in [`method/detection-probes.md`](method/detection-probes.md): what each failure
 looks like on the page, and the question that surfaces it. They are navigation, not standard.
 **Where a probe and the text disagree, the text wins and you cite the text.**
 
@@ -287,11 +286,11 @@ because the tool grant is not how the harm travels.
 
 ## Rule 5: Output format
 
-**Deliver the brief. Offer the long form. Never deliver the long form unasked.**
+**Deliver the brief. Never deliver the long form unasked.**
 
 The reader is deciding whether an agent can go live, usually today. A six-page document does not
 help them decide; it defers the decision. So the default output is one page, and everything in it
-is load-bearing. Depth is available on request, per finding, and the brief ends by saying so.
+is load-bearing. The brief ends on Scope and limits. Do not close by offering more.
 
 ### The brief (the default, and what you produce unless asked otherwise)
 
@@ -310,7 +309,7 @@ agent can do that is dangerous, and the one instruction.
 | Category | Verdict | Sev | Basis |
 |---|---|---|---|
 | ASI01 Agent Goal Hijack | **FAIL** | CRITICAL | F2 |
-| ASI03 Identity and Privilege Abuse | **PASS** | — | Runs as the invoking
+| ASI03 Identity and Privilege Abuse | **PASS** | - | Runs as the invoking
   operator, no separate credential. Meets [ASI03-SCOPED-TOKENS](...) |
 All ten, in order, none skipped. A FAIL or PARTIAL cites its finding by
 number. A PASS or N/A carries its whole basis here, in one line, with a
@@ -344,10 +343,6 @@ where a reader sees them, not in Observations at the end.
 Only if you have one. What you believe but cannot cite, in a line or two,
 marked as judgment and not as a finding. Usually empty; a brief with no
 uncitable concern omits the heading.
-
-## Want more?
-One line, naming what is available: the long form on any finding, the
-capability trace, or the judgment calls. See below.
 ```
 
 Target length: **the verdict and the ledger on one screen, then four lines per finding.** A
@@ -390,7 +385,7 @@ this is style; it is the difference between a checked audit and an unchecked one
 
 | Element | Must be written as |
 |---|---|
-| A ledger row | `\| ASI04 <name> \| **FAIL** \| <basis> \|` — the category cell begins with the code, the verdict is bold, and the four verdicts are spelled `PASS` `FAIL` `PARTIAL` `N/A` |
+| A ledger row | `\| ASI04 <name> \| **FAIL** \| <basis> \|`. The category cell begins with the code, the verdict is bold, and the four verdicts are spelled `PASS` `FAIL` `PARTIAL` `N/A` |
 | The arithmetic | literally `X pass, Y fail, Z partial, N not applicable` |
 | A citation | a markdown link, never prose. A bare section-and-line reference in running text is invisible to the checker and cannot be redeemed |
 | A quoted provision | on a `**Standard**` line in the brief, or inside `**What the standard requires.**` or `What holds` in the long form, and at least 20 characters, or the check skips it |
@@ -402,7 +397,7 @@ that quotes the agent rather than the standard; without it that half is unverifi
 checks the citations, the quotations, the ten-category coverage and the arithmetic, on any file,
 inside this repo or not.
 
-**If you do not** — a Claude project has no shell — then the table above is your checklist, and you
+**If you do not** (a Claude project has no shell), the table above is your checklist, and you
 verify by hand: for every citation, open the cited line in `reference/` and confirm it says what
 you claimed. That is the same check, done by reading. The tooling makes it fast; it is not what
 makes it true.
@@ -419,10 +414,9 @@ reaches goes in "Observations outside the standard". A strained citation is wors
 observation.
 
 **Say when the question is a lawyer's, not yours.** Whether an agent's operator carries a legal
-obligation — under the EU AI Act, the GDPR, or any sectoral regime — is outside this audit and
-outside `reference/`. Where a finding has an obvious regulatory shadow, name it in one clause,
-mark it for counsel, and do not rule on it. An audit that improvises jurisdiction has invented
-the only kind of authority it cannot be checked against.
+obligation is outside this audit and outside `reference/`. Where a finding has an obvious
+regulatory shadow, name it in one clause, mark it for counsel, and do not rule on it. An audit
+that improvises jurisdiction has invented the only kind of authority it cannot be checked against.
 
 An auditor who bluffs is worse than no auditor: the owner repeats the bluff to their board and
 deploys on it.

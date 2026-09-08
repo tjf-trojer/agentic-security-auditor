@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""build_register.py — generate provisions.md, the register of citable provisions.
+"""build_register.py: generate provisions.md, the register of citable provisions.
 
 Why a register exists. A finding cites a line. Line numbers move, and a citation
 that has moved is worse than no citation: it still looks authoritative. So each
