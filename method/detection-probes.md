@@ -1,6 +1,6 @@
 # Detection probes: what each category looks like in a definition
 
-_Last updated: 2026-09-05_
+_Last updated: 2026-09-08_
 
 The standard describes each risk in the abstract, as a standard should. This file translates
 each category into **what it looks like on the page** when you are holding a system prompt and a
@@ -11,6 +11,11 @@ standard's text disagree, the text wins. See [`README.md`](README.md).
 
 Citations below point into
 [`../reference/owasp-top-10-agentic-applications-2026.md`](../reference/owasp-top-10-agentic-applications-2026.md).
+
+Some of the attack shapes below were drawn from the scenario lists in OWASP's *Agentic AI —
+Threats and Mitigations* v1.1, the taxonomy the standard names as its foundation. That guide is
+deliberately not in `reference/` and is not citable here. The shapes are navigation; the finding
+still cites the Top 10.
 
 ---
 
@@ -30,6 +35,13 @@ This is the same class of flaw as SQL injection, and it means a prompt-layer ins
 all natural-language input as untrusted and route it through validation *before* it can
 influence goal selection or tool calls
 ([§L283](../reference/owasp-top-10-agentic-applications-2026.md#L283 "^ASI01-UNTRUSTED-INPUT")).
+
+**Injection is not always a single move.** Where a plan persists across turns, an agent can be
+walked off its goal by increments, each of which reads as a reasonable refinement and none of
+which contains an attack on its own. The definition-side tell is a goal that is carried and
+updated rather than restated: nothing re-anchors the agent to what it was originally asked to do.
+A bounded reflection or self-critique loop belongs to ASI10 rather than here, but look for it in
+the same place.
 
 **Probe:** what does this agent read that an outsider can write? Can that content change what it
 does next, and can it reach a tool that acts?
@@ -52,6 +64,13 @@ property an agent can have and the most commonly skipped.
 The standard pairs least privilege with human approval for high-impact actions
 ([§L286](../reference/owasp-top-10-agentic-applications-2026.md#L286 "^ASI01-LEAST-PRIVILEGE")).
 
+**Two shapes a per-tool review misses.** *Arguments.* A tool can be correctly scoped and still
+catastrophic through the values it accepts — quantity, recipient, path, filter, limit. Ask what
+the widest legal value of each consequential argument does; "book a seat" and "book five hundred
+seats" are the same tool call. *Composition.* Two individually harmless tools make a third
+capability that neither holds alone: read plus send is exfiltration, read plus write is
+persistence, fetch plus execute is installation. Enumerate the pairs, not only the tools.
+
 **Probe:** for each tool, what task in the stated goal needs it? "It might be useful later" is
 not an answer. Then: name every irreversible action and name its gate. A blank is the finding.
 
@@ -64,6 +83,12 @@ on a token scoped far wider than its task, so the blast radius on hijack is the 
 rather than the task. Sub-agents that inherit the parent's credentials multiply it. Look for
 phrases like *"authenticates as the `ops-admin` service account"* and for the absence of any
 identity statement at all, which usually means it inherits whatever invoked it.
+
+**Elevation with no stated end, and reach sideways.** Watch for definitions that let the agent
+raise its own privileges for a stated reason — troubleshooting, an incident, a backfill — without
+saying what returns them. Temporary access with no expiry in the text is permanent access. Then
+ask how far one identity reaches laterally: an agent holding a single credential valid in two
+systems is a bridge between them, and the bridge is the finding, not either system.
 
 **Probe:** if this agent were fully hijacked on its next run, what is the maximum damage its
 credentials permit? That number is the finding. Then: do spawned sub-agents hold the same
@@ -96,6 +121,13 @@ auditable, and `ASI04-PROMPT-REVIEW` at L583, requiring them under version contr
 and scanned for anomalies. Text that hides from a reviewer is arguably neither. Read them and
 decide; this is navigation, not authority, and the finding cites what you read.
 
+**The description is part of the supply chain.** An agent that selects a tool by what the tool
+says it does is trusting text written by whoever published it. A registry entry, an MCP server's
+advertised capability, a skill's own summary — each reaches the agent's reasoning before any
+human reads it, and a broad or misleading description is enough to get a tool called for work it
+should never have been given. Ask what this agent knows about a tool other than the tool's own
+claim about itself.
+
 **Probe:** list everything this agent composes, fetches or installs at runtime that it does not
 itself own. For each: pinned to an immutable reference? signature or hash verified? inspected
 before use? Each unverified item is a finding.
@@ -108,6 +140,12 @@ before use? Each unverified item is a finding.
 `exec`, `eval` or code-interpreter tool is the obvious form. The quieter form is a tool that
 writes to a location something else will execute, or a definition that steers the agent toward
 shell for convenience (*"use `curl -s` for downloads"*) when a narrower tool would do.
+
+**Generated configuration is executed code.** A definition that only writes files still reaches
+execution when what it writes is Terraform, a CI workflow, a Dockerfile, a migration, a cron
+entry or a systemd unit — anything a later process runs without a human reading it line by line.
+The distance between "writes YAML" and "executes code" is one pipeline, and the definition
+usually does not mention the pipeline. Ask what consumes what this agent writes.
 
 **Probe:** can model output become an executed command? Where does that execution run, what
 does it reach from there, and is the environment sandboxed or the operator's own machine?
@@ -126,6 +164,13 @@ that corrupts the ground every later run stands on. When an artifact writes file
 sessions will treat as instructions, both fire, and the ASI06 finding is usually the more
 serious of the two because it survives the session that caused it.
 
+**Two shapes worth naming separately.** *Repetition.* Where a store accumulates what it is
+told, no single write is anomalous and the corruption is the pattern rather than any one entry,
+so a control that inspects writes individually passes all of them. *Tenancy.* Where one store
+serves several users or several agents, ask whether what one writes another reads. Cross-user
+contamination through shared memory is the same defect as a shared mutable global, and it hides
+easily behind a definition that says only "stores context for later sessions".
+
 **Probe:** does anything this agent writes get read back as instruction later? Who else can
 write to what it reads?
 
@@ -137,6 +182,12 @@ write to what it reads?
 nothing authenticates those messages. Look for *"dispatch the work to the most appropriate
 specialist"*, *"can spawn helper sub-agents"*, or an orchestrator pattern with no statement of
 what a sub-agent is trusted to assert back.
+
+**The channel is the protocol, not only the peer.** An MCP server's responses — returned
+context, tool metadata, capability lists — enter the agent's reasoning with the same weight as a
+sibling agent's message and are authenticated about as rarely. Watch too for consent a peer can
+satisfy on the user's behalf: a delegation step that treats an upstream approval as already given
+lets the approving party be chosen by whoever controls the upstream.
 
 **Probe:** what messages cross an agent boundary here, what authenticates them, and what would a
 forged one achieve? If the artifact defines a single agent that neither calls nor is called by
@@ -151,6 +202,14 @@ between, so an early error (a misread, a hallucinated fact, a wrong classificati
 silently until the final action is built on it. Errors originate early and compound. The
 amplifier is volume: an agent working a backlog continuously fails the same way many times
 before anyone notices once.
+
+**Volume as its own failure.** An agent that schedules its own work, spawns helpers, or
+re-enters its own queue has no natural ceiling, and the failure mode is exhaustion rather than
+error: quota burned, budget spent, the queue filled with its own retries. The 2026 edition treats
+this as an amplifier rather than a category of its own — it survives in this category as the
+rate-limiting mitigation, throttle or pause on anomalies, and in ASI02 as a named contributing
+factor. Open the text before citing it, and if nothing there carries the claim, it belongs in
+observations outside the standard rather than in a finding.
 
 **Probe:** if step two is wrong, what catches it before the final action executes? If the answer
 is nothing, that is the finding.
@@ -173,6 +232,13 @@ model-generated rationale ([§L1030-L1031](../reference/owasp-top-10-agentic-app
 and separating preview from effect, with a risk badge showing source provenance and expected
 side effects ([§L1044](../reference/owasp-top-10-agentic-applications-2026.md#L1044 "^ASI09-PREVIEW")).
 
+**The agent's output is an instruction channel back to the human.** Where an agent relays what
+it read — a link, an account number, an amount, a sequence of steps — the human acts on content
+the agent did not author and cannot vouch for, while the trust attaches to the agent rather than
+to the source. A definition that lets the agent render URLs or payment details drawn from fetched
+content has built a channel whose apparent sender the user already trusts. Ask which parts of the
+output originate outside the agent, and whether the human can tell which parts those are.
+
 **Probe:** at the moment of approval, what exactly does the human see, and how many such moments
 per hour? Name the thing that carries the risk and ask whether it appears on that screen.
 
@@ -185,6 +251,12 @@ escalate when uncertain. The agent can loop, amplify, or drift with nothing to h
 nobody able to stop it mid-run. *"Runs continuously as a background service"* with none of the
 above is the clearest form. Note that this category also covers autonomous misalignment that
 emerges without an attacker present, which is what distinguishes it from ASI01.
+
+**Fragmentation defeats a threshold.** Where approval is triggered by the size of an action, an
+action split across several runs or several agents can stay under the line at every step and
+still land whole. Ask whether the gate measures the step or the outcome. Watch too for output
+that carries instruction to the next agent: where one agent's product becomes another's prompt, a
+drifted agent propagates rather than merely failing.
 
 **Probe:** name what stops this agent, and name who can stop it while it is running. Two blanks
 is severe.

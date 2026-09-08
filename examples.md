@@ -1,6 +1,6 @@
 # Worked audits
 
-_Last updated: 2026-09-05_
+_Last updated: 2026-09-08_
 
 Three audits of three real agent definitions, from three different projects, none of them mine.
 Each is vendored byte-for-byte in [`targets/`](targets/) and pinned, so you can read the input
@@ -13,16 +13,14 @@ beside the output. Every citation resolves into
 | 2 | [`ecc-loop-operator.md`](targets/ecc-loop-operator.md) | affaan-m/ECC, MIT | 0 pass, 6 fail, 4 partial, 0 N/A |
 | 3 | [`swe-agent-default.yaml`](targets/swe-agent-default.yaml) | SWE-agent/SWE-agent, MIT | 1 pass, 6 fail, 2 partial, 1 N/A |
 
-**Audit 1 was written by hand while building this folder, which demonstrates a format and proves
-nothing. Audits 2 and 3 were not.** Each is the output of a clean-room run: a fresh session given
-only this repository and a target it had never seen, with no knowledge of the other audits. Their
-citations were checked line by line afterwards and all resolved.
-
 Between them the three exercise the whole ledger. Audit 1 carries three earned passes and all
 three severity levels. Audit 3 shows each of the four verdicts arising from a different mechanism:
 a PASS where a control meets its provision, an N/A where a category cannot fire, and two PARTIALs
 where a control exists and is incomplete in a specific way. Audit 2 has no pass at all, and says
 so plainly rather than manufacturing one.
+
+Audits 2 and 3 are the output of clean-room runs on targets this repository had never seen. How
+these were produced is set out at the end, after the work it describes.
 
 A fourth artifact, [`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md), is not
 audited here. It is written to fail all ten categories and exists as the fixture you use to check
@@ -135,11 +133,13 @@ Not verifiable from the definition: where `Bash` executes, and whether the harne
 confirmation. The test that settles the first is to run an install and print the effective user,
 working directory and network policy of the shell.
 
+**Two judgment calls this brief makes**, recorded as interpretation and not as findings: whether
+`model: haiku` is the right assignment on a supply-chain path, and whether "global versus local"
+is posed to the operator as a location or as a blast radius.
+
 ## Want more?
 
-Say the word for the long form on any finding, the full capability trace, or the two judgment
-calls this brief compresses: whether `model: haiku` is right on a supply-chain path, and whether
-"global versus local" is posed to the operator as a location or as a blast radius.
+Available on request: the long form on any finding, or the full capability trace.
 
 ---
 ---
@@ -150,10 +150,6 @@ calls this brief compresses: whether `model: haiku` is right on a supply-chain p
 pinned at commit `e04ea0b`, 45 lines. Copy at
 [`targets/ecc-loop-operator.md`](targets/ecc-loop-operator.md).
 **Standard.** OWASP Top 10 for Agentic Applications 2026. **Date.** 2026-09-05.
-
-**How this was produced.** A clean-room run: a fresh session given only this repository and a
-target it had never seen. Its seventeen citations were checked afterwards and all resolved.
-Condensed into the brief format here; the reasoning is the run's own.
 
 ## Verdict
 
@@ -252,11 +248,13 @@ means only this agent's own iteration, ASI07 falls away and F1 survives inside A
 
 **The EU AI Act does not bind.** Internal developer tooling, not an Annex III use.
 
+**A second judgment call**, recorded as interpretation and not as a finding: whether a
+prompt-layer defence block counts as a control at all, or only as a statement of intent. The
+first, what "loop" names, is settled above.
+
 ## Want more?
 
-Available on request: the long form on any finding, and the two judgment calls compressed here,
-which are whether "loop" names other agents or this agent's own iteration, and whether a
-prompt-layer defence block should count as a control at all or only as a statement of intent.
+Available on request: the long form on any finding.
 
 ---
 ---
@@ -268,8 +266,6 @@ MIT, 69 lines. Copy at [`targets/swe-agent-default.yaml`](targets/swe-agent-defa
 **YAML, not markdown:** the instructions are in `agent.templates` (lines 5-32), the tool grant in
 `agent.tools` (lines 33-66).
 **Standard.** OWASP Top 10 for Agentic Applications 2026. **Date.** 2026-09-05.
-
-**How this was produced.** A clean-room run on an unseen target, eighteen citations, all checked.
 
 ## Verdict
 
@@ -366,8 +362,25 @@ network policy, and the step and cost limits actually in force. If that is a thr
 with no credentials and no egress, F2 closes and F1 and F3 drop to bounded. If it is a
 developer's laptop, F1 is worse than CRITICAL suggests.
 
+**Two judgment calls this brief makes**, recorded as interpretation and not as findings: whether
+`{{problem_statement}}` should be read as attacker-writable at all, and whether a benchmark
+harness normally run in a container should be audited as the container or as the file.
+
 ## Want more?
 
-Available on request: the long form on any finding, or the two judgment calls compressed here,
-which are whether `{{problem_statement}}` should be read as attacker-writable at all, and whether
-a benchmark harness normally run in a container should be audited as the container or as the file.
+Available on request: the long form on any finding.
+
+---
+---
+
+# How these were produced
+
+**Audit 1 was written by hand while building this folder, which demonstrates a format and proves
+nothing. Audits 2 and 3 were not.** Each is the output of a clean-room run: a fresh session given
+only this repository and a target it had never seen, with no knowledge of the other audits. Audit
+2's seventeen citations and Audit 3's eighteen were checked line by line afterwards and all
+resolved. Both were condensed into the brief format here; the reasoning is each run's own.
+
+`make verify` re-checks all three on every run: that each citation resolves to the line it claims
+and quotes that line correctly, that no audit skipped a category, and that the counts a verdict
+states match its own ledger.
