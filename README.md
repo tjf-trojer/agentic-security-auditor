@@ -76,9 +76,14 @@ seen, with no knowledge of the other audits. Their citations were checked line b
 and all resolved. Those runs also found real defects in these rules, all fixed and recorded in the
 git history.
 
-All three audited artifacts are real agent definitions published by other people, from three
-different projects, vendored byte-for-byte and pinned. None is mine: an auditor demonstrated only
-on artifacts its author controls has demonstrated very little.
+Audit 4 was not clean-room: it ran in an ordinary session with this folder open, and its own Scope
+and limits says so rather than letting the paragraph above cover it.
+
+All four audited artifacts are real agent definitions published by other people, from four
+different projects. The first three are vendored byte-for-byte in `targets/` and pinned; the
+fourth carries no licence covering its own text, so it is quoted but not copied, which is weaker
+and is stated where it applies. None is mine: an auditor demonstrated only on artifacts its author
+controls has demonstrated very little.
 
 ## What it is not
 

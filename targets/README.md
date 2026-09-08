@@ -5,9 +5,12 @@ _Last updated: 2026-09-05_
 These are the inputs. They are here so a reader can hold the audit and the artifact side by side
 and check that every quoted line says what the finding claims.
 
-All three audited artifacts are **real agent definitions written by other people and published**,
-each vendored byte-for-byte and pinned. None is the author's own work: an auditor demonstrated
-only on artifacts its author controls has demonstrated very little.
+The three artifacts vendored here are **real agent definitions written by other people and
+published**, each copied byte-for-byte and pinned. None is the author's own work: an auditor
+demonstrated only on artifacts its author controls has demonstrated very little. Audit 4's target
+is not among them: the community workflow kit carries no licence covering its own text, so
+[`../examples.md`](../examples.md) quotes it without copying it and says so in that audit's own
+Scope and limits.
 
 | File | Origin | Licence | Audited in |
 |---|---|---|---|
@@ -36,7 +39,7 @@ different mechanism. It also demonstrates a rule preventing a plausible false fi
 `bundles:` paths look exactly like a pinning failure, and `rules.md` forbids that reading because
 they sit inside the operator's own checkout.
 
-**`ops-copilot` is synthetic and labelled as such.** The three real artifacts leave the far end of
+**`ops-copilot` is synthetic and labelled as such.** The three vendored artifacts leave the far end of
 the range untested: none holds administrator credentials or runs unattended in a continuous loop.
 This one fails all ten and ships with an expected result, so a reader can check the auditor
 against a known answer before trusting it on their own agent. Nobody shipped it.
