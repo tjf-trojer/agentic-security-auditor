@@ -36,13 +36,13 @@ ROOT = Path(__file__).resolve().parent.parent
 ARGV = [a if a.startswith("-") else str(Path(a).resolve()) for a in sys.argv[1:]]
 os.chdir(ROOT)
 
-REF = Path("reference/owasp-top-10-agentic-applications-2026.md")
+REF = Path("reference/owasp-top-10-agentic-applications-2026.txt")
 REGISTER = Path("provisions.md")
 # Longest a provision may run when nothing is registered after it.
 SPAN_CAP = 14
 
 CITE = re.compile(
-    r"owasp-top-10-agentic-applications-2026\.md(?:\?plain=1)?#L(?P<line>\d+)(?:-L(?P<end>\d+))?"
+    r"owasp-top-10-agentic-applications-2026\.txt#L(?P<line>\d+)(?:-L(?P<end>\d+))?"
     r"(?:\s+\"\^(?P<id>[A-Za-z0-9-]+)\")?"
 )
 

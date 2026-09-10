@@ -19,7 +19,7 @@ git clone https://github.com/tjf-trojer/agentic-security-auditor
 ```
 
 **In a Claude project**, add `identity.md`, `rules.md`, `examples.md`, `provisions.md`, `method/`
-and `reference/owasp-top-10-agentic-applications-2026.md` to its knowledge. Scripts do not run
+and `reference/owasp-top-10-agentic-applications-2026.txt` to its knowledge. Scripts do not run
 there; Rule 5 in [`rules.md`](rules.md) says how to verify by hand.
 
 Paste the definition and say **"Audit this agent definition."** Paste it; do not ask the auditor to
@@ -65,8 +65,7 @@ the agent's file.
 
 It cannot tell you a verdict is right, and without `--artifact` it never opens the agent.
 
-A citation names the line a provision begins on; `cite.sh` prints to its end. Rendered markdown on
-github.com has no line numbers, so append `?plain=1` to a citation link there.
+A citation names the line a provision begins on; `cite.sh` prints to its end.
 
 [`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md) is a synthetic agent written
 to fail all ten categories, with its expected result at the end.

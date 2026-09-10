@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REF = "reference/owasp-top-10-agentic-applications-2026.md"
+REF = "reference/owasp-top-10-agentic-applications-2026.txt"
 OUT = ROOT / "provisions.md"
 
 REGISTER = [
@@ -145,7 +145,7 @@ _Last updated: {date}_
 Cite a provision by id, with its current line as the link target:
 
 ```
-[ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN")
+[ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN")
 ```
 
 Each row records the first line of a provision; most run across two or three. Read the provision

@@ -12,4 +12,4 @@ and what question surfaces the evidence.
 |---|---|
 | [`scope-gate.md`](scope-gate.md) | The opening move: is this an agent, what can it do unattended, and who does it decide about |
 | [`detection-probes.md`](detection-probes.md) | What each category's failure looks like in a definition, and the question that surfaces it |
-| [`normalise-source.py`](normalise-source.py) | Produces the markdown in `reference/` from a text extraction of the official PDF |
+| [`normalise-source.py`](normalise-source.py) | Produces the text file in `reference/` from an extraction of the official PDF |

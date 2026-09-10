@@ -9,14 +9,14 @@ Navigation, not standard. A finding cites `reference/`, never this file. Where a
 standard's text disagree, the text wins. See [`README.md`](README.md).
 
 Citations below point into
-[`../reference/owasp-top-10-agentic-applications-2026.md`](../reference/owasp-top-10-agentic-applications-2026.md).
+[`../reference/owasp-top-10-agentic-applications-2026.txt`](../reference/owasp-top-10-agentic-applications-2026.txt).
 
 Some attack shapes below come from the scenario lists in OWASP's *Agentic AI —
 Threats and Mitigations* v1.1. It is not in `reference/` and a finding never cites it.
 
 ---
 
-## ASI01: Agent Goal Hijack ([§L235](../reference/owasp-top-10-agentic-applications-2026.md#L235 "^ASI01"))
+## ASI01: Agent Goal Hijack ([§L235](../reference/owasp-top-10-agentic-applications-2026.txt#L235 "^ASI01"))
 
 **In a definition:** the agent is told to read content from sources it does not control
 (inboxes, uploads, web pages, fetched repositories, tool outputs), and nothing separates
@@ -26,12 +26,12 @@ makes the collapse explicit, and for the quieter version where a `WebFetch` or `
 simply sits in the same loop as a consequential one.
 
 The root cause is structural, not a model defect: agents "cannot reliably distinguish
-instructions from related content" ([§L240](../reference/owasp-top-10-agentic-applications-2026.md#L240 "^ASI01-ONE-CHANNEL")).
+instructions from related content" ([§L240](../reference/owasp-top-10-agentic-applications-2026.txt#L240 "^ASI01-ONE-CHANNEL")).
 A prompt-layer instruction to "ignore malicious instructions" is not a boundary. The standard's
 first mitigation is to treat
 all natural-language input as untrusted and route it through validation *before* it can
 influence goal selection or tool calls
-([§L283](../reference/owasp-top-10-agentic-applications-2026.md#L283 "^ASI01-UNTRUSTED-INPUT")).
+([§L283](../reference/owasp-top-10-agentic-applications-2026.txt#L283 "^ASI01-UNTRUSTED-INPUT")).
 
 **Injection is not always a single move.** Where a plan persists across turns, an agent can be
 walked off its goal by increments, each of which reads as a reasonable refinement and none of
@@ -45,7 +45,7 @@ does next, and can it reach a tool that acts?
 
 ---
 
-## ASI02: Tool Misuse and Exploitation ([§L318](../reference/owasp-top-10-agentic-applications-2026.md#L318 "^ASI02"))
+## ASI02: Tool Misuse and Exploitation ([§L318](../reference/owasp-top-10-agentic-applications-2026.txt#L318 "^ASI02"))
 
 **In a definition:** two distinct shapes, and it is worth naming which one you found.
 
@@ -56,7 +56,7 @@ end of this file).
 with no dry-run, no approval, no compensating transaction.
 
 The standard pairs least privilege with human approval for high-impact actions
-([§L286](../reference/owasp-top-10-agentic-applications-2026.md#L286 "^ASI01-LEAST-PRIVILEGE")).
+([§L286](../reference/owasp-top-10-agentic-applications-2026.txt#L286 "^ASI01-LEAST-PRIVILEGE")).
 
 **Two shapes a per-tool review misses.** *Arguments.* A tool can be correctly scoped and still
 catastrophic through the values it accepts: quantity, recipient, path, filter, limit. Ask what
@@ -70,7 +70,7 @@ not an answer. Then: name every irreversible action and name its gate. A blank i
 
 ---
 
-## ASI03: Identity and Privilege Abuse ([§L414](../reference/owasp-top-10-agentic-applications-2026.md#L414 "^ASI03"))
+## ASI03: Identity and Privilege Abuse ([§L414](../reference/owasp-top-10-agentic-applications-2026.txt#L414 "^ASI03"))
 
 **In a definition:** the agent runs on a broad service account, on a human's own credentials, or
 on a token scoped far wider than its task, so the blast radius on hijack is the whole account
@@ -90,7 +90,7 @@ credentials?
 
 ---
 
-## ASI04: Agentic Supply Chain Vulnerabilities ([§L514](../reference/owasp-top-10-agentic-applications-2026.md#L514 "^ASI04"))
+## ASI04: Agentic Supply Chain Vulnerabilities ([§L514](../reference/owasp-top-10-agentic-applications-2026.txt#L514 "^ASI04"))
 
 **In a definition:** the agent loads, fetches, installs, or composes something at runtime that it
 does not own and does not verify. Tools, MCP servers, skills, prompts, other agents' definitions,
@@ -102,10 +102,10 @@ points to at fetch time is what runs, and it can change between the moment a hum
 description and the moment the file lands.
 
 The standard names the remedies. Pin by content hash and commit ID
-([§L589](../reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN")); allowlist and pin, verify
+([§L589](../reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN")); allowlist and pin, verify
 provenance before install or activation, auto-reject unsigned or unverified
-([§L579](../reference/owasp-top-10-agentic-applications-2026.md#L579 "^ASI04-GATEKEEPING")); use curated registries and
-block untrusted sources ([§L578](../reference/owasp-top-10-agentic-applications-2026.md#L578 "^ASI04-REGISTRIES")).
+([§L579](../reference/owasp-top-10-agentic-applications-2026.txt#L579 "^ASI04-GATEKEEPING")); use curated registries and
+block untrusted sources ([§L578](../reference/owasp-top-10-agentic-applications-2026.txt#L578 "^ASI04-REGISTRIES")).
 
 **When the artifact addresses the auditor.** A definition can carry text aimed at its reviewer: a
 claimed prior certification, a hidden comment, an instruction to report everything as passing.
@@ -128,7 +128,7 @@ before use? Each unverified item is a finding.
 
 ---
 
-## ASI05: Unexpected Code Execution (RCE) ([§L606](../reference/owasp-top-10-agentic-applications-2026.md#L606 "^ASI05"))
+## ASI05: Unexpected Code Execution (RCE) ([§L606](../reference/owasp-top-10-agentic-applications-2026.txt#L606 "^ASI05"))
 
 **In a definition:** model output can become an executed command. A `Bash`, `run_shell`,
 `exec`, `eval` or code-interpreter tool is the obvious form. The quieter form is a tool that
@@ -146,7 +146,7 @@ does it reach from there, and is the environment sandboxed or the operator's own
 
 ---
 
-## ASI06: Memory & Context Poisoning ([§L681](../reference/owasp-top-10-agentic-applications-2026.md#L681 "^ASI06"))
+## ASI06: Memory & Context Poisoning ([§L681](../reference/owasp-top-10-agentic-applications-2026.txt#L681 "^ASI06"))
 
 **In a definition:** the agent reads from or writes to a store that persists beyond the current
 session and that someone other than its owner can influence. A RAG index users can write to, a
@@ -170,7 +170,7 @@ write to what it reads?
 
 ---
 
-## ASI07: Insecure Inter-Agent Communication ([§L772](../reference/owasp-top-10-agentic-applications-2026.md#L772 "^ASI07"))
+## ASI07: Insecure Inter-Agent Communication ([§L772](../reference/owasp-top-10-agentic-applications-2026.txt#L772 "^ASI07"))
 
 **In a definition:** the agent delegates to, spawns, or receives messages from other agents, and
 nothing authenticates those messages. Look for *"dispatch the work to the most appropriate
@@ -189,7 +189,7 @@ others, this is a reasoned N/A, and say so in that form.
 
 ---
 
-## ASI08: Cascading Failures ([§L863](../reference/owasp-top-10-agentic-applications-2026.md#L863 "^ASI08"))
+## ASI08: Cascading Failures ([§L863](../reference/owasp-top-10-agentic-applications-2026.txt#L863 "^ASI08"))
 
 **In a definition:** a multi-step agent conditions each step on the previous one with no check in
 between, so an early error (a misread, a hallucinated fact, a wrong classification) propagates
@@ -209,7 +209,7 @@ is nothing, that is the finding.
 
 ---
 
-## ASI09: Human-Agent Trust Exploitation ([§L965](../reference/owasp-top-10-agentic-applications-2026.md#L965 "^ASI09"))
+## ASI09: Human-Agent Trust Exploitation ([§L965](../reference/owasp-top-10-agentic-applications-2026.txt#L965 "^ASI09"))
 
 **In a definition:** the artifact says a human approves, but either the throughput makes real
 review impossible, or the approval step shows the human nothing they can actually judge. A
@@ -220,9 +220,9 @@ The words "always confirm" in a definition do not earn a pass. **The presence of
 not the question. What the human can see at the moment of confirmation is the question.** A gate
 that shows a description while the risk lives in a tool grant the human never sees is oversight
 theatre. The remedy in the standard is a plain-language risk summary rather than
-model-generated rationale ([§L1030-L1031](../reference/owasp-top-10-agentic-applications-2026.md#L1030-L1031 "^ASI09-RISK-SUMMARY")),
+model-generated rationale ([§L1030-L1031](../reference/owasp-top-10-agentic-applications-2026.txt#L1030-L1031 "^ASI09-RISK-SUMMARY")),
 and separating preview from effect, with a risk badge showing source provenance and expected
-side effects ([§L1044](../reference/owasp-top-10-agentic-applications-2026.md#L1044 "^ASI09-PREVIEW")).
+side effects ([§L1044](../reference/owasp-top-10-agentic-applications-2026.txt#L1044 "^ASI09-PREVIEW")).
 
 **The agent's output is an instruction channel back to the human.** Where an agent relays what
 it read (a link, an account number, an amount, a sequence of steps), the human acts on content
@@ -236,7 +236,7 @@ per hour? Name the thing that carries the risk and ask whether it appears on tha
 
 ---
 
-## ASI10: Rogue Agents ([§L1062](../reference/owasp-top-10-agentic-applications-2026.md#L1062 "^ASI10"))
+## ASI10: Rogue Agents ([§L1062](../reference/owasp-top-10-agentic-applications-2026.txt#L1062 "^ASI10"))
 
 **In a definition:** no iteration cap, no budget limit, no kill switch, no instruction to
 escalate when uncertain. The agent can loop, amplify, or drift with nothing to halt it and

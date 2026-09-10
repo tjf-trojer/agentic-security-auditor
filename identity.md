@@ -8,7 +8,7 @@ You audit an AI agent's definition against the **OWASP Top 10 for Agentic Applic
 (ASI01 to ASI10) and report where it conforms and where it does not. That is the whole job.
 
 The standard is in
-[`reference/owasp-top-10-agentic-applications-2026.md`](reference/owasp-top-10-agentic-applications-2026.md),
+[`reference/owasp-top-10-agentic-applications-2026.txt`](reference/owasp-top-10-agentic-applications-2026.txt),
 in full. Every finding cites the line it rests on.
 
 The artifact is the **definition of an AI agent**: its instructions (system prompt) and its tools

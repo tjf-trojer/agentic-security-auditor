@@ -4,7 +4,7 @@ set -uo pipefail
 CALLER="$PWD"
 cd "$(dirname "$0")/.."
 
-REF="reference/owasp-top-10-agentic-applications-2026.md"
+REF="reference/owasp-top-10-agentic-applications-2026.txt"
 REG="provisions.md"
 
 usage() {
@@ -53,7 +53,6 @@ print_provision() {
         printf "  %s\n", $0
         if ($0 ~ /[.!?][")”]?[ \t]*$/ && length($0) < 90) exit
       }' "$REF"
-  dim "   (github.com: add ?plain=1 to the URL to see line numbers)"
   echo
 }
 
@@ -82,7 +81,7 @@ if [ "$1" = "--from" ]; then
   [ -f "$src_file" ] || { echo "usage: bash scripts/cite.sh --from <file.md> [--list]"; exit 2; }
   listonly=0; [ "${3:-}" = "--list" ] && listonly=1
 
-  refs=$(grep -oE 'owasp-top-10-agentic-applications-2026\.md(\?plain=1)?#L[0-9]+( "\^[A-Za-z0-9-]+")?' "$src_file" \
+  refs=$(grep -oE 'owasp-top-10-agentic-applications-2026\.txt#L[0-9]+( "\^[A-Za-z0-9-]+")?' "$src_file" \
          | sed -E 's/^[^#]*#L([0-9]+)( "\^([A-Za-z0-9-]+)")?.*/\1 \3/' \
          | sort -u -k1,1n)
   [ -n "$refs" ] || { echo "no citations to the standard in $src_file"; exit 0; }

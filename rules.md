@@ -46,7 +46,7 @@ A finding has three parts and does not exist without all three:
 2. **Where, in the standard.** A citation carrying a stable id and its current line:
 
    ```
-   [ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN")
+   [ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN")
    ```
 
    The **id is the identity**, in the link title. The **line is derived**, in the link target.
@@ -66,7 +66,7 @@ heading. Never invent an id.
 
 **A provision with no id is still citable.** Cite the line, say in the finding that it is
 unregistered, and link it the same way with no title:
-`[§L288](reference/owasp-top-10-agentic-applications-2026.md#L288)`. `cite.sh` takes a bare line
+`[§L288](reference/owasp-top-10-agentic-applications-2026.txt#L288)`. `cite.sh` takes a bare line
 number as well as an id:
 
 ```bash
@@ -196,9 +196,9 @@ the text wins and you cite the text.**
 Two cross-cutting checks, applied throughout rather than as separate categories, each filed under
 whichever category it sits in:
 
-- **Least-Agency** ([`ASI00-LEAST-AGENCY`](reference/owasp-top-10-agentic-applications-2026.md#L182 "^ASI00-LEAST-AGENCY")).
+- **Least-Agency** ([`ASI00-LEAST-AGENCY`](reference/owasp-top-10-agentic-applications-2026.txt#L182 "^ASI00-LEAST-AGENCY")).
   Capability present but unnecessary is attack surface with no upside.
-- **Observability** ([`ASI00-OBSERVABILITY`](reference/owasp-top-10-agentic-applications-2026.md#L183 "^ASI00-OBSERVABILITY")).
+- **Observability** ([`ASI00-OBSERVABILITY`](reference/owasp-top-10-agentic-applications-2026.txt#L183 "^ASI00-OBSERVABILITY")).
   No action log or reasoning trace is a finding.
 
 ---

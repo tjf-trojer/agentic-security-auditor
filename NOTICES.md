@@ -4,18 +4,18 @@ _Last updated: 2026-09-10_
 
 ## OWASP Top 10 for Agentic Applications 2026
 
-- **Files:** `reference/owasp-top-10-agentic-applications-2026.md` and
+- **Files:** `reference/owasp-top-10-agentic-applications-2026.txt` and
   `reference/owasp-top-10-agentic-applications-2026.pdf`
 - **Author:** OWASP GenAI Security Project, Agentic Security Initiative
 - **Version:** 2026, published December 2025
 - **Source:** <https://genai.owasp.org>
 - **Licence:** Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0),
   <https://creativecommons.org/licenses/by-sa/4.0/>
-- **Changes:** the PDF is unmodified. The markdown is a text extraction of it with layout
+- **Changes:** the PDF is unmodified. The `.txt` file is a text extraction of it with layout
   normalisations, listed in its header and reproducible with `method/normalise-source.py`: page
   footers removed, the ten category headings rejoined, the five subsection labels marked as
   headings, and one ASI02 scenario heading that the PDF's text layer holds as placeholder glyphs
-  restored from the rendered page. No wording changed. The markdown stays under CC BY-SA 4.0.
+  restored from the rendered page. No wording changed. The `.txt` file stays under CC BY-SA 4.0.
 
 ## Audited artifacts
 
