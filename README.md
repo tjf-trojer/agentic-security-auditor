@@ -67,8 +67,11 @@ It cannot tell you a verdict is right, and without `--artifact` it never opens t
 
 A citation names the line a provision begins on; `cite.sh` prints to its end.
 
-[`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md) is a synthetic agent written
-to fail all ten categories, with its expected result at the end.
+[`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md) is a synthetic agent for
+checking the auditor against a known answer. Audit it, then compare: **Do not deploy**; all ten
+categories FAIL, with no PASS, PARTIAL or N/A; ASI01, ASI02, ASI03, ASI05, ASI07 and ASI10 are
+CRITICAL. An audit that passes any category, or grades fewer than those six rows CRITICAL, has
+missed something in the file.
 
 ## Limits
 
