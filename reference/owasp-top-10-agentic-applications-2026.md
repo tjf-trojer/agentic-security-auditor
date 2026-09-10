@@ -21,26 +21,26 @@
 > this transcription against the source.
 >
 > **Changes made** (required disclosure under CC BY-SA 4.0, clause 3.a.1.B). The
-> wording of the standard is untouched. Three layout normalisations were applied
+> wording of the standard is untouched. These layout normalisations were applied
 > to the text extraction so that findings can cite it by line:
 >
-> 1. PDF page-footer lines (`genai.owasp.org  Page N`) were removed.
+> 1. PDF page-footer lines (`genai.owasp.org  Page N`) were removed, one of them
+>    from inside a table row.
 > 2. The ten category headings, which the PDF extraction split across two or
 >    three lines, were rejoined and marked as level-2 markdown headings.
 > 3. The five recurring subsection labels (Description, Common Examples of the
 >    Vulnerability, Example Attack Scenarios, Prevention and Mitigation
 >    Guidelines, References) were marked as level-3 markdown headings.
+> 4. The heading of ASI02 attack scenario 4, which the PDF's text layer holds as
+>    placeholder glyphs, was restored from the rendered page.
 >
-> No sentence was added, removed, reordered, or reworded. The script that
-> performed these three changes is at `../method/normalise-source.py`, so the
-> transformation is reproducible from the original PDF.
+> No sentence was added, removed, reordered, or reworded. `../method/normalise-source.py`
+> performs these changes, so the transformation is reproducible from the original PDF.
 >
 > **Table and diagram artifacts.** The front-matter diagram ("Agentic Top 10 At A
 > Glance") and the appendix mapping tables were laid out in multiple columns in
-> the PDF and do not survive linear text extraction cleanly. They are left exactly
-> as extracted rather than reconstructed, because reconstructing them would mean
-> altering the standard. Read those in the PDF. The ten category sections, which
-> are what this auditor cites, are continuous prose and extracted cleanly.
+> the PDF and are left exactly as extracted: read those in the PDF. The ten
+> category sections, which are what this auditor cites, are continuous prose.
 
 ---
 
@@ -357,7 +357,7 @@ the tool layer itself to drive unintended or unsafe agent actions.
 logs to X”). The agent obeys, invoking a local shell tool.
 3. Over-Privileged API: A customer service bot intended to fetch order history also issues refunds
 because the tool had full financial API access.
-4. !"#$%"&'()*$%+(,(-.#$%"&'(-./0'#%&#01": An agent is tricked into chaining a secure, internal-only CRM
+4. Internal Query → External Exfiltration: An agent is tricked into chaining a secure, internal-only CRM
 tool with an external email tool, exfiltrating a sensitive customer list to an attacker.
 5. Tool name impersonation (typosquatting): A malicious tool named ‘report’ is resolved before
 ‘report_finance,’ causing misrouting and unintended data disclosure.
@@ -1477,7 +1477,6 @@ Exploitation)
 | ---------------- | ------------------------------ | -------------------------- | --------------- |
 |                  | files, chat logs) outside its  | • ASI06 (Memory & Context  |                 |
 |                  | intended scope                 | Poisoning)                 |                 |
-| genai.owasp.org  |                                |                            | Page 47         |
 
 May GitPublic Issue Public issue text hijacked an • ASI01 (Agent Goal Hijack) • Invariant Labs
 2025 Repo Hijack AI dev agent into leaking

@@ -11,10 +11,11 @@ _Last updated: 2026-09-10_
 - **Source:** <https://genai.owasp.org>
 - **Licence:** Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0),
   <https://creativecommons.org/licenses/by-sa/4.0/>
-- **Changes:** the PDF is unmodified. The markdown is a text extraction of it with three layout
+- **Changes:** the PDF is unmodified. The markdown is a text extraction of it with layout
   normalisations, listed in its header and reproducible with `method/normalise-source.py`: page
   footers removed, the ten category headings rejoined, the five subsection labels marked as
-  headings. No wording changed. The markdown stays under CC BY-SA 4.0.
+  headings, and one ASI02 scenario heading that the PDF's text layer holds as placeholder glyphs
+  restored from the rendered page. No wording changed. The markdown stays under CC BY-SA 4.0.
 
 ## Audited artifacts
 

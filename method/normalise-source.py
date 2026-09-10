@@ -3,12 +3,18 @@
 extraction so findings can cite it by line.
 
 Changes made (and only these):
-  1. Remove PDF page-footer lines ("genai.owasp.org  Page N").
+  1. Remove PDF page-footer lines ("genai.owasp.org  Page N"), including one the
+     extraction placed inside a table row.
   2. Rejoin the ten category headings that the PDF extraction split across
      lines, and mark them as level-2 markdown headings.
   3. Mark the five recurring subsection labels as level-3 markdown headings.
+  4. Restore the heading of ASI02 attack scenario 4, which the PDF's text layer
+     holds as placeholder glyphs, with the words the rendered page shows.
 
-No wording is altered, added, or removed.
+No wording is altered, added, or removed. The output is the reference file below its header:
+
+    markitdown reference/owasp-top-10-agentic-applications-2026.pdf > extraction.md
+    python3 method/normalise-source.py extraction.md body.md
 """
 
 import re
@@ -41,12 +47,26 @@ SUBHEADINGS = {
 PAGE_FOOTER = re.compile(r"^genai\.owasp\.org\s+Page\s+\d+\s*$")
 HEADING_START = re.compile(r"^(ASI\d{2}):")
 
+# Each placeholder glyph stands for one letter, the same one every time it appears. The words are
+# read from the rendered page (page 13).
+PLACEHOLDER_HEADINGS = {
+    '!"#$%"&\'()*$%+(,(-.#$%"&\'(-./0\'#%&#01"': "Internal Query → External Exfiltration",
+}
+
 lines = open(SRC, encoding="utf-8").read().split("\n")
 
-# Pass 1: drop page footers.
-lines = [ln for ln in lines if not PAGE_FOOTER.match(ln.strip())]
+# Pass 1: drop page footers, on a line of their own or alone in a table row.
+lines = [ln for ln in lines if not PAGE_FOOTER.match(re.sub(r"[|\s]+", " ", ln).strip())]
 
-# Pass 2: promote body headings and subheadings.
+# Pass 2: restore headings held as placeholder glyphs.
+restored = 0
+for glyphs, words in PLACEHOLDER_HEADINGS.items():
+    for idx, ln in enumerate(lines):
+        if glyphs in ln:
+            lines[idx] = ln.replace(glyphs, words)
+            restored += 1
+
+# Pass 3: promote body headings and subheadings.
 out = []
 i = 0
 n = len(lines)
@@ -88,3 +108,4 @@ open(DST, "w", encoding="utf-8").write("\n".join(out))
 
 print(f"wrote {DST}: {len(out)} lines (source {n})")
 print(f"promoted {len(promoted)} category headings: {[c for c, _ in promoted]}")
+print(f"restored {restored} heading(s) held as placeholder glyphs")
