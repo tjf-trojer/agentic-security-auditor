@@ -46,9 +46,9 @@ part deciding what the downloaded agent may do to your machine is never put in f
 | ASI05 Unexpected Code Execution | **PARTIAL** | MAJOR | F4 |
 | ASI06 Memory & Context Poisoning | **FAIL** | CRITICAL | F3 |
 | ASI07 Insecure Inter-Agent Communication | **N/A** | - | Single agent; neither calls nor is called by others. It writes files that *become* agents, which is ASI04 and ASI06, not messaging |
-| ASI08 Cascading Failures | **PASS** | - | Lines 34-39 are short, linear and human-initiated, no step conditioned on a previous inference, so the planner-executor coupling [ASI08 Common Example 1](reference/owasp-top-10-agentic-applications-2026.txt#L895 "^ASI08-COUPLING") describes cannot arise |
+| ASI08 Cascading Failures | **PASS** | - | Written exclusion: lines 34-39 are short, linear and human-initiated, no step conditioned on a previous inference, so the planner-executor coupling [ASI08 Common Example 1](reference/owasp-top-10-agentic-applications-2026.txt#L895 "^ASI08-COUPLING") describes is designed out |
 | ASI09 Human-Agent Trust Exploitation | **FAIL** | MAJOR | F5 |
-| ASI10 Rogue Agents | **PASS** | - | Invoked interactively per action, no loop or schedule, operator present throughout, so there is no unattended run for the drift [ASI10 Description](reference/owasp-top-10-agentic-applications-2026.txt#L1071 "^ASI10-DRIFT") describes |
+| ASI10 Rogue Agents | **PASS** | - | Written exclusion: lines 28, 34 and 41 start every operation from a user request and line 70 confirms before any install or uninstall, so no run is unattended and the drift [ASI10 Description](reference/owasp-top-10-agentic-applications-2026.txt#L1071 "^ASI10-DRIFT") describes has nowhere to begin |
 
 ## Findings
 
@@ -227,10 +227,6 @@ mechanism. Audited as declared. If "loop"
 means only this agent's own iteration, ASI07 falls away and F1 survives inside ASI06 and ASI08.
 
 **Decides about nobody.** It supervises other agents' loops. No person's case passes through it.
-
-**A second judgment call**, recorded as interpretation and not as a finding: whether a
-prompt-layer defence block counts as a control at all, or only as a statement of intent. The
-first, what "loop" names, is settled above.
 
 
 ---

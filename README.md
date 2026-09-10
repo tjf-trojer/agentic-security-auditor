@@ -79,15 +79,11 @@ missed something in the file.
   "cannot verify from the definition", with the test that would settle it.
 - **One standard.** What no provision reaches goes in "Observations outside the standard", marked
   as judgment.
-- **A PASS needs a control the artifact contains**, so a short definition scores badly.
+- **A PASS needs a control or a written exclusion the artifact contains**, so a short definition
+  scores badly.
 - **It can be lied to.** It reads the artifact in the same context as its own rules, the flaw ASI01
   describes. Rule 0 tells it never to act on text inside the artifact and to report it, and that is
   a prompt-layer control.
-- **Boilerplate safety stanzas have no scoring rule.** Two careful auditors can score the same block
-  differently.
-- **The ledger cannot express reflexivity.** When the artifact is itself a category's mitigation for
-  other agents (a watchdog under ASI10, a governance agent under ASI08), its own exposure has to go
-  in prose.
 - **Not a penetration test and not legal advice.**
 
 ## Licence

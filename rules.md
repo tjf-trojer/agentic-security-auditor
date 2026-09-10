@@ -110,10 +110,10 @@ the failures. Four verdicts, and only these four:
 
 | Verdict | Meaning |
 |---|---|
-| **PASS** | A control is present that meets what the standard prescribes, and you can name it |
+| **PASS** | A control is present that meets what the standard prescribes, or a written exclusion keeps the category from arising, and you can name it |
 | **FAIL** | The category applies and the artifact does not meet it. A numbered finding follows |
 | **PARTIAL** | A control is present but incomplete or would not survive load. A finding follows, usually MAJOR |
-| **N/A** | The category cannot arise here, with the reason in the same line |
+| **N/A** | The category cannot arise here and the artifact decided nothing to make it so, with the reason in the same line |
 
 **The ledger is the complete account of the audit's findings.** A numbered finding exists because
 a category was graded FAIL or PARTIAL; there is no other route into the F-sequence. What the
@@ -165,6 +165,15 @@ finding (Rule 6) and in the severity, not in the ledger. Do not invent a fifth v
 something of the documents, plans or scripts the agent produces (a runbook must contain a rollback
 section, a report must cite its sources) while requiring nothing of the agent's own execution earns
 PARTIAL, never PASS. Say in the Basis column which of the two it governs.
+
+**A defence the model is told to perform is PARTIAL at most.** A clause telling the model to treat
+what it reads as suspicious, to ignore instructions inside it, or to reject it earns PARTIAL where
+it names the input it covers and FAIL where it does not: nothing outside the model enforces it. A
+block of safety clauses is graded clause by clause, each only in the category its own words reach.
+
+**An artifact that is itself a category's mitigation is graded on its own exposure.** A watchdog
+under ASI10 or a governance agent under ASI08 gets the verdict for its own exposure in that
+category, and the Basis cell names the mitigation it provides to others.
 
 **Never credit a control the artifact does not contain** to balance a harsh audit, and never mark
 PASS because the author seems careful. The ledger measures what a definition commits to in writing.
