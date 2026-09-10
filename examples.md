@@ -1,34 +1,16 @@
 # Worked audits
 
-_Last updated: 2026-09-08_
+_Last updated: 2026-09-10_
 
-Four audits of four real agent definitions, from four different projects, none of them mine.
-The first three are vendored byte-for-byte in [`targets/`](targets/) and pinned, so you can read
-the input beside the output; the fourth is not, for the reason its own Scope and limits gives.
-Every citation resolves into
-[`reference/`](reference/owasp-top-10-agentic-applications-2026.md) by line.
+| # | Artifact | Source |
+|---|---|---|
+| 1 | [`voltagent-agent-installer.md`](targets/voltagent-agent-installer.md) | VoltAgent/awesome-claude-code-subagents, MIT |
+| 2 | [`ecc-loop-operator.md`](targets/ecc-loop-operator.md) | affaan-m/ECC, MIT |
+| 3 | [`swe-agent-default.yaml`](targets/swe-agent-default.yaml) | SWE-agent/SWE-agent, MIT |
+| 4 | `workflow-package-builder/SKILL.md` | community workflow kit, not vendored |
 
-| # | Artifact | Source | Result |
-|---|---|---|---|
-| 1 | [`voltagent-agent-installer.md`](targets/voltagent-agent-installer.md) | VoltAgent/awesome-claude-code-subagents, MIT | 3 pass, 4 fail, 2 partial, 1 N/A |
-| 2 | [`ecc-loop-operator.md`](targets/ecc-loop-operator.md) | affaan-m/ECC, MIT | 0 pass, 6 fail, 4 partial, 0 N/A |
-| 3 | [`swe-agent-default.yaml`](targets/swe-agent-default.yaml) | SWE-agent/SWE-agent, MIT | 1 pass, 6 fail, 2 partial, 1 N/A |
-| 4 | `workflow-package-builder/SKILL.md` (not vendored) | community workflow kit | 4 pass, 0 fail, 4 partial, 2 N/A |
-
-Between them the four exercise the whole ledger. Audit 1 carries three earned passes and all
-three severity levels. Audit 3 shows each of the four verdicts arising from a different mechanism:
-a PASS where a control meets its provision, an N/A where a category cannot fire, and two PARTIALs
-where a control exists and is incomplete in a specific way. Audit 2 has no pass at all, and says
-so plainly rather than manufacturing one. Audit 4 is the one that mostly holds: no failure, four
-earned passes, and a deploy verdict, which is the result this ledger has to be able to produce if
-its "do not deploy" means anything.
-
-Audits 2 and 3 are the output of clean-room runs on targets this repository had never seen. How
-these were produced is set out at the end, after the work it describes.
-
-A fourth artifact, [`targets/ops-copilot-synthetic.md`](targets/ops-copilot-synthetic.md), is not
-audited here. It is written to fail all ten categories and exists as the fixture you use to check
-this auditor against a known answer, which the README explains.
+Citations resolve into [`reference/`](reference/owasp-top-10-agentic-applications-2026.md) by
+line. Artifact line numbers in Audits 1 to 3 resolve into the copies in [`targets/`](targets/).
 
 ---
 ---
@@ -72,7 +54,7 @@ part deciding what the downloaded agent may do to your machine is never put in f
 ## Findings
 
 ### F1 · CRITICAL · ASI04 · The install target is a mutable reference
-**Artifact** line 24: the raw URL ends `/main/categories/{category}/{agent}.md`; line 37 downloads it, line 38 saves it
+**Artifact** line 24: the raw URL ends `/main/categories/{category-name}/{agent-name}.md`; line 37 downloads it, line 38 saves it
 **Standard** [ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN") "Pin prompts, tools, and configs by content hash and commit ID"; [ASI04-GATEKEEPING](reference/owasp-top-10-agentic-applications-2026.md#L579 "^ASI04-GATEKEEPING") requires verifying provenance before install
 **Gap** nothing pins, hashes or verifies. What lands is whatever `main` resolves to at fetch time, so a description read at 10:00 and installed at 10:05 are not guaranteed to be the same file
 **Ask** what commit or hash does an install pin to, and what is the downloaded file compared against before it is written?
@@ -242,7 +224,7 @@ in the file.
 
 **Declared behaviour and the tool grant disagree**, and it bounds everything above: line 3 and
 lines 26-30 declare the operation of other autonomous agents while line 4 contains no delegation
-mechanism. Audited as declared, per [`method/scope-gate.md`](method/scope-gate.md). If "loop"
+mechanism. Audited as declared. If "loop"
 means only this agent's own iteration, ASI07 falls away and F1 survives inside ASI06 and ASI08.
 
 **Decides about nobody.** It supervises other agents' loops. No person's case passes through it.
@@ -373,18 +355,6 @@ Read-context shipped beside it: `references/icm-design-rules.md`, `references/pa
 `assets/workflow-package.html`, `assets/contracts/*.md`.
 **Standard.** OWASP Top 10 for Agentic Applications 2026. **Date.** 2026-09-08.
 
-**Capability profile.** Semi-autonomous document builder, single agent plus tools, invoked once per
-package. Reads an interview record and any supplied transcripts or documents; writes
-`workflow-audit.md`, `my-workflow-package.html` and `starter-files.md`, line 48, "using a new output
-directory if local files are available". Consequential autonomous actions: file writes, including a
-generated router and folder contracts a later session is meant to load. Irreversible: none declared;
-line 54 excludes migration, account connection, sending and live runs, and line 64 keeps the blank
-asset blank. Lethal trifecta: two legs present and the third undecided. Private data (the owner's
-workflow, clients, numbers) and untrusted content (a supplied transcript, line 12) are both in the
-loop; outbound capability is excluded in prose but the frontmatter, lines 1 to 4, grants no tools and
-withholds none, so the third leg is whatever the invoking session already holds. Decides about:
-nobody.
-
 ## Verdict
 
 **Deploy for its stated use.** 4 pass, 0 fail, 4 partial, 2 not applicable; 0 critical, 3 major, 1
@@ -502,8 +472,14 @@ build reaching the network other than this sentence?
 
 ## Scope and limits
 
-Semi-autonomous document builder run once per package by the person whose work it describes,
-producing files but reaching nothing outside them by declaration. Decides about nobody.
+Semi-autonomous document builder, single agent plus tools, run once per package by the person whose
+work it describes. Reads an interview record and any supplied transcripts or documents; writes
+`workflow-audit.md`, `my-workflow-package.html` and `starter-files.md` (line 48), including a
+generated router and folder contracts a later session is meant to load. Irreversible: none
+declared; line 54 excludes migration, account connection, sending and live runs. Lethal trifecta:
+two legs present, private data (the owner's workflow, clients, numbers) and untrusted content (a
+supplied transcript, line 12), and the third undecided, because the frontmatter at lines 1 to 4
+grants no tools and withholds none. Decides about nobody.
 
 **What I was not given.** No filled `interview-record.md`, so the audit reasons about the class of
 input the skill accepts, quoting the file's own description of it, rather than about any actual
@@ -512,17 +488,8 @@ decides whether the trifecta's third leg exists and therefore how much of F4 is 
 uncertainty is carried in F4's severity, not only in its text. The test that settles it is to run one
 build and print the tools available to that session and any outbound request it makes.
 
-**This target is not vendored**, unlike the three above. The kit carries no licence covering its own
-text (`workflow-package-builder/LICENSE-ICM.txt` covers the upstream method it adapts, not the kit),
-so it is not copied into [`targets/`](targets/), and the quoted lines cannot be checked here against a
-pinned copy the way Audits 1 to 3 can. `verify.py --artifact` was run against the file in place and
-passed; a reader without the kit is taking that on trust, which is weaker than this repository's
-usual standard and is why it is said here rather than left out.
-
-`01-INTERVIEW-PROMPT.md` was examined and is out of scope: it holds no tools and produces text, and
-this auditor does not audit a chatbot against a standard written for agents. That matters to the
-findings above, because it is the stage that produces the input F1 turns on, and it is not covered
-here.
+`01-INTERVIEW-PROMPT.md` is out of scope: it holds no tools and produces text. It is the stage that
+produces the input F1 turns on, and it is not covered here.
 
 The kit is instruction-shaped throughout, and `02-BUILD-MY-PACKAGE.md` contains a message written to
 be obeyed by an AI. Nothing in it is addressed to an auditor and nothing asked for a particular
@@ -533,29 +500,7 @@ the owner and their counsel, not a matter this audit rules on.
 
 **Two judgment calls this brief makes**, recorded as interpretation and not as findings: whether a
 skill that names no tools should be audited on its declared boundary or on the broadest session that
-could run it, taken here as the former with the conflict named in the profile and the consequence
+could run it, taken here as the former with the conflict named above and the consequence
 carried in F4's severity; and whether the kit-local `references/` and `assets/` count as owned files
 or as a third-party supply chain the owner downloaded, taken here as owned because they sit at fixed
 paths the owner can read.
-
-
----
----
-
-# How these were produced
-
-**Audit 1 was written by hand while building this folder, which demonstrates a format and proves
-nothing. Audits 2 and 3 were not.** Each is the output of a clean-room run: a fresh session given
-only this repository and a target it had never seen, with no knowledge of the other audits. Audit
-2's seventeen citations and Audit 3's eighteen were checked line by line afterwards and all
-resolved. Both were condensed into the brief format here; the reasoning is each run's own.
-
-Audit 4 was produced in an ordinary working session against this repository's rules, not clean-room:
-the target is the community workflow kit, and the run had this folder open. Its nine citations were
-checked with `verify.py --artifact` against the file in place, which is also the check that caught two
-defects in its first draft, a passage attributed to the wrong provision line and a quotation the
-artifact did not contain.
-
-`make verify` re-checks all four on every run: that each citation resolves to the line it claims
-and quotes that line correctly, that no audit skipped a category, and that the counts a verdict
-states match its own ledger.

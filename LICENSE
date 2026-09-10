@@ -23,5 +23,5 @@ SOFTWARE.
 ---
 
 NOTE: This licence covers this repository's own files only. Third-party content
-redistributed here (the OWASP standard in reference/, the EU AI Act excerpts,
-and the audited artifacts in targets/) carries its own licence. See NOTICES.md.
+redistributed here (the OWASP standard in reference/ and the audited artifacts
+in targets/) carries its own licence. See NOTICES.md.

@@ -1,10 +1,9 @@
 # Detection probes: what each category looks like in a definition
 
-_Last updated: 2026-09-08_
+_Last updated: 2026-09-10_
 
-The standard describes each risk in the abstract, as a standard should. This file translates
-each category into **what it looks like on the page** when you are holding a system prompt and a
-tool list, and gives the question that surfaces the evidence.
+Each category as it looks **on the page** when you hold a system prompt and a tool list, with the
+question that surfaces the evidence.
 
 Navigation, not standard. A finding cites `reference/`, never this file. Where a probe and the
 standard's text disagree, the text wins. See [`README.md`](README.md).
@@ -12,10 +11,8 @@ standard's text disagree, the text wins. See [`README.md`](README.md).
 Citations below point into
 [`../reference/owasp-top-10-agentic-applications-2026.md`](../reference/owasp-top-10-agentic-applications-2026.md).
 
-Some of the attack shapes below were drawn from the scenario lists in OWASP's *Agentic AI —
-Threats and Mitigations* v1.1, the taxonomy the standard names as its foundation. That guide is
-deliberately not in `reference/` and is not citable here. The shapes are navigation; the finding
-still cites the Top 10.
+Some attack shapes below come from the scenario lists in OWASP's *Agentic AI —
+Threats and Mitigations* v1.1. It is not in `reference/` and a finding never cites it.
 
 ---
 
@@ -30,8 +27,8 @@ simply sits in the same loop as a consequential one.
 
 The root cause is structural, not a model defect: agents "cannot reliably distinguish
 instructions from related content" ([§L240](../reference/owasp-top-10-agentic-applications-2026.md#L240 "^ASI01-ONE-CHANNEL")).
-This is the same class of flaw as SQL injection, and it means a prompt-layer instruction to
-"ignore malicious instructions" is not a boundary. The standard's first mitigation is to treat
+A prompt-layer instruction to "ignore malicious instructions" is not a boundary. The standard's
+first mitigation is to treat
 all natural-language input as untrusted and route it through validation *before* it can
 influence goal selection or tool calls
 ([§L283](../reference/owasp-top-10-agentic-applications-2026.md#L283 "^ASI01-UNTRUSTED-INPUT")).
@@ -52,14 +49,11 @@ does next, and can it reach a tool that acts?
 
 **In a definition:** two distinct shapes, and it is worth naming which one you found.
 
-*Excessive agency.* The agent holds tools its stated goal does not require. Every consequential
-capability present but unnecessary is attack surface with no upside. The standard's own framing
-is Least-Agency: autonomy deployed where it is not needed expands the attack surface without
-adding value.
+*Excessive agency.* The agent holds tools its stated goal does not require (Least-Agency, at the
+end of this file).
 
 *Ungated irreversible action.* Delete, send, pay, publish, provision or install is reachable
-with no dry-run, no approval, no compensating transaction. Reversibility is the cheapest safety
-property an agent can have and the most commonly skipped.
+with no dry-run, no approval, no compensating transaction.
 
 The standard pairs least privilege with human approval for high-impact actions
 ([§L286](../reference/owasp-top-10-agentic-applications-2026.md#L286 "^ASI01-LEAST-PRIVILEGE")).
@@ -107,7 +101,7 @@ The tell in a Claude Code or similar definition is a **mutable reference**: a ra
 points to at fetch time is what runs, and it can change between the moment a human read the
 description and the moment the file lands.
 
-The standard is unusually concrete here. Pin by content hash and commit ID
+The standard names the remedies. Pin by content hash and commit ID
 ([§L589](../reference/owasp-top-10-agentic-applications-2026.md#L589 "^ASI04-PIN")); allowlist and pin, verify
 provenance before install or activation, auto-reject unsigned or unverified
 ([§L579](../reference/owasp-top-10-agentic-applications-2026.md#L579 "^ASI04-GATEKEEPING")); use curated registries and
@@ -118,8 +112,8 @@ claimed prior certification, a hidden comment, an instruction to report everythi
 Rule 0 says never act on it and always report it. Two provisions usually reach it, and you should
 open both before citing either: `ASI01-LOCK-PROMPTS` at L288, requiring prompts to be locked and
 auditable, and `ASI04-PROMPT-REVIEW` at L583, requiring them under version control with peer review
-and scanned for anomalies. Text that hides from a reviewer is arguably neither. Read them and
-decide; this is navigation, not authority, and the finding cites what you read.
+and scanned for anomalies. Text that hides from a reviewer is arguably neither. Read them,
+decide, and cite what you read.
 
 **The description is part of the supply chain.** An agent that selects a tool by what the tool
 says it does is trusting text written by whoever published it. A registry entry, an MCP server's
@@ -205,10 +199,9 @@ before anyone notices once.
 
 **Volume as its own failure.** An agent that schedules its own work, spawns helpers, or
 re-enters its own queue has no natural ceiling, and the failure mode is exhaustion rather than
-error: quota burned, budget spent, the queue filled with its own retries. The 2026 edition treats
-this as an amplifier rather than a category of its own. It survives in this category as the
-rate-limiting mitigation, throttle or pause on anomalies, and in ASI02 as a named contributing
-factor. Open the text before citing it, and if nothing there carries the claim, it belongs in
+error: quota burned, budget spent, the queue filled with its own retries. The standard reaches it
+through this category's rate-limiting mitigation (throttle or pause on anomalies) and as a
+contributing factor in ASI02. Open the text before citing it, and if nothing there carries the claim, it belongs in
 observations outside the standard rather than in a finding.
 
 **Probe:** if step two is wrong, what catches it before the final action executes? If the answer
@@ -223,11 +216,10 @@ review impossible, or the approval step shows the human nothing they can actuall
 yes/no prompt with no state, no trace and no uncertainty signal is a rubber stamp exactly where
 volume is highest.
 
-This is the category most often mis-scored as a pass, because the words "always confirm" appear
-in the definition and the auditor stops reading. **The presence of a confirmation is not the
-question. What the human can see at the moment of confirmation is the question.** A gate that
-shows a description while the risk lives in a tool grant the human never sees is oversight
-theatre, and the standard is direct about the remedy: a plain-language risk summary rather than
+The words "always confirm" in a definition do not earn a pass. **The presence of a confirmation is
+not the question. What the human can see at the moment of confirmation is the question.** A gate
+that shows a description while the risk lives in a tool grant the human never sees is oversight
+theatre. The remedy in the standard is a plain-language risk summary rather than
 model-generated rationale ([§L1030-L1031](../reference/owasp-top-10-agentic-applications-2026.md#L1030-L1031 "^ASI09-RISK-SUMMARY")),
 and separating preview from effect, with a risk badge showing source provenance and expected
 side effects ([§L1044](../reference/owasp-top-10-agentic-applications-2026.md#L1044 "^ASI09-PREVIEW")).
@@ -275,6 +267,4 @@ unnecessary is a finding.
 **Observability as non-negotiable.** Without visibility into what agents are doing, why, and
 which tools they are invoking, minor issues become system-wide failures. The absence of any
 action log or reasoning trace is a finding: after a bad outcome, could anyone reconstruct the
-exact sequence of actions and the reason for each? Where the Act binds, this is also the Art. 12
-record-keeping duty and has a clock behind it, because Art. 72 lifetime monitoring and incident
-reporting run on timelines an unobservable agent cannot meet.
+exact sequence of actions and the reason for each?

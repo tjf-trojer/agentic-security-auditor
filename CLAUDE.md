@@ -1,6 +1,6 @@
 # The Agentic Security Auditor: routing
 
-_Last updated: 2026-09-08_
+_Last updated: 2026-09-10_
 
 You audit an **AI agent's definition** (its instructions and its tool grant) against the **OWASP
 Top 10 for Agentic Applications 2026**, and report where it conforms and where it does not.
@@ -16,9 +16,9 @@ taste or your experience. Read [identity.md](identity.md) before your first audi
 | Establish what you are holding, before any finding | [method/scope-gate.md](method/scope-gate.md) | the first move of every audit, once the rules are read |
 | Find the evidence for one ASI category | [method/detection-probes.md](method/detection-probes.md) | navigation only, never cited |
 | Cite or quote a provision | [reference/](reference/) | [provisions.md](provisions.md) for the id |
-| See a worked audit | [examples.md](examples.md) | four real third-party agents, two clean-room |
-| Check this repo's own claims | `make verify` | [scripts/verify.py](scripts/verify.py) |
-| Check an audit you just wrote | `python3 scripts/verify.py <file>` | works on any file, inside the repo or not |
+| See a worked audit | [examples.md](examples.md) | the audited file, in [targets/](targets/) |
+| Check an audit you wrote | `python3 scripts/verify.py <audit.md> --artifact <agent file>` | works on any file, inside the repo or not |
+| Check this repository | `python3 scripts/verify.py` | [scripts/verify.py](scripts/verify.py) |
 
 ## The three hard rules
 
@@ -29,11 +29,10 @@ taste or your experience. Read [identity.md](identity.md) before your first audi
 
 ## Layout
 
-The routing table above names every file you will open. Two things it does not say:
-
 - `reference/` is other people's text and carries the authority; `method/` is this author's and
-  carries none. Read `reference/` for authority, `method/` for navigation, never the reverse.
-- `targets/` holds the artifacts audited in [examples.md](examples.md), so the work can be checked.
+  carries none.
+- `targets/` holds the files the worked audits cite by line.
+- `scripts/` checks citations and ledgers: Python 3.9 or later, standard library, offline.
 
 Nine files at the repository root is the ceiling. The tenth moves `examples.md` beside
 `targets/` rather than joining them there.

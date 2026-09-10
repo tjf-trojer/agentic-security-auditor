@@ -1,71 +1,34 @@
-# Notices: third-party content and its licences
+# Notices: third-party material and its licences
 
-_Last updated: 2026-09-08_
+_Last updated: 2026-09-10_
 
-This repository redistributes material it did not write. Everything redistributed is listed here
-with its source and its licence. Where a licence differs from this repository's, the file's own
-licence governs that file.
+## OWASP Top 10 for Agentic Applications 2026
 
-## The standard
-
-### OWASP Top 10 for Agentic Applications 2026
-
-- **File:** `reference/owasp-top-10-agentic-applications-2026.md` and
+- **Files:** `reference/owasp-top-10-agentic-applications-2026.md` and
   `reference/owasp-top-10-agentic-applications-2026.pdf`
 - **Author:** OWASP GenAI Security Project, Agentic Security Initiative
 - **Version:** 2026, published December 2025
 - **Source:** <https://genai.owasp.org>
 - **Licence:** Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0),
   <https://creativecommons.org/licenses/by-sa/4.0/>
-
-The licence permits sharing and adaptation, including commercially, under three conditions,
-which are met as follows.
-
-**Attribution.** Credited above and in the header of the file itself. The project name is given
-as required by OWASP's attribution guidelines.
-
-**Indication of changes.** The PDF is redistributed unmodified. The markdown transcription
-carries three layout normalisations, disclosed in the file's own header and reproducible from the
-PDF with `method/normalise-source.py`: page-footer lines removed, the ten category headings
-rejoined after the extraction split them across lines, and the five recurring subsection labels
-marked as headings. No wording was added, removed, reordered, or reworded.
-
-**ShareAlike.** The markdown transcription in `reference/` remains under CC BY-SA 4.0. It is
-redistributed alongside this repository's own files rather than merged into them, and no file in
-`identity.md`, `rules.md`, `examples.md`, `method/` or `targets/` incorporates the standard's
-text beyond short quotation for the purpose of citation.
+- **Changes:** the PDF is unmodified. The markdown is a text extraction of it with three layout
+  normalisations, listed in its header and reproducible with `method/normalise-source.py`: page
+  footers removed, the ten category headings rejoined, the five subsection labels marked as
+  headings. No wording changed. The markdown stays under CC BY-SA 4.0.
 
 ## Audited artifacts
 
-All are reproduced byte-for-byte, because the audits cite them by line. No modifications.
+Reproduced byte-for-byte.
 
-### `agent-installer`
-- **File:** `targets/voltagent-agent-installer.md`
-- **Source:** `categories/09-meta-orchestration/agent-installer.md` from
-  <https://github.com/VoltAgent/awesome-claude-code-subagents>, commit
-  `beb9a0f0d74a222f5e24aeb390e6d7c3005d9e27` (2026-09-04)
-- **Licence:** MIT
-
-### `loop-operator`
-- **File:** `targets/ecc-loop-operator.md`
-- **Source:** `agents/loop-operator.md` from <https://github.com/affaan-m/ECC>, commit `e04ea0b`
-- **Licence:** MIT
-
-### SWE-agent `config/default.yaml`
-- **File:** `targets/swe-agent-default.yaml`
-- **Source:** `config/default.yaml` from <https://github.com/SWE-agent/SWE-agent>
-- **Upstream commit:** not recorded when the file was copied. The copy is byte-for-byte as
-  retrieved, but unlike the two above it cannot be resolved to a specific upstream revision.
-  Audit 3 is an audit of this file as vendored here.
-- **Licence:** MIT
+| File | Source | Licence |
+|---|---|---|
+| `targets/voltagent-agent-installer.md` | `categories/09-meta-orchestration/agent-installer.md` from <https://github.com/VoltAgent/awesome-claude-code-subagents>, commit `beb9a0f0d74a222f5e24aeb390e6d7c3005d9e27` | MIT |
+| `targets/ecc-loop-operator.md` | `agents/loop-operator.md` from <https://github.com/affaan-m/ECC>, commit `e04ea0b` | MIT |
+| `targets/swe-agent-default.yaml` | `config/default.yaml` from <https://github.com/SWE-agent/SWE-agent>, commit not recorded | MIT |
 
 ## Everything else
 
-All other files in this repository are original work and are licensed under the MIT Licence in
-`LICENSE`.
+Original work under the MIT Licence in [`LICENSE`](LICENSE), including
+`targets/ops-copilot-synthetic.md`.
 
-## Endorsement
-
-Neither OWASP nor the authors of any audited artifact endorse this
-repository or the audits in it. Citations to their work are for verification, which is the point
-of the exercise.
+Neither OWASP nor the authors of the audited artifacts endorse this repository.
