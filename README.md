@@ -9,6 +9,60 @@ Give it an agent's instructions and its tool grant. It rules on all ten categori
 as fail, and every verdict cites the line of the standard it rests on. The standard is in
 [`reference/`](reference/), in full, beside the original PDF.
 
+## The standard
+
+The OWASP Top 10 for Agentic Applications 2026 names the ten highest-impact security risks in AI
+agents. The OWASP GenAI Security Project's Agentic Security Initiative published it in December
+2025, for systems that "plan, decide, and act across multiple steps and systems, often on behalf of
+users and teams"
+([Letter from the Leaders](reference/owasp-top-10-agentic-applications-2026.txt#L154-L155)). Its
+entries build on the OWASP Top 10 for LLM Applications and map to it
+([Appendix A](reference/owasp-top-10-agentic-applications-2026.txt#L1142)). "Dozens of security
+experts from industry, academia, and government" contributed, and an expert review board and a
+public review read it before publication
+([Letter from the Leaders](reference/owasp-top-10-agentic-applications-2026.txt#L186-L190)). Its
+incident tracker maps real exploits from 2025 to the categories they fall under
+([Appendix D](reference/owasp-top-10-agentic-applications-2026.txt#L1311)). It is the current
+edition: the [Agentic Security Initiative](https://genai.owasp.org/initiatives/agentic-security-initiative/)
+still lists it, beside later work built on it such as a crosswalk to AIUC-1.
+
+An agent's definition is where its autonomy is decided: what it is told to do, and what it may
+touch before a person looks. The standard's guidance reaches that layer by name. It asks for agent
+system prompts whose "goal priorities and permitted actions are explicit and auditable"
+([ASI01 Mitigation 3](reference/owasp-top-10-agentic-applications-2026.txt#L288 "^ASI01-LOCK-PROMPTS")),
+and for "per-tool least-privilege profiles"
+([ASI02 Mitigation 1](reference/owasp-top-10-agentic-applications-2026.txt#L376 "^ASI02-TOOL-PROFILES")).
+Both are written, or missing, in the file this auditor reads.
+
+The list sets no pass mark of its own. This auditor takes each category's Prevention and Mitigation
+Guidelines as the requirement and grades the definition against them, so a FAIL means the definition
+does not commit to that guidance in writing. What the running system does lies beyond what a
+definition can show, and an audit says so wherever a finding depends on it.
+
+### The ten categories
+
+| Code | Category | What goes wrong |
+|---|---|---|
+| [ASI01](reference/owasp-top-10-agentic-applications-2026.txt#L235 "^ASI01") | Agent Goal Hijack | Text the agent reads (a web page, an email, a document, a tool's output) changes what it is trying to do |
+| [ASI02](reference/owasp-top-10-agentic-applications-2026.txt#L318 "^ASI02") | Tool Misuse and Exploitation | The agent uses a tool it legitimately holds in an unsafe way, such as deleting data, running up costs or sending data out |
+| [ASI03](reference/owasp-top-10-agentic-applications-2026.txt#L414 "^ASI03") | Identity and Privilege Abuse | The agent acts with credentials or permissions wider than its task, or hands them on to agents it delegates to |
+| [ASI04](reference/owasp-top-10-agentic-applications-2026.txt#L514 "^ASI04") | Agentic Supply Chain Vulnerabilities | Tools, prompts, MCP servers or other agents it loads at runtime come from third parties and nobody verified them |
+| [ASI05](reference/owasp-top-10-agentic-applications-2026.txt#L606 "^ASI05") | Unexpected Code Execution (RCE) | Text the agent generates or receives ends up running as code |
+| [ASI06](reference/owasp-top-10-agentic-applications-2026.txt#L681 "^ASI06") | Memory & Context Poisoning | False or malicious content gets into memory or retrieved context and shapes later runs |
+| [ASI07](reference/owasp-top-10-agentic-applications-2026.txt#L772 "^ASI07") | Insecure Inter-Agent Communication | Messages between agents can be forged, replayed or altered |
+| [ASI08](reference/owasp-top-10-agentic-applications-2026.txt#L863 "^ASI08") | Cascading Failures | One fault spreads across agents, sessions or workflows |
+| [ASI09](reference/owasp-top-10-agentic-applications-2026.txt#L965 "^ASI09") | Human-Agent Trust Exploitation | People approve what the agent proposes without being able to judge it |
+| [ASI10](reference/owasp-top-10-agentic-applications-2026.txt#L1062 "^ASI10") | Rogue Agents | An agent drifts from its purpose or authorised scope, and nothing detects or stops it |
+
+Two principles run through all ten, and the auditor applies both inside every category:
+
+- **Least-Agency.** Autonomy deployed "where it is not needed expands the attack surface without
+  adding value"
+  ([Letter from the Leaders](reference/owasp-top-10-agentic-applications-2026.txt#L182 "^ASI00-LEAST-AGENCY")).
+- **Observability.** Without "clear visibility into what agents are doing, why they are doing it,
+  and which tools they are invoking", minor issues turn into system-wide failures
+  ([Letter from the Leaders](reference/owasp-top-10-agentic-applications-2026.txt#L183-L185 "^ASI00-OBSERVABILITY")).
+
 ## Using it
 
 **In Claude Code**, clone the repository and open the folder. [`CLAUDE.md`](CLAUDE.md) routes and
@@ -45,6 +99,31 @@ Observations       What it believes but cannot cite, marked as judgment; usually
 ```
 
 It never writes a fixed configuration. The long form comes only when you ask for it.
+
+## Reading an audit
+
+Every category gets one of four verdicts, and a PASS carries a citation exactly as a FAIL does:
+
+| Verdict | Means |
+|---|---|
+| **PASS** | The definition holds a control, or a written exclusion, that meets the category's guidance |
+| **FAIL** | The category applies and the definition does not meet it |
+| **PARTIAL** | A control is there, but it is incomplete or would not survive an attack |
+| **N/A** | The category cannot arise, and nothing the definition decided made it so |
+
+Every FAIL and PARTIAL has a severity. **CRITICAL** is an unmitigated path to serious harm,
+**MAJOR** a control that would not survive load or attack, **MINOR** a real gap whose consequence is
+bounded. The call at the top follows from them: any CRITICAL means **Do not deploy**, a MAJOR
+without a CRITICAL means **Deploy after closing** the MAJOR findings, and anything else means
+**Deploy**.
+
+A citation such as **ASI04 Mitigation 7** is OWASP's own address: category ASI04, its Prevention and
+Mitigation Guidelines, item 7, as the PDF prints them. The link opens the standard on that line.
+
+Before the categories, the auditor checks for the **lethal trifecta**: an agent that reads private
+data, is exposed to content an outsider can write, and can send data out. Removing any one of the
+three closes that route to data theft. The pre-check comes from this auditor's method; OWASP has no
+category by that name.
 
 ## Checking an audit
 
