@@ -25,7 +25,7 @@ Reproduced byte-for-byte.
 |---|---|---|
 | `targets/voltagent-agent-installer.md` | `categories/09-meta-orchestration/agent-installer.md` from <https://github.com/VoltAgent/awesome-claude-code-subagents>, commit `beb9a0f0d74a222f5e24aeb390e6d7c3005d9e27` | MIT |
 | `targets/ecc-loop-operator.md` | `agents/loop-operator.md` from <https://github.com/affaan-m/ECC>, commit `e04ea0b` | MIT |
-| `targets/swe-agent-default.yaml` | `config/default.yaml` from <https://github.com/SWE-agent/SWE-agent>, commit not recorded | MIT |
+| `targets/swe-agent-default.yaml` | `config/default.yaml` from <https://github.com/SWE-agent/SWE-agent>, commit `a1193dd8fd84eb3e2cd6b0ecbd0bed1cdbb84993` | MIT |
 
 ## Everything else
 

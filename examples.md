@@ -239,7 +239,7 @@ first, what "loop" names, is settled above.
 # Audit 3: SWE-agent `config/default.yaml`
 
 **Artifact.** `config/default.yaml` from [SWE-agent/SWE-agent](https://github.com/SWE-agent/SWE-agent),
-MIT, 69 lines. Copy at [`targets/swe-agent-default.yaml`](targets/swe-agent-default.yaml).
+MIT, pinned at commit `a1193dd`, 69 lines. Copy at [`targets/swe-agent-default.yaml`](targets/swe-agent-default.yaml).
 **YAML, not markdown:** the instructions are in `agent.templates` (lines 5-32), the tool grant in
 `agent.tools` (lines 33-66).
 **Standard.** OWASP Top 10 for Agentic Applications 2026. **Date.** 2026-09-05.
