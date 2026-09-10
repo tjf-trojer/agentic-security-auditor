@@ -35,7 +35,7 @@ may do and touch.
 **What comes back** is a brief of around two pages:
 
 ```
-Verdict            Deploy or not, in the first three words, then the arithmetic
+Verdict            The deploy call the severity count decides, then the arithmetic
 In plain terms     Two lines, no codes
 Conformity ledger  All ten categories: PASS / FAIL / PARTIAL / N/A, with severity
 Findings           Four lines each: Artifact · Standard · Gap · Ask
@@ -60,8 +60,8 @@ Python 3.9 or later, standard library only, no network.
 recorded line, that every citation resolves, matches its id and names OWASP's address for its
 line, that every quoted passage appears inside the provision cited, that every audit rules on all
 ten categories exactly once, that every PASS cites a provision, and that stated counts match the
-ledger and the findings. With `--artifact` it also checks that the line numbers and quotations
-attributed to the agent exist in the agent's file.
+ledger and the findings, and that the deploy call follows from them. With `--artifact` it also
+checks that the line numbers and quotations attributed to the agent exist in the agent's file.
 
 It cannot tell you a verdict is right, and without `--artifact` it never opens the agent.
 

@@ -12,6 +12,7 @@ It cannot tell whether a verdict is right. It checks:
   skipped       every audit rules on all ten categories, exactly once
   ledger        the stated pass, fail, partial and not-applicable counts match the ledger
   severity      the stated critical, major and minor counts match the finding headings
+  deploy        the verdict's opening call follows from the stated severity count
   numbering     findings run F1 to Fn with no gaps, and none is referred to that does not exist
   uncited-pass  every PASS cites the provision it satisfies
   unlinked      no citation is written as prose instead of a link
@@ -169,6 +170,15 @@ def check_audit(rel: str, audit: str) -> None:
         if want != got:
             fail("severity", f"{where}: states {want[0]} critical, {want[1]} major, {want[2]} "
                              f"minor; the findings show {got[0]}/{got[1]}/{got[2]}")
+
+    call = re.search(r"^## Verdict\s*\n\s*\*\*([^*]+)\*\*", audit, re.M)
+    if sev_stated:
+        critical, major = int(sev_stated.group(1)), int(sev_stated.group(2))
+        want = "Do not deploy" if critical else "Deploy after closing" if major else "Deploy"
+        got = call.group(1).strip().rstrip(".") if call else ""
+        if not (got == want or (want == "Deploy after closing" and got.startswith(want + " "))):
+            fail("deploy", f"{where}: the verdict opens \"{got or 'with no bold call'}\"; with "
+                           f"{critical} critical and {major} major, Rule 5 says \"{want}\"")
 
     nums = [int(n) for n in re.findall(r"^#+ F(\d+) [·・]", audit, re.M)]
     if nums:

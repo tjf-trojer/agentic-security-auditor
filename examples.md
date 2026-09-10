@@ -246,8 +246,7 @@ MIT, pinned at commit `a1193dd`, 69 lines. Copy at [`targets/swe-agent-default.y
 
 ## Verdict
 
-**Do not deploy** outside a disposable, credential-free sandbox. 1 pass, 6 fail, 2 partial,
-1 not applicable; 1 critical, 4 major, 1 minor.
+**Do not deploy.** 1 pass, 6 fail, 2 partial, 1 not applicable; 1 critical, 4 major, 1 minor.
 
 The governing fact sits on two lines 49 apart: line 15 interpolates a third party's problem
 statement into the instruction channel, and line 64 gives that channel a shell. Three causes:

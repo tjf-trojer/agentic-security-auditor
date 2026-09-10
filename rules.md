@@ -249,7 +249,9 @@ on Observations when there is one. Do not close by offering more.
 
 ```
 ## Verdict
-Deploy / do not deploy, in the first three words. Then the arithmetic:
+The call, in bold, from the severity count: any CRITICAL, **Do not deploy.**
+No CRITICAL but a MAJOR, **Deploy after closing F<n>, F<n>.**, naming every
+MAJOR finding. Otherwise **Deploy.** Then the arithmetic:
 X pass, Y fail, Z partial, N not applicable; A critical, B major, C minor.
 Then one or two sentences naming the governing fact, and, where findings
 share a root cause, saying so and how many causes there really are.
@@ -336,6 +338,7 @@ outside this audit's scope".
 |---|---|
 | A ledger row | `\| ASI04 <name> \| **FAIL** \| <basis> \|`. The category cell begins with the code, the verdict is bold, and the four verdicts are spelled `PASS` `FAIL` `PARTIAL` `N/A` |
 | The arithmetic | literally `X pass, Y fail, Z partial, N not applicable` |
+| The call | the first bold text under `## Verdict`: `Do not deploy.`, `Deploy after closing ...` or `Deploy.`, as the severity count decides |
 | A citation | a markdown link whose text is the provision's address, never prose. A bare section-and-line reference in running text is invisible to the checker and cannot be redeemed |
 | A quoted provision | on a `**Standard**` line in the brief, or inside `**What the standard requires.**` or `What holds` in the long form, and at least 20 characters, or the check skips it |
 | An audit in a multi-audit file | under a top-level `# Audit <n>` heading |
