@@ -48,6 +48,16 @@ It never writes a fixed configuration. The long form comes only when you ask for
 
 ## Checking an audit
 
+**One finding by hand.** Audit 1's F1 in [`examples.md`](examples.md) says the installer downloads
+from a moving branch. Its citation,
+[ASI04 Mitigation 7](reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN"), opens
+the standard on "Pin prompts, tools, and configs by content hash and commit ID". Line 24 of
+[`targets/voltagent-agent-installer.md`](targets/voltagent-agent-installer.md) fetches from
+`raw.githubusercontent.com/VoltAgent/awesome-claude-code-subagents/main/`. Every finding has these
+two halves: a line of the standard and a line of the agent.
+
+**Every finding at once:**
+
 ```bash
 python3 scripts/verify.py                                     # this repository
 python3 scripts/verify.py my-audit.md --artifact my-agent.md  # any audit, anywhere
@@ -60,10 +70,11 @@ Python 3.9 or later, standard library only, no network.
 recorded line, that every citation resolves, matches its id and names OWASP's address for its
 line, that every quoted passage appears inside the provision cited, that every audit rules on all
 ten categories exactly once, that every PASS cites a provision, and that stated counts match the
-ledger and the findings, and that the deploy call follows from them. With `--artifact` it also
-checks that the line numbers and quotations attributed to the agent exist in the agent's file.
+ledger and the findings, and that the deploy call follows from them. Given the agent's file, by
+`--artifact` or by an audit's own `Copy at` link into `targets/`, it also checks that the line
+numbers and quotations attributed to the agent exist in it.
 
-It cannot tell you a verdict is right, and without `--artifact` it never opens the agent.
+It cannot tell you a verdict is right.
 
 A citation names the line a provision begins on; `cite.sh` prints to its end.
 
