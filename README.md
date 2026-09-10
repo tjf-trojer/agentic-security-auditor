@@ -57,11 +57,11 @@ bash scripts/cite.sh ASI04-PIN                                # print one provis
 Python 3.9 or later, standard library only, no network.
 
 `verify.py` checks that every provision in [`provisions.md`](provisions.md) still sits on its
-recorded line, that every citation resolves and matches its id, that every quoted passage appears
-inside the provision cited, that every audit rules on all ten categories exactly once, that every
-PASS cites a provision, and that stated counts match the ledger and the findings. With
-`--artifact` it also checks that the line numbers and quotations attributed to the agent exist in
-the agent's file.
+recorded line, that every citation resolves, matches its id and names OWASP's address for its
+line, that every quoted passage appears inside the provision cited, that every audit rules on all
+ten categories exactly once, that every PASS cites a provision, and that stated counts match the
+ledger and the findings. With `--artifact` it also checks that the line numbers and quotations
+attributed to the agent exist in the agent's file.
 
 It cannot tell you a verdict is right, and without `--artifact` it never opens the agent.
 

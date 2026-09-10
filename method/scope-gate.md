@@ -77,7 +77,7 @@ and route it out. **Remove any one leg and this specific exfiltration path close
 profile and carry them into the ASI01 and ASI02 findings as the exact config elements to quote.
 
 This is the structural form of what the standard describes as the root cause under
-[ASI01](../reference/owasp-top-10-agentic-applications-2026.txt#L240 "^ASI01-ONE-CHANNEL"): agents "cannot reliably
+[ASI01 Description](../reference/owasp-top-10-agentic-applications-2026.txt#L240 "^ASI01-ONE-CHANNEL"): agents "cannot reliably
 distinguish instructions from related content".
 
 ---

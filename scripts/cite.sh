@@ -42,12 +42,13 @@ id_at() {
 # A provision runs from its line to the next blank line, heading or numbered item, at most eight
 # lines. Where the extraction lost a paragraph break, a short line ending in a full stop ends it.
 print_provision() {
-  local start="$1" id="${2:-}" total
+  local start="$1" id="${2:-}" total addr
   total=$(wc -l < "$REF" | tr -d ' ')
   if ! [ "$start" -ge 1 ] 2>/dev/null || [ "$start" -gt "$total" ]; then
     printf '  ! line %s is outside %s (1..%s)\n' "$start" "$REF" "$total"; return 1
   fi
-  bold "── ${id:-line $start}   $REF#L$start"
+  addr=$(python3 scripts/build_register.py --address "$start")
+  bold "── $addr   ${id:-unregistered}   $REF#L$start"
   awk -v s="$start" 'NR>=s && NR<s+8 {
         if (NR>s && ($0 ~ /^#{1,6} / || $0 ~ /^[0-9]+\. / || $0 ~ /^$/)) exit
         printf "  %s\n", $0
@@ -66,8 +67,9 @@ if [ "$1" = "--list" ] && [ $# -eq 1 ]; then
   awk -F'|' '/^\| `/ {
       id=$2; gsub(/[ \t`]/, "", id)
       ln=$3; gsub(/[ \t]/, "", ln)
-      p=$5;  gsub(/^[ \t]+|[ \t]+$/, "", p)
-      printf "  %-28s L%-6s %s\n", id, ln, p
+      a=$4;  gsub(/^[ \t]+|[ \t]+$/, "", a)
+      p=$6;  gsub(/^[ \t]+|[ \t]+$/, "", p)
+      printf "  %-26s L%-5s %-26s %s\n", id, ln, a, p
     }' "$REG"
   exit 0
 fi

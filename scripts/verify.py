@@ -6,6 +6,7 @@ It cannot tell whether a verdict is right. It checks:
   drift         every registered provision still holds its recorded words on its recorded line
   invented      every citation points at a line the standard has
   id            a citation's id and line agree with the register
+  address       a citation's link text is OWASP's address for the line it cites
   misquote      every passage quoted from the standard sits inside the provision cited
   artifact      the lines and quotations a finding attributes to the agent exist in its file
   skipped       every audit rules on all ten categories, exactly once
@@ -31,6 +32,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_register import address  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 # Resolve paths against the caller's directory before moving to the repository root.
 ARGV = [a if a.startswith("-") else str(Path(a).resolve()) for a in sys.argv[1:]]
@@ -44,6 +48,10 @@ SPAN_CAP = 14
 CITE = re.compile(
     r"owasp-top-10-agentic-applications-2026\.txt#L(?P<line>\d+)(?:-L(?P<end>\d+))?"
     r"(?:\s+\"\^(?P<id>[A-Za-z0-9-]+)\")?"
+)
+
+LINK = re.compile(
+    r"\[(?P<text>[^\]\n]+)\]\([^)\s]*owasp-top-10-agentic-applications-2026\.txt#L(?P<line>\d+)"
 )
 
 failures: list[str] = []
@@ -96,7 +104,7 @@ def load_register() -> dict[str, tuple[int, str]]:
         fail("register", f"{REGISTER} missing; run scripts/build_register.py")
         return reg
     for row in REGISTER.read_text(encoding="utf-8").splitlines():
-        m = re.match(r"^\|\s*`([A-Za-z0-9-]+)`\s*\|\s*(\d+)\s*\|\s*(.*?)\s*\|", row)
+        m = re.match(r"^\|\s*`([A-Za-z0-9-]+)`\s*\|\s*(\d+)\s*\|[^|]*\|\s*(.*?)\s*\|", row)
         if m:
             reg[m.group(1)] = (int(m.group(2)), m.group(3).replace("\\|", "|"))
     return reg
@@ -230,6 +238,13 @@ def main() -> int:
                 fail("id", f"{rel}: link title ^{pid} is not in the register")
             elif pid and reg[pid][0] != ln:
                 fail("id", f"{rel}: ^{pid} cited at L{ln}, register says L{reg[pid][0]}")
+
+        for m in LINK.finditer(text):
+            want = address(ref_lines, int(m.group("line")))
+            got = m.group("text").strip().strip("`")
+            if got != want:
+                fail("address", f"{rel}: [{got}] cites L{m.group('line')}, which OWASP addresses as "
+                                 f"\"{want}\"")
 
         blocks = re.findall(r"\*\*What the standard requires[.:]\*\*(.*?)(?=\n\n|\Z)", text, re.S)
         blocks += re.findall(r"^\*\*Standard\*\*(.*?)(?=\n\*\*|\n\n|\Z)", text, re.M | re.S)

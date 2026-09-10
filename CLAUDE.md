@@ -15,7 +15,7 @@ taste or your experience. Read [identity.md](identity.md) before your first audi
 | Audit an agent definition | this folder | [identity.md](identity.md), then [rules.md](rules.md), then the scope gate below |
 | Establish what you are holding, before any finding | [method/scope-gate.md](method/scope-gate.md) | the first move of every audit, once the rules are read |
 | Find the evidence for one ASI category | [method/detection-probes.md](method/detection-probes.md) | navigation only, never cited |
-| Cite or quote a provision | [reference/](reference/) | [provisions.md](provisions.md) for the id |
+| Cite or quote a provision | [reference/](reference/) | [provisions.md](provisions.md) for the id and OWASP's address |
 | See a worked audit | [examples.md](examples.md) | the audited file, in [targets/](targets/) |
 | Check an audit you wrote | `python3 scripts/verify.py <audit.md> --artifact <agent file>` | works on any file, inside the repo or not |
 | Check this repository | `python3 scripts/verify.py` | [scripts/verify.py](scripts/verify.py) |

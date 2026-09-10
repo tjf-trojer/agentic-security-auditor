@@ -43,15 +43,20 @@ A finding has three parts and does not exist without all three:
 
 1. **Where, in the artifact.** The quoted instruction, named tool, or specific permission. Not
    "poor input handling" but the line that creates the exposure.
-2. **Where, in the standard.** A citation carrying a stable id and its current line:
+2. **Where, in the standard.** A citation whose text is OWASP's address for the provision, whose
+   title is its id, and whose target is its current line:
 
    ```
-   [ASI04-PIN](reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN")
+   [ASI04 Mitigation 7](reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN")
    ```
 
-   The **id is the identity**, in the link title. The **line is derived**, in the link target.
-   All ids are in [`provisions.md`](provisions.md). `bash scripts/cite.sh ASI04-PIN` prints the
-   provision; `python3 scripts/verify.py` fails if a line has drifted.
+   The **address is where a reader finds the provision in the PDF**: the category, then
+   `Description`, `Common Example n`, `Attack Scenario n`, `Mitigation n` or `Reference n` for the
+   numbered item in that subsection. `ASI04` alone is the category heading, `ASI04 Mitigations` the
+   section heading, `Letter from the Leaders` the front matter. The **id is the identity**, in the
+   link title. The **line is derived**, in the link target. Ids and addresses are in
+   [`provisions.md`](provisions.md). `bash scripts/cite.sh ASI04-PIN` prints the provision;
+   `python3 scripts/verify.py` fails if a line has drifted or a citation's text is not its address.
 
    **Never cite from the register alone.** Each row holds one line and most provisions run across
    two or three. Open the category in `reference/` and read it, or run `cite.sh`, which prints the
@@ -64,13 +69,13 @@ called.
 **Cite the narrowest thing that carries the claim**: the specific mitigation, not the section
 heading. Never invent an id.
 
-**A provision with no id is still citable.** Cite the line, say in the finding that it is
-unregistered, and link it the same way with no title:
-`[§L288](reference/owasp-top-10-agentic-applications-2026.txt#L288)`. `cite.sh` takes a bare line
-number as well as an id:
+**A provision with no id is still citable.** Cite the line with its address and no title, and say
+in the finding that it is unregistered:
+`[ASI01 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L295)`. `cite.sh` takes
+a bare line number as well as an id, and prints the address either way:
 
 ```bash
-bash scripts/cite.sh 288            # a line in the standard
+bash scripts/cite.sh 295            # a line in the standard
 bash scripts/cite.sh ASI01-MIT      # or by register id
 ```
 
@@ -196,9 +201,9 @@ the text wins and you cite the text.**
 Two cross-cutting checks, applied throughout rather than as separate categories, each filed under
 whichever category it sits in:
 
-- **Least-Agency** ([`ASI00-LEAST-AGENCY`](reference/owasp-top-10-agentic-applications-2026.txt#L182 "^ASI00-LEAST-AGENCY")).
+- **Least-Agency** ([Letter from the Leaders](reference/owasp-top-10-agentic-applications-2026.txt#L182 "^ASI00-LEAST-AGENCY")).
   Capability present but unnecessary is attack surface with no upside.
-- **Observability** ([`ASI00-OBSERVABILITY`](reference/owasp-top-10-agentic-applications-2026.txt#L183 "^ASI00-OBSERVABILITY")).
+- **Observability** ([Letter from the Leaders](reference/owasp-top-10-agentic-applications-2026.txt#L183 "^ASI00-OBSERVABILITY")).
   No action log or reasoning trace is a finding.
 
 ---
@@ -258,7 +263,7 @@ agent can do that is dangerous, and the one instruction.
 |---|---|---|---|
 | ASI01 Agent Goal Hijack | **FAIL** | CRITICAL | F2 |
 | ASI03 Identity and Privilege Abuse | **PASS** | - | Runs as the invoking
-  operator, no separate credential. Meets [ASI03-SCOPED-TOKENS](...) |
+  operator, no separate credential. Meets [ASI03 Mitigation 1](...) |
 All ten, in order, none skipped. A FAIL or PARTIAL cites its finding by
 number. A PASS or N/A carries its whole basis here, in one line, with a
 citation for a PASS.
@@ -266,7 +271,7 @@ citation for a PASS.
 ## Findings
 ### F1 · CRITICAL · ASI04 · <the claim, in six words or so>
 **Artifact** the line or tool, quoted, with its number
-**Standard** [ID](citation) plus the words that carry the requirement
+**Standard** [address](citation) plus the words that carry the requirement
 **Gap** one sentence: what the artifact does instead
 **Ask** the question the owner must answer
 
@@ -331,7 +336,7 @@ outside this audit's scope".
 |---|---|
 | A ledger row | `\| ASI04 <name> \| **FAIL** \| <basis> \|`. The category cell begins with the code, the verdict is bold, and the four verdicts are spelled `PASS` `FAIL` `PARTIAL` `N/A` |
 | The arithmetic | literally `X pass, Y fail, Z partial, N not applicable` |
-| A citation | a markdown link, never prose. A bare section-and-line reference in running text is invisible to the checker and cannot be redeemed |
+| A citation | a markdown link whose text is the provision's address, never prose. A bare section-and-line reference in running text is invisible to the checker and cannot be redeemed |
 | A quoted provision | on a `**Standard**` line in the brief, or inside `**What the standard requires.**` or `What holds` in the long form, and at least 20 characters, or the check skips it |
 | An audit in a multi-audit file | under a top-level `# Audit <n>` heading |
 
