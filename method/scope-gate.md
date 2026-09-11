@@ -1,6 +1,6 @@
 # The scope gate
 
-_Last updated: 2026-09-10_
+_Last updated: 2026-09-11_
 
 The opening move of every audit (rules.md, Rule 3, Move 1). It answers three questions and
 produces a **capability profile** that the rest of the audit refers back to. Run it before
@@ -14,7 +14,9 @@ Navigation, not standard. See [`README.md`](README.md).
 
 A model that only produces text in response to a prompt is **not in scope**. This auditor is for
 systems that *act*: they hold tools or permissions and take steps toward a goal. If the
-definition has no tools and cannot trigger actions, say so in one line and stop.
+definition has no tools and cannot trigger actions, say so in one line and stop. An agent that holds
+tools but takes no consequential action itself is in scope when people act on what it returns: that
+report or verdict is its consequential output, and the agent sits at the supervised level.
 
 Place the artifact on the autonomy scale. The scale is about **what happens without a human**,
 not about how capable the model is:
@@ -39,7 +41,8 @@ purpose sitting on top of a broad grant.
 
 **Audit what the artifact declares, and record the conflict as a judgment call.** Name the
 conflict in the capability profile. Put it first in the judgment calls, with both readings and
-what changes under each; only the owner can say what their runtime does when the agent names a
+what changes under each, in Scope and limits; only the owner can say what their runtime does when
+the agent names a
 specialist. A narrow stated purpose does not remove a broad grant: audit the grant.
 
 ---
@@ -70,11 +73,13 @@ single session combines all three of:
 2. **exposure to untrusted content** (web pages, email bodies, uploaded files, fetched
    repositories, tool output the agent does not control), and
 3. **the ability to communicate externally** (send, post, an outbound API call, a write to a
-   shared store, or even a plain URL fetch, which carries data out in the request).
+   shared store, or even a plain URL fetch, which carries data out in the request). A report
+   returned only to the person who invoked the agent is not this leg.
 
 Hold all three and an injected instruction in the untrusted content can read the private data
 and route it out. **Remove any one leg and this specific exfiltration path closes.** If the profile has all three, name the three legs in the capability
-profile and carry them into the ASI01 and ASI02 findings as the exact config elements to quote.
+profile and carry them into the findings for ASI01 and ASI02, merged where they share a cause
+(Rule 4), as the exact config elements to quote.
 
 This is the structural form of what the standard describes as the root cause under
 [ASI01 Description](../reference/owasp-top-10-agentic-applications-2026.txt#L240 "^ASI01-ONE-CHANNEL"): agents "cannot reliably
@@ -120,7 +125,7 @@ unmitigated path from an ordinary mistake to serious harm, and that is CRITICAL.
 
 ## Output of the gate
 
-Three to five lines. Two worked shapes:
+Three to five lines, which open Scope and limits in the brief. Two worked shapes:
 
 > **Capability profile.** Semi-autonomous email-triage agent, single agent plus tools. Reads
 > untrusted inbound mail; can `send_email`, `create_ticket` and `update_crm` without
@@ -130,12 +135,12 @@ Three to five lines. Two worked shapes:
 > are never told a machine handled them, which no ASI provision reaches and is named here rather
 > than as a finding.
 
-> **Capability profile.** Supervised developer utility, single agent plus tools, invoked
-> interactively. Fetches files from a third-party GitHub repository and writes them into the
-> operator's own agent directory after a stated confirmation. Consequential autonomous actions:
-> file writes into a location later sessions load; shell execution via `Bash`. Irreversible:
-> uninstall (delete). Lethal trifecta present (local filesystem read, fetched third-party
-> content, outbound fetch and shell). Decides about: nobody; the only person it interacts with
-> is the developer who invoked it.
+> **Capability profile.** Supervised scheduling assistant, single agent plus tools, invoked by one
+> organiser. Reads the organiser's calendar and the text of incoming invitations; drafts replies
+> and invitations, and sends one only after the organiser confirms the full draft on screen.
+> Consequential autonomous actions: none. Irreversible actions, all gated: sent invitations and
+> replies. Lethal trifecta present, outbound leg gated (calendar data, invitation text written by
+> outsiders, `send_invite`). Decides about: nobody; invitees receive only what the organiser
+> approved.
 
 Then sweep the ten categories against that profile.

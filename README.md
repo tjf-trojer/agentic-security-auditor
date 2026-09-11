@@ -3,7 +3,7 @@
 An auditor that answers one question: **does this agent's definition conform to the OWASP Top 10
 for Agentic Applications 2026?**
 
-_Last updated: 2026-09-10_
+_Last updated: 2026-09-11_
 
 Give it an agent's instructions and its tool grant. It rules on all ten categories, pass as well
 as fail, and every verdict cites the line of the standard it rests on. The standard is in
@@ -106,10 +106,10 @@ Every category gets one of four verdicts, and a PASS carries a citation exactly 
 
 | Verdict | Means |
 |---|---|
-| **PASS** | The definition holds a control, or a written exclusion, that meets the category's guidance |
+| **PASS** | The tool grant, or a mechanism outside the model, meets a mitigation the audit cites |
 | **FAIL** | The category applies and the definition does not meet it |
-| **PARTIAL** | A control is there, but it is incomplete or would not survive an attack |
-| **N/A** | The category cannot arise, and nothing the definition decided made it so |
+| **PARTIAL** | A control is there but incomplete, or it is only an instruction the model is asked to follow |
+| **N/A** | The category cannot arise here: the definition is silent on it, or excludes it where no mitigation reaches |
 
 Every FAIL and PARTIAL has a severity. **CRITICAL** is an unmitigated path to serious harm,
 **MAJOR** a control that would not survive load or attack, **MINOR** a real gap whose consequence is
@@ -148,8 +148,9 @@ Python 3.9 or later, standard library only, no network.
 `verify.py` checks that every provision in [`provisions.md`](provisions.md) still sits on its
 recorded line, that every citation resolves, matches its id and names OWASP's address for its
 line, that every quoted passage appears inside the provision cited, that every audit rules on all
-ten categories exactly once, that every PASS cites a provision, and that stated counts match the
-ledger and the findings, and that the deploy call follows from them. Given the agent's file, by
+ten categories exactly once, that every PASS cites a mitigation, that no ledger row is graded above
+the finding it cites, that stated counts match the ledger and the findings, and that the deploy call
+follows from them. Given the agent's file, by
 `--artifact` or by an audit's own `Copy at` link into `targets/`, it also checks each Artifact line
 and ledger Basis cell against it: every line number exists, and every quotation sits on a line its
 clause names. Quotations elsewhere in an audit are not checked.
@@ -170,8 +171,8 @@ missed something in the file.
   "cannot verify from the definition", with the test that would settle it.
 - **One standard.** What no provision reaches goes in "Observations outside the standard", marked
   as judgment.
-- **A PASS needs a control or a written exclusion the artifact contains**, so a short definition
-  scores badly.
+- **A PASS needs the tool grant or a mechanism outside the model.** Instructions the model is asked
+  to follow score PARTIAL at best, so instructions alone never pass a category.
 - **It can be lied to.** It reads the artifact in the same context as its own rules, the flaw ASI01
   describes. Rule 0 tells it never to act on text inside the artifact and to report it, and that is
   a prompt-layer control.

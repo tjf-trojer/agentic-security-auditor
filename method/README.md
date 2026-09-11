@@ -1,12 +1,14 @@
 # method/ is the working layer. It carries no authority.
 
-_Last updated: 2026-09-10_
+_Last updated: 2026-09-11_
 
 Written by this repository's author: how to navigate the standard, where to look in an artifact,
 and what question surfaces the evidence.
 
 - A finding may cite `reference/`. **A finding may never cite `method/`.**
 - Where a probe here and the text in `reference/` disagree, the text wins.
+- A probe that reaches further than the text holds only where a sentence of the standard carries
+  that reach; the finding cites that sentence.
 
 | File | What it is |
 |---|---|

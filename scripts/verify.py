@@ -15,7 +15,8 @@ It cannot tell whether a verdict is right. It checks:
   severity      the stated critical, major and minor counts match the finding headings
   deploy        the verdict's opening call follows from the stated severity count
   numbering     findings run F1 to Fn with no gaps, and none is referred to that does not exist
-  uncited-pass  every PASS cites the provision it satisfies
+  uncited-pass  every PASS cites a mitigation, or the Least-Agency line
+  row-level     no ledger row is graded above the finding it cites
   unlinked      no citation is written as prose instead of a link
   link          internal links resolve (repository run only)
 
@@ -176,9 +177,17 @@ def check_audit(rel: str, audit: str) -> None:
             fail("skipped", f"{where}: {code} ruled on {seen[code]} times")
 
     for row in re.findall(r"^\|\s*ASI\d\d\b.*$", audit, re.M):
-        if "**PASS**" in row and not CITE.search(row):
-            code = re.match(r"^\|\s*(ASI\d\d)", row).group(1)
+        if "**PASS**" not in row:
+            continue
+        code = re.match(r"^\|\s*(ASI\d\d)", row).group(1)
+        credits = [m for m in LINK.finditer(row)
+                   if re.fullmatch(r"ASI\d\d Mitigation \d+", m.group("text").strip("` "))
+                   or (m.group("text").strip("` ") == "Letter from the Leaders" and m.group("line") == "182")]
+        if not CITE.search(row):
             fail("uncited-pass", f"{where}: {code} is PASS with no citation in its Basis cell")
+        elif not credits:
+            fail("uncited-pass", f"{where}: {code} is PASS without a mitigation or the Least-Agency line; "
+                                 f"a description, example or scenario cannot carry a PASS")
 
     flat = re.sub(r"\s+", " ", audit)
     stated = re.search(r"(\d+) pass, (\d+) fail, (\d+) partial, (\d+) not applicable", flat)
@@ -208,6 +217,14 @@ def check_audit(rel: str, audit: str) -> None:
         if not (got == want or (want == "Deploy after closing" and got.startswith(want + " "))):
             fail("deploy", f"{where}: the verdict opens \"{got or 'with no bold call'}\"; with "
                            f"{critical} critical and {major} major, Rule 5 says \"{want}\"")
+
+    rank = {"MINOR": 1, "MAJOR": 2, "CRITICAL": 3}
+    heads = {n: lv for n, lv in re.findall(r"^#+ F(\d+) *[·・] *(CRITICAL|MAJOR|MINOR)\b", audit, re.M)}
+    for code, lv, basis in re.findall(r"^\|\s*(ASI\d\d)\b[^|]*\|\s*\*\*(?:FAIL|PARTIAL)\*\*\s*\|\s*"
+                                      r"(CRITICAL|MAJOR|MINOR)\s*\|(.*)$", audit, re.M):
+        cited = [heads[n] for n in re.findall(r"\bF(\d+)\b", basis) if n in heads]
+        if cited and rank[lv] > max(rank[c] for c in cited):
+            fail("row-level", f"{where}: {code} is {lv}, above every finding its Basis cell cites")
 
     nums = [int(n) for n in re.findall(r"^#+ F(\d+) [·・]", audit, re.M)]
     if nums:

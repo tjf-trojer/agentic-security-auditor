@@ -1,6 +1,6 @@
 # Detection probes: what each category looks like in a definition
 
-_Last updated: 2026-09-10_
+_Last updated: 2026-09-11_
 
 Each category as it looks **on the page** when you hold a system prompt and a tool list, with the
 question that surfaces the evidence.
@@ -86,7 +86,8 @@ systems is a bridge between them, and the bridge is the finding, not either syst
 
 **Probe:** if this agent were fully hijacked on its next run, what is the maximum damage its
 credentials permit? That number is the finding. Then: do spawned sub-agents hold the same
-credentials?
+credentials? The category is about acting with an identity: a credential, a token, a session, a
+shell running as someone. What a read-only grant can open is graded under ASI02.
 
 ---
 
@@ -141,10 +142,14 @@ shell for convenience (*"use `curl -s` for downloads"*) when a narrower tool wou
 execution when what it writes is Terraform, a CI workflow, a Dockerfile, a migration, a cron
 entry or a systemd unit, anything a later process runs without a human reading it line by line.
 The distance between "writes YAML" and "executes code" is one pipeline, and the definition
-usually does not mention the pipeline. Ask what consumes what this agent writes.
+usually does not mention the pipeline. Ask what consumes what this agent writes. Code a person
+reads and pastes is graded under ASI09, whose first attack scenario is exactly that
+([ASI09 Attack Scenario 1](../reference/owasp-top-10-agentic-applications-2026.txt#L1001)); ASI05 covers what a process runs unread.
 
 **Probe:** can model output become an executed command? Where does that execution run, what
-does it reach from there, and is the environment sandboxed or the operator's own machine?
+does it reach from there, and is the environment sandboxed or the operator's own machine? With a
+shell in the grant, grade what its commands can do to data and systems under ASI02, and whether
+generated or injected code runs unchecked under ASI05.
 
 ---
 
@@ -187,7 +192,9 @@ lets the approving party be chosen by whoever controls the upstream.
 
 **Probe:** what messages cross an agent boundary here, what authenticates them, and what would a
 forged one achieve? If the artifact defines a single agent that neither calls nor is called by
-others, this is a reasoned N/A, and say so in that form.
+other agents, this is a reasoned N/A, and say so in that form. A sub-agent whose only caller is the
+person's own session counts as single: being invoked is not inter-agent messaging. A status file or
+checkpoint another agent writes for this one to read is a message, whatever carries it.
 
 ---
 
@@ -207,7 +214,9 @@ contributing factor in ASI02. Open the text before citing it, and if nothing the
 observations outside the standard rather than in a finding.
 
 **Probe:** if step two is wrong, what catches it before the final action executes? If the answer
-is nothing, that is the finding.
+is nothing, that is the finding. For a single agent the category applies where its output crosses
+into another session, agent or workflow (a patch applied, a file later sessions load, a change
+pasted into a device); where nothing crosses, it is N/A.
 
 ---
 
@@ -234,7 +243,10 @@ content has built a channel whose apparent sender the user already trusts. Ask w
 output originate outside the agent, and whether the human can tell which parts those are.
 
 **Probe:** at the moment of approval, what exactly does the human see, and how many such moments
-per hour? Name the thing that carries the risk and ask whether it appears on that screen.
+per hour? Name the thing that carries the risk and ask whether it appears on that screen. Where the
+definition names no person at all and the agent takes consequential actions, the category applies
+and fails: a missing confirmation step is the failure
+[ASI09 Common Example 2](../reference/owasp-top-10-agentic-applications-2026.txt#L989 "^ASI09-MISSING-CONFIRM") names.
 
 ---
 
