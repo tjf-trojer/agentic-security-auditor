@@ -150,8 +150,9 @@ recorded line, that every citation resolves, matches its id and names OWASP's ad
 line, that every quoted passage appears inside the provision cited, that every audit rules on all
 ten categories exactly once, that every PASS cites a provision, and that stated counts match the
 ledger and the findings, and that the deploy call follows from them. Given the agent's file, by
-`--artifact` or by an audit's own `Copy at` link into `targets/`, it also checks that the line
-numbers and quotations attributed to the agent exist in it.
+`--artifact` or by an audit's own `Copy at` link into `targets/`, it also checks each Artifact line
+and ledger Basis cell against it: every line number exists, and every quotation sits on a line its
+clause names. Quotations elsewhere in an audit are not checked.
 
 It cannot tell you a verdict is right.
 

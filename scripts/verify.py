@@ -8,7 +8,8 @@ It cannot tell whether a verdict is right. It checks:
   id            a citation's id and line agree with the register
   address       a citation's link text is OWASP's address for the line it cites
   misquote      every passage quoted from the standard sits inside the provision cited
-  artifact      the lines and quotations a finding attributes to the agent exist in its file
+  artifact      the lines a finding names exist in the agent's file, and each quotation sits on
+                the line its clause names
   skipped       every audit rules on all ten categories, exactly once
   ledger        the stated pass, fail, partial and not-applicable counts match the ledger
   severity      the stated critical, major and minor counts match the finding headings
@@ -55,6 +56,8 @@ LINK = re.compile(
     r"\[(?P<text>[^\]\n]+)\]\([^)\s]*owasp-top-10-agentic-applications-2026\.txt#L(?P<line>\d+)"
 )
 
+LINE_REF = re.compile(r"\blines?\s+(\d+)(?:\s*(?:-|–|to)\s*(\d+))?", re.I)
+
 failures: list[str] = []
 notes: list[str] = []
 
@@ -83,11 +86,12 @@ def hyphen_variants(text: str) -> list[str]:
     return [fold(re.sub(r"-\s*\n\s*", "-", text)), fold(re.sub(r"-\s*\n\s*", "", text))]
 
 
-def quoted(text: str) -> list[str]:
-    """Double-quoted passages, then code spans outside them. Each delimiter pairs only with its
-    own kind, so a code span next to a quotation cannot swallow it."""
-    found = re.findall(r'"([^"]+)"', text)
-    found += re.findall(r"`([^`]+)`", re.sub(r'"[^"]*"', " ", text))
+def quote_spans(text: str) -> list[tuple[int, int, str]]:
+    """Double-quoted passages, then code spans outside them, with their positions. Each delimiter
+    pairs only with its own kind, so a code span next to a quotation cannot swallow it."""
+    found = [(m.start(), m.end(), m.group(1)) for m in re.finditer(r'"([^"]+)"', text)]
+    outside = re.sub(r'"[^"]*"', lambda m: " " * len(m.group(0)), text)
+    found += [(m.start(), m.end(), m.group(1)) for m in re.finditer(r"`([^`]+)`", outside)]
     return found
 
 
@@ -121,16 +125,41 @@ def audits_in(text: str) -> list[str]:
 
 def check_artifact(rel: str, text: str, artifact: Path) -> None:
     lines = artifact.read_text(encoding="utf-8", errors="replace").split("\n")
-    whole = fold("\n".join(lines))
-    for para in re.findall(r"^\*\*Artifact\*\*(.*?)(?=\n\*\*|\n\n|\Z)", text, re.M | re.S):
-        for n in sorted({int(x) for x in re.findall(r"\blines?\s+(\d+)", para)}):
-            if not 0 < n <= len(lines):
-                fail("artifact", f"{rel}: cites line {n} of {artifact.name}, which has "
-                                 f"{len(lines)} lines")
-        for q in quoted(strip_link_targets(para)):
-            if 12 <= len(norm(q)) <= 300 and fold(q) not in whole:
-                fail("artifact", f"{rel}: quoted as being in {artifact.name} but not found there: "
-                                 f"\"{q[:70]}\"")
+
+    def holds(q: str, chunk: list[str]) -> bool:
+        # A code span inside a quotation is the audit's markup, not the artifact's.
+        body = fold("\n".join(chunk))
+        return fold(q) in body or fold(q.replace("`", "")) in body.replace("`", "")
+
+    # The half of a finding that quotes the agent: its Artifact paragraph, and the ledger's Basis cells.
+    parts = re.findall(r"^\*\*Artifact\*\*(.*?)(?=\n\*\*|\n\n|\Z)", text, re.M | re.S)
+    parts += [row.rsplit("|", 2)[-2] for row in re.findall(r"^\|\s*ASI\d\d\b.*\|[ \t]*$", text, re.M)]
+    for part in map(strip_link_targets, parts):
+        quotes = quote_spans(part)
+        blank = part
+        for a, b, _ in quotes:
+            blank = blank[:a] + " " * (b - a) + blank[b:]
+        # A quotation belongs to the line numbers named in its own clause.
+        cuts = [0] + [m.end() for m in re.finditer(r";|\.\s+(?=[A-Z])", blank)] + [len(part)]
+        for lo, hi in zip(cuts, cuts[1:]):
+            refs = [(int(m.group(1)), int(m.group(2) or m.group(1)))
+                    for m in LINE_REF.finditer(blank, lo, hi)]
+            for n in {n for pair in refs for n in pair}:
+                if not 0 < n <= len(lines):
+                    fail("artifact", f"{rel}: cites line {n} of {artifact.name}, which has "
+                                     f"{len(lines)} lines")
+            for a, _, q in quotes:
+                if not lo <= a < hi or not 12 <= len(norm(q)) <= 300:
+                    continue
+                if not holds(q, lines):
+                    fail("artifact", f"{rel}: quoted as being in {artifact.name} but not found there: "
+                                     f"\"{q[:70]}\"")
+                elif refs and not any(holds(q, lines[max(0, f - 2):l + 1]) for f, l in refs):
+                    at = next((i + 1 for i in range(len(lines)) if holds(q, lines[i:i + 1])),
+                              next((i + 1 for i in range(len(lines)) if holds(q, lines[i:i + 2])), "?"))
+                    named = ", ".join(str(f) if f == l else f"{f}-{l}" for f, l in refs)
+                    fail("artifact", f"{rel}: \"{q[:50]}\" is attributed to line {named} of "
+                                     f"{artifact.name}, but it is at line {at}")
 
 
 def check_audit(rel: str, audit: str) -> None:
@@ -304,7 +333,8 @@ def main() -> int:
                 check_artifact(rel, a, Path(copy.group(1)))
 
     notes.append(f"citations: {cites} checked")
-    notes.append(f"audits: {audits}, {against_targets} checked against their copy in targets/")
+    notes.append(f"audits: {audits}" + ("" if artifact else
+                 f", {against_targets} checked against their copy in targets/"))
     if artifact is not None:
         notes.append(f"artifact: {artifact.name}")
 
