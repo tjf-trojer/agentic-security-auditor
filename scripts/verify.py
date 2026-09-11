@@ -128,9 +128,13 @@ def check_artifact(rel: str, text: str, artifact: Path) -> None:
     lines = artifact.read_text(encoding="utf-8", errors="replace").split("\n")
 
     def holds(q: str, chunk: list[str]) -> bool:
-        # A code span inside a quotation is the audit's markup, not the artifact's.
-        body = fold("\n".join(chunk))
-        return fold(q) in body or fold(q.replace("`", "")) in body.replace("`", "")
+        # Markup is not wording: a code span the audit puts inside a quotation, or the ">" that opens
+        # each line of a quoted block in the artifact.
+        for text in (chunk, [re.sub(r"^\s*>\s?", "", ln) for ln in chunk]):
+            body = fold("\n".join(text))
+            if fold(q) in body or fold(q.replace("`", "")) in body.replace("`", ""):
+                return True
+        return False
 
     # The half of a finding that quotes the agent: its Artifact paragraph, and the ledger's Basis cells.
     parts = re.findall(r"^\*\*Artifact\*\*(.*?)(?=\n\*\*|\n\n|\Z)", text, re.M | re.S)
