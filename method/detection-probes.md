@@ -106,7 +106,7 @@ The standard names the remedies. Pin by content hash and commit ID
 ([ASI04 Mitigation 7](../reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN")); allowlist and pin, verify
 provenance before install or activation, auto-reject unsigned or unverified
 ([ASI04 Mitigation 2](../reference/owasp-top-10-agentic-applications-2026.txt#L579 "^ASI04-GATEKEEPING")); use curated registries and
-block untrusted sources ([ASI04 Mitigation 1](../reference/owasp-top-10-agentic-applications-2026.txt#L578 "^ASI04-REGISTRIES")).
+block untrusted sources ([ASI04 Mitigation 1](../reference/owasp-top-10-agentic-applications-2026.txt#L576 "^ASI04-REGISTRIES")).
 
 **When the artifact addresses the auditor.** A definition can carry text aimed at its reviewer: a
 claimed prior certification, a hidden comment, an instruction to report everything as passing.

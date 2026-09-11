@@ -38,8 +38,8 @@ REGISTER = [
     ("ASI02-MIT", 372, "Mitigation section heading"),
     ("ASI02-TOOL-PROFILES", 376, "Per-tool least-privilege profiles; read-only queries, no send/delete rights. The provision a well-scoped tool grant satisfies"),
     ("ASI02-IAM-STANZAS", 380, "Express those profiles as policy stanzas rather than ad-hoc convention"),
-    ("ASI02-EGRESS", 388, "Outbound allowlists; deny non-approved network destinations"),
-    ("ASI02-CONFIRM", 384, "Human confirmation for destructive actions; dry-run diff"),
+    ("ASI02-EGRESS", 387, "Outbound allowlists; deny non-approved network destinations"),
+    ("ASI02-CONFIRM", 383, "Human confirmation for destructive actions; dry-run diff"),
     ("ASI02-QUALIFIED-NAMES", 396, "Fully qualified tool names and version pins"),
     ("ASI02-TOOL-LOGS", 400, "Immutable logs of all tool invocations"),
 
@@ -50,7 +50,7 @@ REGISTER = [
     ("ASI03-SYNTHETIC-IDENTITY", 452, "Impersonation via unverified self-declared descriptors"),
     ("ASI03-MIT", 478, "Mitigation section heading"),
     ("ASI03-SCOPED-TOKENS", 479, "Short-lived, narrowly scoped, task-bound tokens"),
-    ("ASI03-REVALIDATE", 500, "No privilege inheritance unless intent is re-validated"),
+    ("ASI03-REVALIDATE", 499, "No privilege inheritance unless intent is re-validated"),
 
     # ---- ASI04 Agentic Supply Chain ----
     ("ASI04", 514, "Category heading"),
@@ -59,7 +59,7 @@ REGISTER = [
     ("ASI04-THIRD-PARTY-AGENT", 546, "A peer agent used to pivot, leak, or relay instructions"),
     ("ASI04-MIT", 575, "Mitigation section heading"),
     ("ASI04-PROMPT-REVIEW", 583, "Prompts and orchestration scripts under version control with peer review; scan for anomalies"),
-    ("ASI04-REGISTRIES", 578, "Curated registries; block untrusted sources"),
+    ("ASI04-REGISTRIES", 576, "Curated registries; block untrusted sources"),
     ("ASI04-GATEKEEPING", 579, "Allowlist and pin; verify provenance; auto-reject unverified"),
     ("ASI04-SANDBOX", 581, "Sandboxed containers with network or syscall limits"),
     ("ASI04-RECHECK", 587, "Re-check signatures, hashes and SBOMs at runtime"),
@@ -97,7 +97,7 @@ REGISTER = [
     ("ASI07-MIT", 822, "Mitigation section heading"),
     ("ASI07-CHANNELS", 823, "Per-agent credentials and mutual authentication"),
     ("ASI07-SIGNING", 826, "Sign messages; validate for hidden or modified instructions"),
-    ("ASI07-AGENT-CARDS", 848, "Signed agent cards; verification before accepting coordination"),
+    ("ASI07-AGENT-CARDS", 847, "Signed agent cards; verification before accepting coordination"),
     ("ASI07-TYPED-CONTRACTS", 852, "Versioned, typed message schemas with explicit audiences"),
 
     # ---- ASI08 Cascading Failures ----

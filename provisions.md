@@ -4,7 +4,7 @@
 
 # The register: every provision this auditor may cite
 
-_Last updated: 2026-09-10_
+_Last updated: 2026-09-11_
 
 Cite a provision by its OWASP address, with the id as the link title and the current line as the
 link target:
@@ -43,8 +43,8 @@ Cite the narrowest id that carries the claim.
 | `ASI02-MIT` | 372 | ASI02 Mitigations | ### Prevention and Mitigation Guidelines | Mitigation section heading |
 | `ASI02-TOOL-PROFILES` | 376 | ASI02 Mitigation 1 | 1. Least Agency and Least Privilege for Tools. Define per-tool least-privilege profiles (scopes, | Per-tool least-privilege profiles; read-only queries, no send/delete rights. The provision a well-scoped tool grant satisfies |
 | `ASI02-IAM-STANZAS` | 380 | ASI02 Mitigation 1 | express these profiles as IAM or authorization policy stanzas attached to each tool, rather than | Express those profiles as policy stanzas rather than ad-hoc convention |
-| `ASI02-EGRESS` | 388 | ASI02 Mitigation 3 | Enforce outbound allowlists and deny all non-approved network destinations. | Outbound allowlists; deny non-approved network destinations |
-| `ASI02-CONFIRM` | 384 | ASI02 Mitigation 2 | and human confirmation for high-impact or destructive actions (delete, transfer, publish). Display a | Human confirmation for destructive actions; dry-run diff |
+| `ASI02-EGRESS` | 387 | ASI02 Mitigation 3 | 3. Execution Sandboxes and Egress Controls. Run tool or code execution in isolated sandboxes. | Outbound allowlists; deny non-approved network destinations |
+| `ASI02-CONFIRM` | 383 | ASI02 Mitigation 2 | 2. Action-Level Authentication and Approval. Require explicit authentication for each tool invocation | Human confirmation for destructive actions; dry-run diff |
 | `ASI02-QUALIFIED-NAMES` | 396 | ASI02 Mitigation 7 | 7. Semantic and Identity Validation (‘Semantic Firewalls)”. Enforce fully qualified tool names and | Fully qualified tool names and version pins |
 | `ASI02-TOOL-LOGS` | 400 | ASI02 Mitigation 8 | 8. Logging, Monitoring, and Drift Detection. Maintain immutable logs of all tool invocations and | Immutable logs of all tool invocations |
 | `ASI03` | 414 | ASI03 | ## ASI03: Identity and Privilege Abuse | Category heading |
@@ -53,14 +53,14 @@ Cite the narrowest id that carries the claim.
 | `ASI03-SYNTHETIC-IDENTITY` | 452 | ASI03 Common Example 5 | 5. Synthetic Identity Injection. Attackers impersonate internal agents by using unverified descriptors | Impersonation via unverified self-declared descriptors |
 | `ASI03-MIT` | 478 | ASI03 Mitigations | ### Prevention and Mitigation Guidelines | Mitigation section heading |
 | `ASI03-SCOPED-TOKENS` | 479 | ASI03 Mitigation 1 | 1. Enforce Task-Scoped, Time-Bound Permissions: Issue short-lived, narrowly scoped tokens per | Short-lived, narrowly scoped, task-bound tokens |
-| `ASI03-REVALIDATE` | 500 | ASI03 Mitigation 7 | context switch. Prevent privilege inheritance across agents unless the original intent is re-validated. | No privilege inheritance unless intent is re-validated |
+| `ASI03-REVALIDATE` | 499 | ASI03 Mitigation 7 | 7. Bind permissions to subject, resource, purpose, and duration. Require re-authentication on | No privilege inheritance unless intent is re-validated |
 | `ASI04` | 514 | ASI04 | ## ASI04: Agentic Supply Chain Vulnerabilities | Category heading |
 | `ASI04-SCOPE` | 520 | ASI04 Description | other agents, agentic interfaces - MCP (Model Context Protocol), A2A (Agent2Agent) - agentic registries and | Other agents, MCP and A2A interfaces are in scope |
 | `ASI04-RUNTIME-LOADING` | 525 | ASI04 Description | capabilities at runtime - loading external tools- agent personas dynamically – thereby increasing the attack | Runtime loading of external tools and agent personas |
 | `ASI04-THIRD-PARTY-AGENT` | 546 | ASI04 Common Example 4 | 4. Vulnerable Third-Party Agent (Agent→Agent). A third-party agent with unpatched vulnerabilities | A peer agent used to pivot, leak, or relay instructions |
 | `ASI04-MIT` | 575 | ASI04 Mitigations | ### Prevention and Mitigation Guidelines | Mitigation section heading |
 | `ASI04-PROMPT-REVIEW` | 583 | ASI04 Mitigation 4 | 4. Secure prompts and memory: Put prompts, orchestration scripts, and memory schemas under | Prompts and orchestration scripts under version control with peer review; scan for anomalies |
-| `ASI04-REGISTRIES` | 578 | ASI04 Mitigation 1 | use curated registries and block untrusted sources. | Curated registries; block untrusted sources |
+| `ASI04-REGISTRIES` | 576 | ASI04 Mitigation 1 | 1. Provenance and SBOMs, AIBOMs: Sign and attest manifests, prompts, and tool definitions; require | Curated registries; block untrusted sources |
 | `ASI04-GATEKEEPING` | 579 | ASI04 Mitigation 2 | 2. Dependency gatekeeping: Allowlist and pin; scan for typosquats (PyPI, npm, LangChain, | Allowlist and pin; verify provenance; auto-reject unverified |
 | `ASI04-SANDBOX` | 581 | ASI04 Mitigation 3 | 3. Containment and builds: Run sensitive agents in sandboxed containers with strict network or | Sandboxed containers with network or syscall limits |
 | `ASI04-RECHECK` | 587 | ASI04 Mitigation 6 | 6. Continuous validation and monitoring: Re-check signatures, hashes, and SBOMs (incl. AIBOMs) at | Re-check signatures, hashes and SBOMs at runtime |
@@ -92,7 +92,7 @@ Cite the narrowest id that carries the claim.
 | `ASI07-MIT` | 822 | ASI07 Mitigations | ### Prevention and Mitigation Guidelines | Mitigation section heading |
 | `ASI07-CHANNELS` | 823 | ASI07 Mitigation 1 | 1. Secure agent channels: Use end-to-end encryption with per-agent credentials and mutual | Per-agent credentials and mutual authentication |
 | `ASI07-SIGNING` | 826 | ASI07 Mitigation 2 | 2. Message integrity and semantic protection: Digitally sign messages, hash both payload and | Sign messages; validate for hidden or modified instructions |
-| `ASI07-AGENT-CARDS` | 848 | ASI07 Mitigation 8 | attestation of agent identity, provenance, and descriptor integrity. Require signed agent cards and | Signed agent cards; verification before accepting coordination |
+| `ASI07-AGENT-CARDS` | 847 | ASI07 Mitigation 8 | 8. Attested registry and agent verification: Use registries or marketplaces that provide digital | Signed agent cards; verification before accepting coordination |
 | `ASI07-TYPED-CONTRACTS` | 852 | ASI07 Mitigation 9 | 9. Typed contracts and schema validation: Use versioned, typed message schemas with explicit per- | Versioned, typed message schemas with explicit audiences |
 | `ASI08` | 863 | ASI08 | ## ASI08: Cascading Failures | Category heading |
 | `ASI08-COUPLING` | 895 | ASI08 Common Example 1 | 1. Planner–executor coupling: A hallucinating or compromised planner emits unsafe steps that the | Planner-executor coupling: unsafe steps performed without validation |
