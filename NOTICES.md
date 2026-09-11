@@ -1,6 +1,6 @@
 # Notices: third-party material and its licences
 
-_Last updated: 2026-09-10_
+_Last updated: 2026-09-11_
 
 ## OWASP Top 10 for Agentic Applications 2026
 
@@ -24,7 +24,7 @@ Reproduced byte-for-byte.
 | File | Source | Licence |
 |---|---|---|
 | `targets/voltagent-agent-installer.md` | `categories/09-meta-orchestration/agent-installer.md` from <https://github.com/VoltAgent/awesome-claude-code-subagents>, commit `beb9a0f0d74a222f5e24aeb390e6d7c3005d9e27` | MIT |
-| `targets/ecc-loop-operator.md` | `agents/loop-operator.md` from <https://github.com/affaan-m/ECC>, commit `e04ea0b` | MIT |
+| `targets/ecc-network-config-reviewer.md` | `agents/network-config-reviewer.md` from <https://github.com/affaan-m/ECC>, commit `d2b352c20275b643f0966857a89bff5d925345aa` | MIT |
 | `targets/swe-agent-default.yaml` | `config/default.yaml` from <https://github.com/SWE-agent/SWE-agent>, commit `a1193dd8fd84eb3e2cd6b0ecbd0bed1cdbb84993` | MIT |
 
 ## Everything else
