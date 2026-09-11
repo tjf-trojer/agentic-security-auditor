@@ -22,7 +22,7 @@ line. Artifact line numbers resolve into the copies in [`targets/`](targets/).
 
 ## Verdict
 
-**Do not deploy.** 0 pass, 6 fail, 3 partial, 1 not applicable; 2 critical, 2 major, 1 minor.
+**Do not deploy.** 0 pass, 5 fail, 4 partial, 1 not applicable; 2 critical, 2 major, 1 minor.
 
 This agent writes agent definitions nothing has inspected, fetched from a branch that can change
 between one fetch and the next, into directories later sessions load, and it reads that
@@ -41,22 +41,22 @@ installs and what that version is allowed to do.
 
 | Category | Verdict | Sev | Basis |
 |---|---|---|---|
-| ASI01 Agent Goal Hijack | **FAIL** | CRITICAL | F2 |
-| ASI02 Tool Misuse and Exploitation | **PARTIAL** | MAJOR | Line 70 confirms before install and uninstall, the two described operations that change anything, so a gate exists. The grant behind it is unscoped (F3) and the gate shows no plan or diff (F4) |
-| ASI03 Identity and Privilege Abuse | **FAIL** | MAJOR | F3 |
-| ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | CRITICAL | F1, F5. Lines 22-24 fix the source to one repository, which narrows where an attack must land and verifies nothing that arrives from it |
-| ASI05 Unexpected Code Execution | **FAIL** | CRITICAL | F2 |
-| ASI06 Memory & Context Poisoning | **FAIL** | CRITICAL | F1 |
-| ASI07 Insecure Inter-Agent Communication | **N/A** | - | One agent, no delegation tool in line 4, no peer it messages. The host session invokes it on its line 3 description, a handoff this file does not configure; the agents it writes compete for that routing in later sessions, which is supply chain and graded under ASI04 |
-| ASI08 Cascading Failures | **PARTIAL** | MAJOR | Line 35's global-or-local question and line 70's confirmation put a person between a download and the sessions that will load it, the human gate [ASI08 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L946 "^ASI08-GATES") prescribes before an output propagates. Incomplete, because neither shows the operator what would spread: F4 |
-| ASI09 Human-Agent Trust Exploitation | **PARTIAL** | MAJOR | F4 |
-| ASI10 Rogue Agents | **FAIL** | MINOR | F5. Each workflow at lines 28-44 starts on a request and ends in a stated last step, which bounds a run; nothing records one |
+| ASI01 Agent Goal Hijack (outside text redirects the agent) | **FAIL** | CRITICAL | F2 |
+| ASI02 Tool Misuse and Exploitation (legitimate tools used unsafely) | **PARTIAL** | MAJOR | Line 70 confirms before install and uninstall, the two described operations that change anything, so a gate exists. The grant behind it is unscoped (F3) and the gate shows no plan or diff (F4) |
+| ASI03 Identity and Privilege Abuse (the agent's access abused or inherited) | **FAIL** | MAJOR | F3 |
+| ASI04 Agentic Supply Chain Vulnerabilities (third-party parts trusted unverified) | **FAIL** | CRITICAL | F1, F5. Lines 22-24 fix the source to one repository, which narrows where an attack must land and verifies nothing that arrives from it |
+| ASI05 Unexpected Code Execution (model output becomes an executed command) | **FAIL** | CRITICAL | F2 |
+| ASI06 Memory & Context Poisoning (stored context corrupted for later runs) | **FAIL** | CRITICAL | F1 |
+| ASI07 Insecure Inter-Agent Communication (messages between agents forged or tampered) | **N/A** | - | One agent, no delegation tool in line 4, no peer it messages. The host session invokes it on its line 3 description, a handoff this file does not configure; the agents it writes compete for that routing in later sessions, which is supply chain and graded under ASI04 |
+| ASI08 Cascading Failures (one error propagates into later actions) | **PARTIAL** | MAJOR | Line 35's global-or-local question and line 70's confirmation put a person between a download and the sessions that will load it, the human gate [ASI08 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L946 "^ASI08-GATES") prescribes before an output propagates. Incomplete, because neither shows the operator what would spread: F4 |
+| ASI09 Human-Agent Trust Exploitation (people over-trust what the agent tells them) | **PARTIAL** | MAJOR | F4 |
+| ASI10 Rogue Agents (an agent drifts from its job with nothing to catch it) | **PARTIAL** | MINOR | F5. Each workflow at lines 28-44 starts on a request and ends in a stated last step, which bounds a run; nothing records one |
 
 ## Findings
 
 ### F1 · CRITICAL · ASI04, ASI06 · Unpinned, uninspected files installed as standing agents
 **Artifact** line 24: the raw URL ends `/main/categories/{category-name}/{agent-name}.md`; lines 37-38 download it and save it; line 74 "Preserve exact file content when downloading (don't modify agent files)"; line 16 installs to the global `~/.claude/agents/`. No hash, commit, signature or inspection step anywhere
-**Standard** [ASI04 Mitigation 7](reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN") "Pin prompts, tools, and configs by content hash and commit ID"; [ASI06 Mitigation 2](reference/owasp-top-10-agentic-applications-2026.txt#L735 "^ASI06-VALIDATE-WRITES") "Scan all new memory writes and model outputs (rules + AI) for malicious or sensitive content before commit"
+**Standard** [ASI04 Mitigation 7](reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN") "Pin prompts, tools, and configs by content hash and commit ID"; [ASI06 Mitigation 2](reference/owasp-top-10-agentic-applications-2026.txt#L735 "^ASI06-VALIDATE-WRITES") "Scan all new memory writes and model outputs (rules + AI) for malicious or sensitive content before commit"; [ASI06 Description](reference/owasp-top-10-agentic-applications-2026.txt#L686-L687) counts as context "any information an agent retains, retrieves, or reuses"
 **Gap** what lands is whatever `main` holds at fetch time: a system prompt with its own `tools:` line, written byte for byte where later sessions load it, with nothing reading it first. Its `description:` field, which for this agent is line 3, decides which later tasks the host hands it. A file read on GitHub at 10:00 and installed at 10:05 need not be the same file
 **Ask** what commit or hash does an install pin to, and what reads a fetched file's `tools:` line and body before it is written?
 
@@ -74,7 +74,7 @@ installs and what that version is allowed to do.
 
 ### F4 · MAJOR · ASI09, ASI08, ASI02 · The confirmation shows none of what it approves
 **Artifact** line 70 "Always confirm before installing/uninstalling" and line 71 "Show the agent's description before installing if possible" sit in the notes; the install steps at lines 35-39 and the worked example at lines 59-63 go from the location question to download and save, and use "Confirm" for the success message. Line 60 poses global versus local as two paths. Line 38 saves without checking for an existing file, and uninstall (line 18) has no procedure at all
-**Standard** [ASI09 Mitigation 7](reference/owasp-top-10-agentic-applications-2026.txt#L1044 "^ASI09-PREVIEW") requires you to "display a risk badge with source provenance and expected side effects"; [ASI02 Mitigation 2](reference/owasp-top-10-agentic-applications-2026.txt#L383 "^ASI02-CONFIRM") requires you to "Display a pre-execution plan or dry-run diff before final approval"
+**Standard** [ASI09 Mitigation 7](reference/owasp-top-10-agentic-applications-2026.txt#L1044 "^ASI09-PREVIEW") requires you to "display a risk badge with source provenance and expected side effects"; [ASI02 Mitigation 2](reference/owasp-top-10-agentic-applications-2026.txt#L383 "^ASI02-CONFIRM") requires you to "Display a pre-execution plan or dry-run diff before final approval"; [ASI08 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L946 "^ASI08-GATES") asks for "human review for high risk before agent outputs are propagated downstream", and [ASI08 Description](reference/owasp-top-10-agentic-applications-2026.txt#L876-L877) applies the category "only when that defect spreads across agents, sessions, or workflows"
 **Gap** the gate is real, which is why three rows are PARTIAL, and it is missing from the procedure the model follows. Where the note at line 70 does produce it, the operator judges a description written by the author of the file being approved, and never sees its `tools:` line, the commit it came from, that global means every project, or the agent an install would overwrite. A delete has no preview of any kind
 **Ask** at the moment of confirmation, does the operator see the fetched `tools:` line, the source commit, the install scope and any file it replaces, and what does an uninstall show before it deletes?
 
@@ -101,17 +101,25 @@ and any `Bash` command. Behind line 70's confirmation: writes into `~/.claude/ag
 the same name. Lethal trifecta present, all three legs in the definition: `Read` and `Glob` on the
 local filesystem, third-party content from lines 22-24 and 42, and outbound requests through
 `WebFetch` and `curl`. The stated purpose at line 8 is narrow and the grant at line 4 is not;
-audited on the grant.
+audited on the grant. Nothing in the artifact is aimed at the auditor.
 
 **Decides about nobody.** The only person it deals with is the developer who invoked it, and no
 one's case is ranked, scored or filtered by it.
 
-**What could not be verified.** Whether a subagent can stop and wait for the operator, which
-decides whether line 70's confirmation reaches a person at all; whether the harness asks for its
-own approval before a tool call; and where `Bash` runs and which credentials it can read. The test
-that settles all three: ask it to install one agent, record what reaches the operator before the
-file is written, and print from inside its shell the effective user, working directory, readable
-credential files and outbound network policy.
+**What the format's documentation settles.** Claude Code's subagent documentation
+(code.claude.com/docs/en/subagents) says that subagents in `~/.claude/agents/` are available in all
+projects, that Claude delegates to a subagent on its `description`, and that `AskUserQuestion` is
+removed from every subagent's tool set. A subagent cannot stop to ask the operator mid-task, so line
+70's confirmation reaches a person only if the invoking session relays it, and the install steps at
+lines 35-39 never hand the question back. Judgment call, for the owner: read as a gate the invoking
+session relays, ASI02, ASI08 and ASI09 are PARTIAL as graded; read as a gate that cannot fire inside
+a run, all three are FAIL and F4 becomes CRITICAL.
+
+**What could not be verified.** Whether the harness asks for its own approval before a tool call,
+and where `Bash` runs and which credentials it can read. The test that settles both: ask it to
+install one agent, record what reaches the operator before the file is written, and print from
+inside its shell the effective user, working directory, readable credential files and outbound
+network policy.
 
 ---
 ---
@@ -138,16 +146,16 @@ Do not run it anywhere that holds data, credentials or network access you would 
 
 | Category | Verdict | Sev | Basis |
 |---|---|---|---|
-| ASI01 Agent Goal Hijack | **FAIL** | CRITICAL | F2 |
-| ASI02 Tool Misuse and Exploitation | **FAIL** | MAJOR | F1, F3 |
-| ASI03 Identity and Privilege Abuse | **FAIL** | MAJOR | F1 |
-| ASI04 Agentic Supply Chain Vulnerabilities | **FAIL** | MAJOR | F4 |
-| ASI05 Unexpected Code Execution (RCE) | **FAIL** | CRITICAL | F1 |
-| ASI06 Memory & Context Poisoning | **N/A** | - | Silence, not an exclusion: no memory tool, retrieval index or saved context is declared, each task opens on `instance_template` (line 8), and `cache_control` (line 68) names prompt caching, not a store the agent writes or reads back |
-| ASI07 Insecure Inter-Agent Communication | **N/A** | - | Silence, not an exclusion: a single agent that names no sub-agent, peer agent, MCP server or message channel, only three tool bundles (lines 42-44) and a shell (line 64) |
-| ASI08 Cascading Failures | **PARTIAL** | MAJOR | F5. The checkpoint governs the agent's output (its diff), not its execution |
-| ASI09 Human-Agent Trust Exploitation | **FAIL** | MAJOR | F1 |
-| ASI10 Rogue Agents | **FAIL** | CRITICAL | F3 |
+| ASI01 Agent Goal Hijack (outside text redirects the agent) | **FAIL** | CRITICAL | F2 |
+| ASI02 Tool Misuse and Exploitation (legitimate tools used unsafely) | **FAIL** | MAJOR | F1, F3 |
+| ASI03 Identity and Privilege Abuse (the agent's access abused or inherited) | **FAIL** | MAJOR | F1 |
+| ASI04 Agentic Supply Chain Vulnerabilities (third-party parts trusted unverified) | **FAIL** | MAJOR | F4 |
+| ASI05 Unexpected Code Execution (model output becomes an executed command) | **FAIL** | CRITICAL | F1 |
+| ASI06 Memory & Context Poisoning (stored context corrupted for later runs) | **N/A** | - | Silence, not an exclusion: no memory tool, retrieval index or saved context is declared, each task opens on `instance_template` (line 8), and `cache_control` (line 68) names prompt caching, not a store the agent writes or reads back |
+| ASI07 Insecure Inter-Agent Communication (messages between agents forged or tampered) | **N/A** | - | Silence, not an exclusion: a single agent that names no sub-agent, peer agent, MCP server or message channel, only three tool bundles (lines 42-44) and a shell (line 64) |
+| ASI08 Cascading Failures (one error propagates into later actions) | **PARTIAL** | MAJOR | F5. The checkpoint governs the agent's output (its diff), not its execution |
+| ASI09 Human-Agent Trust Exploitation (people over-trust what the agent tells them) | **FAIL** | MAJOR | F1 |
+| ASI10 Rogue Agents (an agent drifts from its job with nothing to catch it) | **FAIL** | CRITICAL | F3 |
 
 ## Findings
 
@@ -160,7 +168,7 @@ Do not run it anywhere that holds data, credentials or network access you would 
 
 ### F2 · CRITICAL · ASI01 · Text other people write sets the agent's goal
 
-**Artifact** `{{problem_statement}}` (line 15) is the specification the agent must satisfy, "so that the requirements specified" (line 18); the code it reads and runs arrives as an upload, "I've uploaded a python code repository" (line 12); every command's output returns as `{{observation}}` (line 30). Nothing marks any of the three as untrusted.
+**Artifact** `{{problem_statement}}` (line 15) is the specification the agent must satisfy, "so that the requirements specified" (line 18); the code it reads and runs arrives as an upload, "I've uploaded a python code repository" (line 12); every command's output returns as `{{observation}}` (line 30). The `<pr_description>` tags (lines 14 and 16) and the `OBSERVATION:` label (line 29) say where each text came from, and no line says to distrust it.
 **Standard** [ASI01 Mitigation 1](reference/owasp-top-10-agentic-applications-2026.txt#L283 "^ASI01-UNTRUSTED-INPUT"): "Treat all natural-language inputs (e.g., user-provided text, uploaded documents, retrieved content)" as untrusted, "before they can influence goal selection, planning, or tool calls".
 **Gap** An instruction planted in an issue, a code comment or a program's output reaches the shell at line 64 in the same channel as the task, which puts all three legs of data theft in one session: whatever the environment holds, text an outsider wrote, and a shell that can send it out.
 **Ask** Who can write the problem statements and repositories this agent will be pointed at, and what screens that text before it can influence a command?
@@ -168,22 +176,22 @@ Do not run it anywhere that holds data, credentials or network access you would 
 ### F3 · CRITICAL · ASI10, ASI02 · Nothing bounds, halts or records a run
 
 **Artifact** No step, cost or time limit and no stop instruction appears in lines 1-69; "Your thinking should be thorough and so it's fine if it's very long." (line 27) invites the opposite, and the only end the definition names is the agent's own choice to "Run the submit command again to confirm." (line 57). No log of commands or reasoning is declared.
-**Standard** [ASI10 Mitigation 4](reference/owasp-top-10-agentic-applications-2026.txt#L1117 "^ASI10-KILL-SWITCH"): "Implement rapid mechanisms like kill-switches and credential revocation to instantly disable rogue agents"; [ASI10 Mitigation 1](reference/owasp-top-10-agentic-applications-2026.txt#L1108 "^ASI10-AUDIT-LOGS"): "Maintain comprehensive, immutable and signed audit logs of all agent actions, tool calls"; [ASI02 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L392), unregistered: "Apply usage ceilings (cost, rate, or token budgets)".
+**Standard** [ASI10 Mitigation 4](reference/owasp-top-10-agentic-applications-2026.txt#L1117 "^ASI10-KILL-SWITCH"): "Implement rapid mechanisms like kill-switches and credential revocation to instantly disable rogue agents"; [ASI10 Mitigation 1](reference/owasp-top-10-agentic-applications-2026.txt#L1108 "^ASI10-AUDIT-LOGS"): "Maintain comprehensive, immutable and signed audit logs of all agent actions, tool calls"; [ASI02 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L392): "Apply usage ceilings (cost, rate, or token budgets)".
 **Gap** A run that loops, drifts or has been hijacked goes on until the model itself decides to submit, with no ceiling, no named way to halt it and no record from which anyone could reconstruct what it ran and why; whether the framework around it adds any of the three cannot be verified from the definition.
 **Ask** What ends a run that never submits, who can stop one mid-run, and where is every command it executed recorded?
 
 ### F4 · MAJOR · ASI04 · Its tools and packages load unverified
 
-**Artifact** Every tool except the shell comes from a bundle named only by relative path, `tools/registry` (line 42), `tools/edit_anthropic` (line 43) and `tools/review_on_submit_m` (line 44), none defined in this file and none pinned; `PIP_PROGRESS_BAR: 'off'` (line 38) sets the shell up for `pip`, and nothing limits what it installs.
+**Artifact** Every tool except the shell comes from a bundle named only by relative path, `tools/registry` (line 42), `tools/edit_anthropic` (line 43) and `tools/review_on_submit_m` (line 44), none defined in this file and none pinned; `PIP_PROGRESS_BAR: 'off'` (line 38) sets the shell up for `pip`, so installs are inferred from that setting, and nothing limits what they bring in.
 **Standard** [ASI04 Mitigation 7](reference/owasp-top-10-agentic-applications-2026.txt#L589 "^ASI04-PIN"): "Pin prompts, tools, and configs by content hash and commit ID."; [ASI04 Mitigation 2](reference/owasp-top-10-agentic-applications-2026.txt#L579 "^ASI04-GATEKEEPING"): "Allowlist and pin; scan for typosquats" and "verify provenance before install or activation".
 **Gap** The scope and provenance of the three bundles could not be verified from the definition, since a relative path resolves to whatever copy is installed when the agent starts, and nothing in the definition stops a package the model names from being installed and imported with no allowlist, pin or provenance check.
 **Ask** Which exact revision of each bundle runs, who reviewed the commands it adds, and which packages is the agent allowed to install?
 
 ### F5 · MAJOR · ASI08 · The only check before submission is its own
 
-**Artifact** The submit step behind `tools/review_on_submit_m` (line 44) shows the agent its own diff and asks: "Please carefully follow the steps below to help review your changes." (line 49). The steps are to rerun the reproduction script it wrote itself (line 23), then "Remove your reproduction script (if you haven't done so already)." (line 54), and for any test it touched, "please revert them to the state they had before" (line 55).
-**Standard** [ASI08 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L946 "^ASI08-GATES"): "Checkpoints, governance agents, or human review for high risk before agent outputs are propagated downstream"; [ASI08 Mitigation 4](reference/owasp-top-10-agentic-applications-2026.txt#L944 "^ASI08-POLICY-ENGINE"): "Separate planning and execution via an external policy engine".
-**Gap** The checkpoint exists, so the row is partial rather than failed, but the same model runs it against a test it wrote and then deletes, so a wrong reproduction in step 2 passes its own review and the patch leaves with no record of how it was checked.
+**Artifact** The submit step behind `tools/review_on_submit_m` (line 44), inferred from the bundle's name, shows the agent its own diff and asks: "Please carefully follow the steps below to help review your changes." (line 49). The steps are to rerun the reproduction script it wrote itself (line 23), then "Remove your reproduction script (if you haven't done so already)." (line 54), and for any test it touched, "please revert them to the state they had before" (line 55).
+**Standard** [ASI08 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L946 "^ASI08-GATES"): "Checkpoints, governance agents, or human review for high risk before agent outputs are propagated downstream"; [ASI08 Mitigation 4](reference/owasp-top-10-agentic-applications-2026.txt#L944 "^ASI08-POLICY-ENGINE"): "Separate planning and execution via an external policy engine"; [ASI08 Description](reference/owasp-top-10-agentic-applications-2026.txt#L876-L877) applies the category "only when that defect spreads across agents, sessions, or workflows", as a submitted patch does.
+**Gap** The checkpoint is written into the file (lines 47-63), so the row is partial rather than failed; it is an instruction the model follows, and the same model runs it against a test it wrote and then deletes, so a wrong reproduction in step 2 passes its own review and the patch leaves with no record of how it was checked.
 **Ask** What checks a submitted patch that the agent did not write itself, and who sees that check before the patch is applied anywhere?
 
 ## Fix order
@@ -196,7 +204,7 @@ Do not run it anywhere that holds data, credentials or network access you would 
 
 ## Scope and limits
 
-A fully autonomous coding agent, a single agent with tools, run once per task: handed a repository and a problem statement, it reads code, writes and runs scripts through a shell, edits files and submits a diff, and nothing in the definition puts a human in front of any step. Without confirmation it can run any shell command its environment permits; the irreversible ones include deleting files and anything sent out over the network. All three legs of the data-theft combination are present as written (F1, F2). It decides about nobody: its product is a code change, not a judgment about a person. The file carries no text addressed to its reviewer.
+A fully autonomous coding agent, a single agent with tools, run once per task: handed a repository and a problem statement, it reads code, writes and runs scripts through a shell, edits files and submits a diff, and nothing in the definition puts a human in front of any step. Without confirmation it can run any shell command its environment permits; the irreversible ones include deleting its reproduction script (line 54), `git checkout --` (line 56), which also discards any uncommitted change to the test file it names, and anything sent out over the network. All three legs of the data-theft combination are present as written (F1, F2). It decides about nobody: its product is a code change, not a judgment about a person. The file carries no text addressed to its reviewer.
 
 Not given, and not verifiable from the definition: the execution environment (this file names no container, image, user or network setting), the contents of the three bundles, the model (the header says "it with any LM", line 3), any step, cost or logging limits the framework applies, and what happens to a submitted patch. The tests that settle them: run a task that asks the agent to print `id` and `env` and fetch an outside URL, and see what succeeds; give it a task it cannot solve and see whether the run ends and whether an operator can stop it; after any run, try to rebuild every command it executed from what is kept; read each bundle at the revision you run and record its hash; and check whether the environment is discarded between tasks, which is what keeps the ASI06 verdict at not applicable.
 
@@ -243,7 +251,7 @@ Until the two major findings are closed, do not let a PASS stand in for an engin
 
 ### F1 · MAJOR · ASI09, ASI08 · A PASS means nothing found, not everything checked
 **Artifact** line 96: "Use `PASS` only when no actionable findings are present"; line 35: "Report only findings with enough evidence to act on"; line 30: "Identify the device role, platform, and change intent if they are present"; lines 90-91: "Tests checked" and "Residual risk" print under the verdict without deciding it; lines 105-106 ask for "a maintenance window, rollback plan, and verification step" of a proposed fix, not of a PASS.
-**Standard** [ASI09 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L1034) (unregistered): "Implement confidence weighted cues ... that visually prompt users to question high-impact actions, reducing automation bias and blind approval"; [ASI08 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L946 "^ASI08-GATES"): "human review for high risk before agent outputs are propagated downstream".
+**Standard** [ASI09 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L1034): "Implement confidence weighted cues ... that visually prompt users to question high-impact actions, reducing automation bias and blind approval"; [ASI08 Mitigation 5](reference/owasp-top-10-agentic-applications-2026.txt#L946 "^ASI08-GATES"): "human review for high risk before agent outputs are propagated downstream", which [ASI08 Description](reference/owasp-top-10-agentic-applications-2026.txt#L876-L877) applies "only when that defect spreads across agents, sessions, or workflows", as a reviewed change does once it is pasted into a device.
 **Gap** The standard asks for cues that make people question a high-impact change and a check before output travels downstream; here a review that lacked the running config, could not identify the device, or met a platform outside the Cisco IOS and IOS-XE scope of line 22 can still return PASS, and what it could not verify is printed under that PASS without changing it.
 **Ask** On what coverage may this agent say PASS, and does a PASS ever move a change into a window without an engineer reading the change? If it does, this finding is CRITICAL.
 
