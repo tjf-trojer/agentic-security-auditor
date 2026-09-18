@@ -2,8 +2,8 @@
 
 _Last updated: 2026-09-11_
 
-The opening move of every audit (rules.md, Rule 3, Move 1). It answers three questions and
-produces a **capability profile** that the rest of the audit refers back to. Run it before
+The opening move of every audit ([Rule 3](../rules/sweep.md), Move 1). It answers three questions
+and produces a **capability profile** that the rest of the audit refers back to. Run it before
 looking for findings: the profile determines which categories can even fire.
 
 Navigation, not standard. See [`README.md`](README.md).
@@ -79,7 +79,7 @@ single session combines all three of:
 Hold all three and an injected instruction in the untrusted content can read the private data
 and route it out. **Remove any one leg and this specific exfiltration path closes.** If the profile has all three, name the three legs in the capability
 profile and carry them into the findings for ASI01 and ASI02, merged where they share a cause
-(Rule 4), as the exact config elements to quote.
+([Rule 4](../rules/grading.md)), as the exact config elements to quote.
 
 This is the structural form of what the standard describes as the root cause under
 [ASI01 Description](../reference/owasp-top-10-agentic-applications-2026.txt#L240 "^ASI01-ONE-CHANNEL"): agents "cannot reliably
@@ -117,8 +117,9 @@ Three sub-questions. Answer them in one line each, or say "nobody" and move on.
 - **A data-protection pointer becomes mandatory**, in one line, marked as outside this audit's
   scope. Do not assess it.
 
-**Severity, when the subject is a person.** Rule 4's assurance test is for an artifact whose
-*output is an assurance nothing requires to be true*, not for deciding about someone. An agent that
+**Severity, when the subject is a person.** [Rule 4](../rules/grading.md)'s assurance test is for
+an artifact whose *output is an assurance nothing requires to be true*, not for deciding about
+someone. An agent that
 rejects people on an honestly derived score trips this question and not that test. Grade it on
 reachability: an irreversible outcome delivered to someone with no route back to a human is an
 unmitigated path from an ordinary mistake to serious harm, and that is CRITICAL.

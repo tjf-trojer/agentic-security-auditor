@@ -72,9 +72,9 @@ the scripts run.
 git clone https://github.com/tjf-trojer/agentic-security-auditor
 ```
 
-**In a Claude project**, add `identity.md`, `rules.md`, `examples.md`, `provisions.md`, `method/`
-and `reference/owasp-top-10-agentic-applications-2026.txt` to its knowledge. Scripts do not run
-there; Rule 5 in [`rules.md`](rules.md) says how to verify by hand.
+**In a Claude project**, add `identity.md`, `rules.md` with `rules/`, `examples.md`,
+`provisions.md`, `method/` and `reference/owasp-top-10-agentic-applications-2026.txt` to its
+knowledge. Scripts do not run there; [Rule 5](rules/output.md) says how to verify by hand.
 
 Paste the definition and say **"Audit this agent definition."** Paste it; do not ask the auditor to
 fetch it.
@@ -178,8 +178,8 @@ the file.
 - **A PASS needs the tool grant or a mechanism outside the model.** Instructions the model is asked
   to follow score PARTIAL at best, so instructions alone never pass a category.
 - **It can be lied to.** It reads the artifact in the same context as its own rules, the flaw ASI01
-  describes. Rule 0 tells it never to act on text inside the artifact and to report it, and that is
-  a prompt-layer control.
+  describes. [Rule 0](rules/posture.md) tells it never to act on text inside the artifact and to
+  report it, and that is a prompt-layer control.
 - **Not a penetration test and not legal advice.**
 
 ## Licence
