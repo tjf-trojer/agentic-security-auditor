@@ -3,7 +3,7 @@
 An auditor that answers one question: **does this agent's definition conform to the OWASP Top 10
 for Agentic Applications 2026?**
 
-_Last updated: 2026-09-11_
+_Last updated: 2026-09-18_
 
 Give it an agent's instructions and its tool grant. It rules on all ten categories, pass as well
 as fail, and every verdict cites the line of the standard it rests on. The standard is in
@@ -98,7 +98,8 @@ Scope and limits   What it does unattended, who it decides about, what could not
 Observations       What it believes but cannot cite, marked as judgment; usually absent
 ```
 
-It never writes a fixed configuration. The long form comes only when you ask for it.
+It never writes a fixed configuration, and `verify.py` fails an audit that does. The long form
+comes only when you ask for it.
 
 ## Reading an audit
 
@@ -148,7 +149,8 @@ Python 3.9 or later, standard library only, no network.
 `verify.py` checks that every provision in [`provisions.md`](provisions.md) still sits on its
 recorded line, that every citation resolves, matches its id and names OWASP's address for its
 line, that every quoted passage appears inside the provision cited, that every audit rules on all
-ten categories exactly once, that every PASS cites a mitigation, that no ledger row is graded above
+ten categories exactly once, that every PASS cites a mitigation, that no audit hands back agent
+text the artifact does not already contain, that no ledger row is graded above
 the finding it cites, that stated counts match the ledger and the findings, and that the deploy call
 follows from them. Given the agent's file, by
 `--artifact` or by an audit's own `Copy at` link into `targets/`, it also checks each Artifact line

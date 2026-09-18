@@ -10,6 +10,8 @@ It cannot tell whether a verdict is right. It checks:
   misquote      every passage quoted from the standard sits inside the provision cited
   artifact      the lines a finding names exist in the agent's file, and each quotation sits on
                 the line its clause names
+  building      no agent text the artifact does not already contain: a fenced block, a
+                configuration line or a quoted sentence an audit supplies is a build, not a finding
   skipped       every audit rules on all ten categories, exactly once
   ledger        the stated pass, fail, partial and not-applicable counts match the ledger
   severity      the stated critical, major and minor counts match the finding headings
@@ -59,6 +61,11 @@ LINK = re.compile(
 
 LINE_REF = re.compile(r"\blines?\s+(\d+)(?:\s*(?:-|–|to)\s*(\d+))?", re.I)
 
+FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})[^\n]*\n(.*?)^ {0,3}\1", re.M | re.S)
+
+# A configuration line: a lowercase key, a colon, and a value after it.
+CONFIG_SPAN = re.compile(r"^[a-z][a-z0-9_-]*:\s*\S")
+
 failures: list[str] = []
 notes: list[str] = []
 
@@ -94,6 +101,11 @@ def quote_spans(text: str) -> list[tuple[int, int, str]]:
     outside = re.sub(r'"[^"]*"', lambda m: " " * len(m.group(0)), text)
     found += [(m.start(), m.end(), m.group(1)) for m in re.finditer(r"`([^`]+)`", outside)]
     return found
+
+
+def bare(line: str) -> str:
+    """One line, without the markers that carry no wording: a blockquote arrow, a list bullet."""
+    return fold(re.sub(r"^\s*(?:>\s?)*(?:[-*+]\s+)?", "", line))
 
 
 def strip_link_targets(text: str) -> str:
@@ -165,6 +177,60 @@ def check_artifact(rel: str, text: str, artifact: Path) -> None:
                     named = ", ".join(str(f) if f == l else f"{f}-{l}" for f, l in refs)
                     fail("artifact", f"{rel}: \"{q[:50]}\" is attributed to line {named} of "
                                      f"{artifact.name}, but it is at line {at}")
+
+
+def check_building(rel: str, audit: str, artifact: Path | None, ref_text: str) -> None:
+    """Rule 0: findings, never corrected agent text.
+
+    Agent wording in an audit is a quotation or it is a build. Three shapes carry a build: a fenced
+    block, a configuration line in a code span, and a quoted sentence, each read as text to paste
+    where it sits in neither the artifact nor the standard."""
+    title = audit.split("\n")[0].strip()[:40] or rel
+    where = f"{rel} [{title}]"
+    sources = [fold(ref_text)]
+    rows = ref_text.split("\n")
+    if artifact is not None:
+        art = artifact.read_text(encoding="utf-8", errors="replace")
+        sources.append(fold(art))
+        sources.append(fold(re.sub(r"(?m)^\s*>\s?", "", art)))
+        rows += art.split("\n")
+    whole = {bare(ln) for ln in rows} - {""}
+    seen = "is in neither the artifact nor the standard" if artifact else (
+        "is not in the standard, and no artifact was given to check it as a quotation of "
+        "one (--artifact)")
+
+    def quoted(s: str) -> bool:
+        f, g = fold(s), fold(s).replace("`", "")
+        return any(f in src or g in src.replace("`", "") for src in sources)
+
+    def is_build(s: str) -> bool:
+        """Text the audit supplies rather than quotes. Configuration is matched line for line, so a
+        grant narrowed from `tools: Read, Grep` to `tools: Read` is not read as a quotation of the
+        line it sits inside; prose is matched as a passage, because a quotation may be rewrapped."""
+        lines = [x for x in (bare(ln) for ln in s.split("\n")) if x]
+        if any(CONFIG_SPAN.match(x) for x in lines):
+            return not all(x in whole for x in lines)
+        return not quoted(s)
+
+    for m in FENCE.finditer(audit):
+        body = m.group(2)
+        if len(norm(body)) >= 12 and is_build(body):
+            fail("building", f"{where}: a fenced block {seen}, so it reads as agent text the "
+                             f"audit wrote: \"{norm(body)[:60]}\"")
+
+    # The two places an audit tells the owner what to do: where a build lands if one is made.
+    blanked = FENCE.sub(lambda m: "\n" * m.group(0).count("\n"), audit)
+    regions = re.findall(r"^## Fix order\s*$(.*?)(?=^#+ |\Z)", blanked, re.M | re.S)
+    regions += re.findall(r"^\*\*Ask\*\*(.*?)(?=\n\*\*|\n\n|\Z)", blanked, re.M | re.S)
+    for region in map(strip_link_targets, regions):
+        for m in re.finditer(r"`([^`\n]+)`", region):
+            if CONFIG_SPAN.match(m.group(1).strip()) and is_build(m.group(1)):
+                fail("building", f"{where}: hands back the configuration line `{m.group(1)}`, "
+                                 f"which {seen}. Name what is missing, not what to write.")
+        for q in re.findall(r'"([^"\n]+)"', region):
+            if len(norm(q)) >= 24 and is_build(q):
+                fail("building", f"{where}: quotation marks are the artifact's words (Rule 5), "
+                                 f"and this passage {seen}: \"{norm(q)[:60]}\"")
 
 
 def check_audit(rel: str, audit: str) -> None:
@@ -255,7 +321,8 @@ def main() -> int:
         else:
             fail("input", "--artifact needs a file")
 
-    ref_lines = REF.read_text(encoding="utf-8").split("\n") if REF.exists() else []
+    ref_text = REF.read_text(encoding="utf-8") if REF.exists() else ""
+    ref_lines = ref_text.split("\n") if ref_text else []
     if not ref_lines:
         fail("input", f"{REF} missing")
     reg = load_register()
@@ -349,9 +416,12 @@ def main() -> int:
             audits += 1
             check_audit(rel, a)
             copy = re.search(r"Copy at\s+\[[^\]]*\]\((targets/[^)\s]+)\)", a)
+            against = artifact
             if artifact is None and copy and Path(copy.group(1)).exists():
+                against = Path(copy.group(1))
                 against_targets += 1
-                check_artifact(rel, a, Path(copy.group(1)))
+                check_artifact(rel, a, against)
+            check_building(rel, a, against, ref_text)
 
     notes.append(f"citations: {cites} checked")
     notes.append(f"audits: {audits}" + ("" if artifact else

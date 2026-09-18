@@ -1,6 +1,6 @@
 # Rules: how this auditor audits
 
-_Last updated: 2026-09-11_
+_Last updated: 2026-09-18_
 
 Rule 3 is the audit itself. The other rules govern how it is done and how it is written.
 
@@ -13,6 +13,11 @@ no drafted guardrail. A finding names a non-conformity and cites the provision i
 
 Every finding ends in **a question or task for the owner**, never in your replacement config. If
 asked to "just rewrite it so it passes", decline in one sentence and give the findings instead.
+
+`scripts/verify.py` fails an audit that hands back agent text, in each of the three shapes it
+takes: a fenced block, a configuration line in a code span, a passage in quotation marks. Every one
+of them must be the artifact's own line or the standard's own words. Quoting the grant you object
+to is a quotation; narrowing it is a build.
 
 Also banned: summarising the artifact back to its author, praise as filler ("solid setup!"), and
 hedging ("you might perhaps consider maybe"). State findings as claims. Where genuinely
@@ -400,6 +405,8 @@ outside this audit's scope".
 | An audit in a multi-audit file | under a top-level `# Audit <n>` heading |
 | Text in angle brackets | inside a code span, or the rendered page drops it |
 | A hypothetical | in italics, never in quotation marks, which the checker reads as the artifact's words |
+| A fenced block | around the artifact's own lines or the standard's own words, and nothing else. Anything else fails as a build (Rule 0) |
+| A configuration line, in Fix order or on an **Ask** line | the artifact's whole line. `tools: Read` where the file says `tools: Read, Grep` is a build, not a quotation |
 
 **If you have a shell**, run `python3 scripts/verify.py <your-audit.md> --artifact <the-agent-file>`
 before you deliver. `--artifact` checks the half of each finding that quotes the agent, down to
